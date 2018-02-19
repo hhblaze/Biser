@@ -41,7 +41,7 @@ we need to make following
 
 ### Decoding
 
-Primitive types are decoded in such way [TS1 class decoder example] (https://github.com/hhblaze/Biser/blob/master/BiserTest_Net/TS1_Biser.cs):
+Primitive types are decoded in such way [TS1 class decoder example](https://github.com/hhblaze/Biser/blob/master/BiserTest_Net/TS1_Biser.cs):
 
 ![dp3](https://github.com/hhblaze/Biser/blob/master/Docu/dp3.jpg?raw=true)
 
