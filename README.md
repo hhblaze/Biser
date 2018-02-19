@@ -47,6 +47,14 @@ we need to make following
 
 .Add(P5, (r) => { enc.Add(r.Key); enc.Add(r.Value); })
 
+To Encode Dictionary with List as a Value
+
+public Dictionary<long,List<TS3>> P6 { get; set; }
+
+we need to make following
+
+.Add(P6, (r) => { enc.Add(r.Key); enc.Add(r.Value, (r1) => { enc.Add(r1); }); })
+
 
 ### Decoding
 
