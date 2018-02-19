@@ -32,13 +32,21 @@ For IEnumerable we need to define how to encode its content:
 This trick gives us ability to encode any data sequence inside of IEnumerable, e.g:
 
 To encode complex object 
+
 public List<Tuple<string,byte[],TS3>> P8 { get; set; }
+
 we need to make following
+
 .Add(P8, (r) => { enc.Add(r.Item1); enc.Add(r.Item2); enc.Add(r.Item3); })
+
 To encode Dictionary 
+
 public Dictionary<long,TS3> P5 { get; set; }
+
 we need to make following
+
 .Add(P5, (r) => { enc.Add(r.Key); enc.Add(r.Value); })
+
 
 ### Decoding
 
