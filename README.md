@@ -62,4 +62,8 @@ Primitive types are decoded in such way [TS1 class decoder example](https://gith
 
 ![dp3](https://github.com/hhblaze/Biser/blob/master/Docu/dp3.jpg?raw=true)
 
+IEnumerables can have null values inside:
+
+![dp4](https://github.com/hhblaze/Biser/blob/master/Docu/dp4.jpg?raw=true)
+
 hhblaze@gmail.com
