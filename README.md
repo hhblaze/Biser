@@ -1,8 +1,8 @@
 # Biser .NET
 Binary serializer for .NET dotnet ("biser" in Russian means "beads")
 
-Alternative to protobuf-net. 
-With the same operational speed, smaller payload and 15KB DLL size.
+Can be an alternative to protobuf-net in some circumstances. 
+Has the same operational speed, smaller payload and 15KB DLL size.
 
 Integrated part of [DBreeze database](https://github.com/hhblaze/DBreeze), used in [Raft.NET](https://github.com/hhblaze/Raft.Net)
 
