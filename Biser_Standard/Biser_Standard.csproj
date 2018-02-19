@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>Biser</RootNamespace>
+    <AssemblyName>Biser</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Biser\Decoder.cs" Link="Decoder.cs" />
+    <Compile Include="..\Biser\Encoder.cs" Link="Encoder.cs" />
+    <Compile Include="..\Biser\IEncoder.cs" Link="IEncoder.cs" />
+    <Compile Include="..\Biser\Utils.cs" Link="Utils.cs" />
+  </ItemGroup>
+
+</Project>
