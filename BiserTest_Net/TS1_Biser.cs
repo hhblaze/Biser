@@ -51,7 +51,7 @@ namespace BiserTest_Net
             }
 
             TS1 m = new TS1();  //!!!!!!!!!!!!!! change return type
-
+            
             m.P1 = decoder.GetInt();
             m.P2 = decoder.GetInt();
             m.P3 = decoder.GetDecimal();
@@ -62,7 +62,9 @@ namespace BiserTest_Net
 
             m.P5 = decoder.CheckNull() ? null : new Dictionary<long, TS3>();
             if (m.P5 != null)
-                decoder.GetCollection(() => { return decoder.GetLong(); }, () => {  return TS3.BiserDecode(null, decoder); }, m.P5, true);
+                decoder.GetCollection(() => {
+                    return decoder.GetLong(); }, 
+                    () => {  return TS3.BiserDecode(null, decoder); }, m.P5, true);
 
             m.P6 = decoder.CheckNull() ? null : new Dictionary<uint, List<TS3>>();
             if (m.P6 != null)
@@ -84,9 +86,14 @@ namespace BiserTest_Net
             m.P8 = decoder.CheckNull() ? null : new List<Tuple<string, byte[], TS3>>();
             if (m.P8 != null)
                 decoder.GetCollection
-                    (() => { return new Tuple<string, byte[], TS3>(decoder.GetString(), decoder.GetByteArray(), TS3.BiserDecode(null, decoder)); }, m.P8, true);
+                    (() => { return new Tuple<string, byte[], TS3>
+                        (decoder.GetString(), 
+                        decoder.GetByteArray(), 
+                        TS3.BiserDecode(null, decoder));
+                    }, m.P8, true);
 
-            m.P9 = new Tuple<float, TS2, TS3, decimal?>(decoder.GetFloat(), TS2.BiserDecode(null, decoder), TS3.BiserDecode(null, decoder), decoder.GetDecimal_NULL());
+            m.P9 = new Tuple<float, TS2, TS3, decimal?>
+                (decoder.GetFloat(), TS2.BiserDecode(null, decoder), TS3.BiserDecode(null, decoder), decoder.GetDecimal_NULL());
 
             return m;
         }
