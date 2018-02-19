@@ -24,7 +24,7 @@ Use copy-paste from [here](https://github.com/hhblaze/Biser/tree/master/BiserTes
 
 It’s possible to encode primitive .NET type, IEncoder (custom object) and IEnumerable (with the content of any complexity):
 
-.NET Primitives and IEncode can be just added into encoder.Add function.
+.NET Primitives and IEncoder can be just added into encoder.Add function.
 For IEnumerable we need to define how to encode its content:
 
 ![dp2](https://github.com/hhblaze/Biser/blob/master/Docu/dp2.jpg?raw=true)
