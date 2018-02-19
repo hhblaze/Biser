@@ -1,5 +1,5 @@
 # Biser .NET
-Binary serializer for .NET dotnet ("biser" means "beads" in Russian Language)
+Binary serializer for .NET dotnet ("biser" in Russian means "beads")
 
 Alternative to protobuf-net. 
 With the same operational speed, smaller payload and 15KB DLL size.
