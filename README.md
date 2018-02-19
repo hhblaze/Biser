@@ -9,12 +9,11 @@ Integrated part of [DBreeze database](https://github.com/hhblaze/DBreeze)
 - [Examples of encoders/decoders](https://github.com/hhblaze/Biser/blob/master/BiserTest_Net/Program.cs)
 - [Documentation](https://docs.google.com/document/d/e/2PACX-1vQa3C506Esw3Fkroj4OA5erGOHEZpAtnXcQQ90R0w1wnFqO_16CH0dUfBJZt_ppB15ykoZWI9eR8KcG/pub)
 
-Binary serializer "biser" means "beads" in Russian Language
-
 -------------
+### Getting started
 
-In Biser serializing and deserializing functions (later encoding/decoding) are supplied together with POCO class (A Plain Old CLR Objects) as partial extension. 
-These functions are very simple and build up with the help of Biser existing primitives.
+In Biser serializing and deserializing functions (encoding/decoding) are supplied together with POCO class (A Plain Old CLR Objects) as a partial class extension. 
+These functions are very simple and are built up with the help of Biser existing primitives.
 
 Use copy-paste from [here](https://github.com/hhblaze/Biser/tree/master/BiserTest_Net) to create the most popular encoders/decoders
 
