@@ -1,4 +1,9 @@
-﻿using System;
+﻿/* 
+  Copyright (C) 2012 dbreeze.tiesky.com / Alex Solovyov
+  It's a free software for those, who think that it should be free.
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -20,9 +25,10 @@ namespace Biser
         Decoder rootDecoder = null;
         bool externalDecoderExists = false;
         Decoder activeDecoder = null; //the one who fills up collection
-                                      /// <summary>
-                                      /// true in case if object is null
-                                      /// </summary>
+
+        /// <summary>
+        /// true in case if object is null
+        /// </summary>
         public bool IsNull = false;
 
         /// <summary>
