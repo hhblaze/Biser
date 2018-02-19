@@ -33,8 +33,11 @@ namespace BiserTest_Net
                      new TS3 { P3 = DateTime.UtcNow.AddDays(-1) },
                      new TS3 { P3 = DateTime.UtcNow.AddDays(-2) },
                      new TS3 { P3 = DateTime.UtcNow.AddDays(-3) }
-                }
+                },
+                P4 = new TS3 { P1 = "hi" },
+                P5 = 111
             };
+
             //var bt2 = ts2.BiserEncoder().Encode();
             //TS2 ts2D = TS2.BiserDecode(bt2);
 

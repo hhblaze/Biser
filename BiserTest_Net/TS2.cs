@@ -16,5 +16,7 @@ namespace BiserTest_Net
         public long P1 { get; set; }
         public double P2 { get; set; }
         public List<TS3> P3 { get; set; }
+        public TS3 P4 { get; set; }
+        public uint? P5 { get; set; }
     }
 }

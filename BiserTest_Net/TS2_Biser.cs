@@ -21,6 +21,8 @@ namespace BiserTest_Net
             .Add(P1)
             .Add(P2)
             .Add(P3, (r) => { enc.Add(r); })
+            .Add(P4)
+            .Add(P5)
             ;
             return enc;
         }
@@ -49,6 +51,10 @@ namespace BiserTest_Net
             m.P3 = decoder.CheckNull() ? null : new List<TS3>();
             if (m.P3 != null)
                 decoder.GetCollection(() => { return TS3.BiserDecode(null, decoder); }, m.P3, true);
+
+            m.P4 = TS3.BiserDecode(null, decoder);
+
+            m.P5 = decoder.GetUInt_NULL();
 
             return m;
         }
