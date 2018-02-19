@@ -10,5 +10,6 @@ namespace BiserTest_Net
     {
         public long P1 { get; set; }
         public double P2 { get; set; }
+        public List<TS3> P3 { get; set; }
     }
 }

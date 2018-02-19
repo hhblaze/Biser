@@ -22,6 +22,9 @@ namespace BiserTest_Net
             .Add(P4, (r) => { enc.Add(r); })
             .Add(P5, (r) => { enc.Add(r.Key); enc.Add(r.Value); })
             .Add(P6, (r) => { enc.Add(r.Key); enc.Add(r.Value, (r1) => { enc.Add(r1); }); })
+            .Add(P7)
+            .Add(P8, (r) => { enc.Add(r.Item1); enc.Add(r.Item2); enc.Add(r.Item3); })
+            .Add(P9.Item1).Add(P9.Item2).Add(P9.Item3).Add(P9.Item4)
             ;
             return enc;
         }
@@ -71,6 +74,14 @@ namespace BiserTest_Net
                     },
                     m.P6, true);
 
+            m.P7 = TS2.BiserDecode(extDecoder: decoder);
+
+            m.P8 = decoder.CheckNull() ? null : new List<Tuple<string, byte[], TS3>>();
+            if (m.P8 != null)
+                decoder.GetCollection
+                    (() => { return new Tuple<string, byte[], TS3>(decoder.GetString(), decoder.GetByteArray(), TS3.BiserDecode(null, decoder)); }, m.P8, true);
+
+            m.P9 = new Tuple<float, TS2, TS3, decimal?>(decoder.GetFloat(), TS2.BiserDecode(null, decoder), TS3.BiserDecode(null, decoder), decoder.GetDecimal_NULL());
 
             return m;
         }

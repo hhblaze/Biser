@@ -10,13 +10,12 @@ namespace BiserTest_Net
     {
         public int P1 { get; set; }
         public int P2 { get; set; }
-
         public decimal P3 { get; set; }
-
         public List<TS2> P4 { get; set; }
-
         public Dictionary<long,TS3> P5 { get; set; }
-
         public Dictionary<uint, List<TS3>> P6 { get; set; }
+        public TS2 P7 { get; set; }
+        public List<Tuple<string,byte[],TS3>> P8 { get; set; }
+        public Tuple<float, TS2, TS3, decimal?> P9 { get; set; }
     }
 }

@@ -10,14 +10,6 @@ namespace BiserTest_Net
     {
         static void Main(string[] args)
         {
-            TS2 ts2 = new TS2()
-            {
-                P1 = long.MinValue,
-                P2 = 4587.4564
-            };
-            //var bt2 = ts2.BiserEncoder().Encode();
-            //TS2 ts2D = TS2.BiserDecode(bt2);
-
             TS3 ts3 = new TS3()
             {
                 P1 = "welldone",
@@ -28,7 +20,18 @@ namespace BiserTest_Net
             //var bt3 = ts3.BiserEncoder().Encode();
             //TS3 ts2D = TS3.BiserDecode(bt3);
 
-
+            TS2 ts2 = new TS2()
+            {
+                P1 = long.MinValue,
+                P2 = 4587.4564,
+                P3 = new List<TS3> {
+                     new TS3 { P3 = DateTime.UtcNow.AddDays(-1) },
+                     new TS3 { P3 = DateTime.UtcNow.AddDays(-2) },
+                     new TS3 { P3 = DateTime.UtcNow.AddDays(-3) }
+                }
+            };
+            //var bt2 = ts2.BiserEncoder().Encode();
+            //TS2 ts2D = TS2.BiserDecode(bt2);
 
             TS1 ts1 = new TS1()
             {
@@ -46,7 +49,14 @@ namespace BiserTest_Net
                     { 2, new List<TS3>{ new TS3 { P1 = "h2" }, new TS3 { P1 = "h2" }, new TS3 { P1 = "h4" } } },
                     { 3, new List<TS3>{ new TS3 { P1 = "h3" }, new TS3 { P1 = "h2" }, new TS3 { P1 = "h5" } } },
                     { 4, new List<TS3>{ new TS3 { P1 = "h4" }, new TS3 { P1 = "h2" }, new TS3 { P1 = "h6" } } }
-                }
+                },
+                P7 = new TS2 { P1 = -789 },
+                P8=new List<Tuple<string, byte[], TS3>> {
+                    new Tuple<string, byte[], TS3>("tt1",new byte[] { 1,2,3},new TS3 { P1 = "z1" }),
+                    new Tuple<string, byte[], TS3>("tt2",new byte[] { 3,2,3},new TS3 { P1 = "z2" }),
+                    new Tuple<string, byte[], TS3>("tt3",new byte[] { 4,2,3},new TS3 { P1 = "z3" }),
+                },
+                P9=new Tuple<float, TS2, TS3, decimal?>(12.8f,new TS2 { P2 = 45 }, new TS3 { P2 = 12 }, -58.8m)
             };
                        
 
