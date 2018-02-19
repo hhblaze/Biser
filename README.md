@@ -29,7 +29,7 @@ For IEnumerable we need to define how to encode its content:
 
 ![dp2](https://github.com/hhblaze/Biser/blob/master/Docu/dp2.jpg?raw=true)
 
-This trick gives us ability to encode any data sequence inside of IEnumerable, e.g:
+This trick gives us an ability to encode any data sequence inside of IEnumerable, e.g:
 
 To encode complex object 
 
