@@ -22,7 +22,7 @@ Use copy-paste from [here](https://github.com/hhblaze/Biser/tree/master/BiserTes
 
 ### Encoding
 
-It’s possible to encode primitive .NET type, IEncode and IEnumerable:
+It’s possible to encode primitive .NET type, IEncoder (custom object) and IEnumerable (with the content of any complexity):
 
 .NET Primitives and IEncode can be just added into encoder.Add function.
 For IEnumerable we need to define how to encode its content:
