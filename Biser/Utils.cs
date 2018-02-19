@@ -1,5 +1,5 @@
 ﻿/* 
-  Copyright (C) 2012 dbreeze.tiesky.com / Alex Solovyov
+  Copyright (C) 2012 tiesky.com / Alex Solovyov
   It's a free software for those, who think that it should be free.
 */
 
