@@ -31,7 +31,8 @@ namespace BiserTest_Net
                 P2 = 4587.4564,
                 P3 = new List<TS3> {
                      new TS3 { P3 = DateTime.UtcNow.AddDays(-1) },
-                     new TS3 { P3 = DateTime.UtcNow.AddDays(-2) },
+                     null,
+                     //new TS3 { P3 = DateTime.UtcNow.AddDays(-2) },
                      new TS3 { P3 = DateTime.UtcNow.AddDays(-3) }
                 },
                 P4 = new TS3 { P1 = "hi" },
