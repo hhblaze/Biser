@@ -35,6 +35,8 @@ namespace BiserTest_Net
                 if (enc == null || enc.Length == 0)
                     return null;
                 decoder = new Biser.Decoder(enc);
+                if (decoder.CheckNull())
+                    return null;
             }
             else
             {

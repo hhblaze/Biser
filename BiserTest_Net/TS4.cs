@@ -1,9 +1,4 @@
-﻿/* 
-  Copyright (C) 2012 tiesky.com / Alex Solovyov
-  It's a free software for those, who think that it should be free.
-*/
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,21 +6,37 @@ using System.Threading.Tasks;
 
 namespace BiserTest_Net
 {
-    public partial class TS3 : Biser.IEncoder
+    public class TS4 : Biser.IEncoder
     {
+        public enum eVoteType
+        {
+            VoteFor,
+            VoteReject
+        }
+        public TS4()
+        {
+            TermId = 0;
+            VoteType = eVoteType.VoteFor;
+        }
+
+        //public ulong TermId { get; set; }
+        public uint TermId { get; set; }
+
+        public eVoteType VoteType { get; set; }
+
+
         public Biser.Encoder BiserEncoder(Biser.Encoder existingEncoder = null)
         {
             Biser.Encoder enc = new Biser.Encoder(existingEncoder);
 
             enc
-            .Add(P1)
-            .Add(P2)
-            .Add(P3)
+            .Add(TermId)
+            .Add((int)VoteType)
             ;
             return enc;
         }
 
-        public static TS3 BiserDecode(byte[] enc = null, Biser.Decoder extDecoder = null) //!!! change return type
+        public static TS4 BiserDecode(byte[] enc = null, Biser.Decoder extDecoder = null) //!!!!!!!!!!!!!! change return type
         {
             Biser.Decoder decoder = null;
             if (extDecoder == null)
@@ -43,11 +54,10 @@ namespace BiserTest_Net
                     return null;
             }
 
-            TS3 m = new TS3();      //!!!!!!!!!!!!!! change return type
+            TS4 m = new TS4();  //!!!!!!!!!!!!!! change return type
 
-            m.P1 = decoder.GetString();
-            m.P2 = decoder.GetInt_NULL();
-            m.P3 = decoder.GetDateTime();
+            m.TermId = decoder.GetUInt();
+            m.VoteType = (eVoteType)decoder.GetInt();
 
             return m;
         }

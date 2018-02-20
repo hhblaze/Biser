@@ -41,9 +41,11 @@ namespace Biser
             this.encoded = encoded;
             if (encoded == null || encoded.Length == 0)
                 return;
+            
 
             this.rootDecoder = this;
             this.activeDecoder = this;
+                      
         }
 
         /// <summary>

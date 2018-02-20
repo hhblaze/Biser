@@ -75,6 +75,7 @@ namespace BiserTest_Net
             //TestMultiDimensionArray
             //TestCustom();
             //TestPrimitives();
+            //TestT4();
 
             Console.ReadLine();
 
@@ -104,6 +105,18 @@ namespace BiserTest_Net
             //var d4 = decoder.GetFloat();
         }
 
+        static void TestT4()
+        {
+            TS4 voc = new TS4()
+            {
+                TermId = 12,
+                VoteType = TS4.eVoteType.VoteReject
+            };
+
+            Biser.Encoder enc = new Biser.Encoder()
+                .Add(voc);            
+            var voc1 = TS4.BiserDecode(enc.Encode());
+        }
 
         static void TestPrimitives()
         {
