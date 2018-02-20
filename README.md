@@ -86,4 +86,9 @@ Deserializing values:
 
 ![dp7](https://github.com/hhblaze/Biser/blob/master/Docu/dp7.jpg?raw=true)
 
+Custom serialization:
+
+![dp8](https://github.com/hhblaze/Biser/blob/master/Docu/dp8.jpg?raw=true)
+![dp9](https://github.com/hhblaze/Biser/blob/master/Docu/dp9.jpg?raw=true)
+
 hhblaze@gmail.com

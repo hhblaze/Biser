@@ -72,7 +72,7 @@ namespace BiserTest_Net
             var bt1 = ts1.BiserEncoder().Encode();
             TS1 ts1D = TS1.BiserDecode(bt1);
 
-
+            TestCustom();
 
 
             Console.ReadLine();
@@ -103,7 +103,69 @@ namespace BiserTest_Net
             //var d4 = decoder.GetFloat();
         }
 
-        void TestMultiDimensionArray()
+        static void TestCustom()
+        {
+            Biser.Encoder en = new Biser.Encoder();
+            List<int> l1 = new List<int> { 1, 2, 3 };
+            List<TS2> l2 = new List<TS2> { new TS2 { P1 = 15 } , new TS2 { P1 = 16 }, new TS2 { P1 = 17 } };
+            DateTime dt = DateTime.UtcNow;
+            decimal d1 = 548.45m;
+            string s1 = "well done";
+            bool? b1 = null;
+            double o1 = 45.7887;
+
+            //It is possible to add IList directly, but we test custom serialization
+            
+            //Skipping saving NULLS
+            //Addin length of the list l1
+            en.Add(l1.Count);
+            //Adding items one by one
+            foreach (var item in l1)
+                en.Add(item);
+            //Addin length of the list l2
+            en.Add(l2.Count);
+            //Adding items one by one
+            foreach (var item in l2)
+                en.Add(item); //item is IEncoder so can be easily added 
+            //adding other elements
+            en.Add(dt);
+            en.Add(d1);
+            en.Add(s1);
+            en.Add(b1);
+            en.Add(o1);
+
+            byte[] btEnc = en.Encode(); //Getting serialized value
+            
+            //Decoding
+            Biser.Decoder dec = new Biser.Decoder(btEnc);
+
+            //No null checks for lists (we didn't save them)
+            //Getting list l1
+            l1 = new List<int>();
+
+            var cnt = dec.GetInt(); //getting count of items - !!!Note!!! don'T put it into for-loop
+
+            for (int i = 0; i < cnt; i++) //reading count of elements
+                l1.Add(dec.GetInt()); //getting items one by one
+            //Getting list l2
+            l2 = new List<TS2>();
+            cnt = dec.GetInt(); //getting count of items
+            for (int i = 0; i < cnt; i++) 
+                //getting items one by one, supplying existing decoder 
+                //to unroll TS2 element
+                l2.Add(TS2.BiserDecode(extDecoder: dec));
+
+            //Getting other elements
+            dt = dec.GetDateTime();
+            d1 = dec.GetDecimal();
+            s1 = dec.GetString();
+            b1 = dec.GetBool_NULL();
+            o1 = dec.GetDouble();
+
+        }
+
+
+        static void TestMultiDimensionArray()
         {
           
 
