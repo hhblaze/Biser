@@ -72,8 +72,9 @@ namespace BiserTest_Net
             var bt1 = ts1.BiserEncoder().Encode();
             TS1 ts1D = TS1.BiserDecode(bt1);
 
+            //TestMultiDimensionArray
             //TestCustom();
-
+            //TestPrimitives();
 
             Console.ReadLine();
 
@@ -113,15 +114,25 @@ namespace BiserTest_Net
             bool? b1 = null;
             double o1 = 45.7887;
 
+            //Adding one by one to encoder
+            en.Add(dt);
+            en.Add(d1);
+            en.Add(s1);
+            en.Add(b1);
+            en.Add(o1);
+
             byte[] btEnc = en.Encode(); //Getting serialized value
 
             //Decoding
-            Biser.Decoder dec = new Biser.Decoder(btEnc);
+            Biser.Decoder dec = new Biser.Decoder(btEnc); //decoder is based on encoded byte[]
+
+            //Decoding one by one in the same sequence
             dt = dec.GetDateTime();
             d1 = dec.GetDecimal();
             s1 = dec.GetString();
             b1 = dec.GetBool_NULL();
             o1 = dec.GetDouble();
+            
         }
 
         static void TestCustom()
