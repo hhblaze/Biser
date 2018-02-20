@@ -1,8 +1,9 @@
 # Biser .NET
 Binary serializer for .NET dotnet ("biser" in Russian means "beads")
 
-Can be an alternative to protobuf-net in some circumstances. 
-Has the same operational speed, smaller payload and 15KB DLL size.
+- Can be an alternative to protobuf-net in some circumstances. 
+- Has the same operational speed as protobuf-net, smaller payload and 15KB DLL size 
+or +8KB to the final compiled length if embedded as source code.
 
 Integrated part of [DBreeze database](https://github.com/hhblaze/DBreeze), used in [Raft.NET](https://github.com/hhblaze/Raft.Net)
 
@@ -68,6 +69,8 @@ IEnumerables can have null values inside:
 
 
 ### Beads on a string. N-dimensional arrays and custom serialization language
+
+![beads](https://github.com/hhblaze/Biser/blob/master/Docu/beads.png?raw=true)
 
 Putting all values that we are interested just one after another like bead on a string, later in the same sequence we will get them back:
 
