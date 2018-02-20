@@ -4,6 +4,15 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>Biser</RootNamespace>
     <AssemblyName>Biser</AssemblyName>
+    <AssemblyVersion>1.1.0.0</AssemblyVersion>
+    <FileVersion>1.1.0.0</FileVersion>
+    <Version>1.1.0</Version>
+    <Authors>tiesky.com / Alex Solovyov</Authors>
+    <Company>tiesky.com</Company>
+    <Description>Biser .NET dotnet binary serializer</Description>
+    <Copyright>tiesky.com / Alex Solovyov</Copyright>
+    <PackageLicenseUrl>https://github.com/hhblaze/Biser/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/hhblaze/Biser</PackageProjectUrl>
   </PropertyGroup>
 
   <ItemGroup>
