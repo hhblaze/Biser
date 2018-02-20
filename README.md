@@ -66,4 +66,17 @@ IEnumerables can have null values inside:
 
 ![dp4](https://github.com/hhblaze/Biser/blob/master/Docu/dp4.jpg?raw=true)
 
+
+### Beads on a string. N-dimensional arrays and custom serialization language
+
+Putting all values that we are interested just one after another like bead on a string, later in the same sequence we will get them back:
+
+[Examples from here](https://github.com/hhblaze/Biser/blob/master/BiserTest_Net/Program.cs)
+
+![dp5](https://github.com/hhblaze/Biser/blob/master/Docu/dp5.jpg?raw=true)
+
+Deserializing values:
+
+![dp6](https://github.com/hhblaze/Biser/blob/master/Docu/dp6.jpg?raw=true)
+
 hhblaze@gmail.com

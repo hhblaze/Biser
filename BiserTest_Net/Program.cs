@@ -67,12 +67,13 @@ namespace BiserTest_Net
                 },
                 P9=new Tuple<float, TS2, TS3, decimal?>(12.8f,new TS2 { P2 = 45 }, new TS3 { P2 = 12 }, -58.8m)
             };
-                       
 
 
             var bt1 = ts1.BiserEncoder().Encode();
             TS1 ts1D = TS1.BiserDecode(bt1);
-            
+
+
+
 
             Console.ReadLine();
 
@@ -101,5 +102,69 @@ namespace BiserTest_Net
             //var d3 = decoder.GetFloat();
             //var d4 = decoder.GetFloat();
         }
+
+        void TestMultiDimensionArray()
+        {
+          
+
+            Biser.Encoder en = new Biser.Encoder();
+            int[,,] ar3 = new int[,,]
+            {
+                {
+                    { 1, 2, 3 },
+                    { 4, 5, 6 }
+                },
+                {
+                    { 7, 8, 9 },
+                    { 10, 11, 12 }
+                }
+            };
+            //ar3 = null; //can be null
+            //ar3[0,1,2] = 6
+            //ar3[1,1,1] = 11
+            //ar3.Rank = 3
+            //ar3.Length = 12
+            //ar3.GetLength(0) = 2
+            //ar3.GetLength(1) = 2
+            //ar3.GetLength(3) = 3
+            //var x = ar3.Length;
+
+            
+            if (ar3 == null)
+                en.Add((byte)1); //Saving isNULL
+            else
+            {
+                en.Add((byte)0); //not null
+                ////Saving array rank (not necessary when we know it)
+                //en.Add(ar3.Rank);
+                //Saving array dimension length  (not necessary when we know it)
+                for (int i = 0; i < ar3.Rank; i++)
+                    en.Add(ar3.GetLength(i));
+                //Saving array values
+                foreach (var el in ar3)
+                    en.Add(el);
+            }
+
+            byte[] btEnc = en.Encode(); //Getting serialized value
+
+            //Restoring values
+            int[,,] ar3clone = null;
+
+            Biser.Decoder dec = new Biser.Decoder(btEnc);
+            //Checking on null
+            if (!dec.CheckNull())
+            {
+
+                ar3clone = new int[dec.GetInt(), dec.GetInt(), dec.GetInt()];
+
+                for (int x = 0; x < ar3clone.GetLength(0); x++)
+                    for (int y = 0; y < ar3clone.GetLength(1); y++)
+                        for (int z = 0; z < ar3clone.GetLength(2); z++)
+                            ar3clone[x, y, z] = dec.GetInt();
+
+            }
+        }
+
+        
     }
 }
