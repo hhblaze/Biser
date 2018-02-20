@@ -21,6 +21,8 @@ Use copy-paste from [here](https://github.com/hhblaze/Biser/tree/master/BiserTes
 
 ![dp1](https://github.com/hhblaze/Biser/blob/master/Docu/dp1.jpg?raw=true)
 
+
+
 ### Encoding
 
 It’s possible to encode primitive .NET type, IEncoder (custom object) and IEnumerable (with the content of any complexity):
@@ -57,6 +59,7 @@ we need to make following
 .Add(P6, (r) => { enc.Add(r.Key); enc.Add(r.Value, (r1) => { enc.Add(r1); }); })
 
 
+
 ### Decoding
 
 Primitive types are decoded in such way [TS1 class decoder example](https://github.com/hhblaze/Biser/blob/master/BiserTest_Net/TS1_Biser.cs):
@@ -66,6 +69,7 @@ Primitive types are decoded in such way [TS1 class decoder example](https://gith
 IEnumerables can have null values inside:
 
 ![dp4](https://github.com/hhblaze/Biser/blob/master/Docu/dp4.jpg?raw=true)
+
 
 
 ### Beads on a string. N-dimensional arrays and custom serialization language
