@@ -6,7 +6,7 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v2.0": {
-      "Biser/1.0.0": {
+      "Biser/1.1.0": {
         "runtime": {
           "Biser.dll": {}
         }
@@ -14,7 +14,7 @@
     }
   },
   "libraries": {
-    "Biser/1.0.0": {
+    "Biser/1.1.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

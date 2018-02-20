@@ -75,7 +75,7 @@ namespace BiserTest_Net
             //TestMultiDimensionArray
             //TestCustom();
             //TestPrimitives();
-            //TestT4();
+            //TestT5();
 
             Console.ReadLine();
 
@@ -105,6 +105,23 @@ namespace BiserTest_Net
             //var d4 = decoder.GetFloat();
         }
 
+        static void TestT5()
+        {
+            //Testing extensions with IDecoder interface
+
+            TS5 voc = new TS5()
+            {
+                TermId = 12,
+                VoteType = TS5.eVoteType.VoteReject
+            };
+           
+            var lst = new List<TS5> { voc, voc, voc };
+            var bt1= Biser.Biser.SerializeBiserList(lst);
+
+            var lst1 = new List<TS5>();
+            Biser.Biser.DeserializeBiserList(bt1, lst1);
+        }
+
         static void TestT4()
         {
             TS4 voc = new TS4()
@@ -114,9 +131,11 @@ namespace BiserTest_Net
             };
 
             Biser.Encoder enc = new Biser.Encoder()
-                .Add(voc);            
+                .Add(voc);
+
             var voc1 = TS4.BiserDecode(enc.Encode());
         }
+
 
         static void TestPrimitives()
         {

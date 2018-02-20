@@ -51,6 +51,7 @@
     <Compile Include="TS3.cs" />
     <Compile Include="TS3_Biser.cs" />
     <Compile Include="TS4.cs" />
+    <Compile Include="TS5.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

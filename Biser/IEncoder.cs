@@ -10,6 +10,11 @@ namespace Biser
 {
     public interface IEncoder
     {
-        Encoder BiserEncoder(Encoder existingEncoder = null);        
+        Encoder BiserEncoder(Encoder existingEncoder = null);       
+    }
+
+    public interface IDecoder
+    {
+        object BiserDecoderV1(Decoder extDecoder);
     }
 }

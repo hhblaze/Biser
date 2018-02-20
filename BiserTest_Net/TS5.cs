@@ -7,14 +7,18 @@ using Biser;
 
 namespace BiserTest_Net
 {
-    public class TS4 : Biser.IEncoder
+    /// <summary>
+    /// NOT A TEMPLATE, testing Biser.IDecoder
+    /// Testing 
+    /// </summary>
+    public class TS5 : Biser.IEncoder, Biser.IDecoder
     {
         public enum eVoteType
         {
             VoteFor,
             VoteReject
         }
-        public TS4()
+        public TS5()
         {
             TermId = 0;
             VoteType = eVoteType.VoteFor;
@@ -37,7 +41,7 @@ namespace BiserTest_Net
             return enc;
         }
 
-        public static TS4 BiserDecode(byte[] enc = null, Biser.Decoder extDecoder = null) //!!!!!!!!!!!!!! change return type
+        public static TS5 BiserDecode(byte[] enc = null, Biser.Decoder extDecoder = null) //!!!!!!!!!!!!!! change return type
         {
             Biser.Decoder decoder = null;
             if (extDecoder == null)
@@ -55,13 +59,22 @@ namespace BiserTest_Net
                     return null;
             }
 
-            TS4 m = new TS4();  //!!!!!!!!!!!!!! change return type
+            TS5 m = new TS5();  //!!!!!!!!!!!!!! change return type
 
             m.TermId = decoder.GetUInt();
             m.VoteType = (eVoteType)decoder.GetInt();
 
             return m;
         }
-       
+
+        /// <summary>
+        /// To create extension (check IDecoder interface implementaiton and Program.)
+        /// </summary>
+        /// <param name="extDecoder"></param>
+        /// <returns></returns>
+        public object BiserDecoderV1(Biser.Decoder extDecoder)
+        {
+            return TS5.BiserDecode(null, extDecoder);
+        }
     }
 }
