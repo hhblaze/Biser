@@ -72,7 +72,7 @@ namespace BiserTest_Net
             var bt1 = ts1.BiserEncoder().Encode();
             TS1 ts1D = TS1.BiserDecode(bt1);
 
-            TestCustom();
+            //TestCustom();
 
 
             Console.ReadLine();
@@ -101,6 +101,27 @@ namespace BiserTest_Net
             //var d2 = decoder.GetFloat();
             //var d3 = decoder.GetFloat();
             //var d4 = decoder.GetFloat();
+        }
+
+
+        static void TestPrimitives()
+        {
+            Biser.Encoder en = new Biser.Encoder();
+            DateTime dt = DateTime.UtcNow;
+            decimal d1 = 548.45m;
+            string s1 = "well done";
+            bool? b1 = null;
+            double o1 = 45.7887;
+
+            byte[] btEnc = en.Encode(); //Getting serialized value
+
+            //Decoding
+            Biser.Decoder dec = new Biser.Decoder(btEnc);
+            dt = dec.GetDateTime();
+            d1 = dec.GetDecimal();
+            s1 = dec.GetString();
+            b1 = dec.GetBool_NULL();
+            o1 = dec.GetDouble();
         }
 
         static void TestCustom()
@@ -162,6 +183,7 @@ namespace BiserTest_Net
             b1 = dec.GetBool_NULL();
             o1 = dec.GetDouble();
 
+            //done
         }
 
 

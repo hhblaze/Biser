@@ -16,6 +16,12 @@ Integrated part of [DBreeze database](https://github.com/hhblaze/DBreeze), used 
 -------------
 ### Getting started
 
+#### From simple to complex. Encoding .NET Primitives
+
+![dp10](https://github.com/hhblaze/Biser/blob/master/Docu/dp10.jpg?raw=true)
+
+#### Encoding custom objects
+
 In Biser serializing and deserializing functions (encoding/decoding) are supplied together with POCO class (A Plain Old CLR Objects) as a partial class extension. 
 These functions are very simple and are built up with the help of Biser existing primitives.
 
