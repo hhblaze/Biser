@@ -78,7 +78,7 @@ IEnumerables can have null values inside:
 
 ![beads](https://github.com/hhblaze/Biser/blob/master/Docu/beads.png?raw=true)
 
-Putting all values that we are interested just one after another like bead on a string, later in the same sequence we will get them back:
+Putting all values that we are interested just one after another like beads on a string, later in the same sequence we will get them back:
 
 [Examples from here](https://github.com/hhblaze/Biser/blob/master/BiserTest_Net/Program.cs)
 
