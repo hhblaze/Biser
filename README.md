@@ -77,6 +77,6 @@ Putting all values that we are interested just one after another like bead on a 
 
 Deserializing values:
 
-![dp6](https://github.com/hhblaze/Biser/blob/master/Docu/dp6.jpg?raw=true)
+![dp7](https://github.com/hhblaze/Biser/blob/master/Docu/dp7.jpg?raw=true)
 
 hhblaze@gmail.com
