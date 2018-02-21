@@ -3,8 +3,9 @@ Binary serializer for .NET dotnet ("biser" in Russian means "beads")
 
 - Can be an alternative to protobuf-net in some circumstances. 
 - Has the same operational speed as protobuf-net, smaller payload and 15KB DLL size 
-or +8KB to the final compiled length if embedded as source code.
+or +8KB to the final compiled length, when embedded as a source code.
 - Has custom encoding possibilities of any complexity.
+- Thread safe. No need to "warm up" serializing/encoding entites.
 - Managed code without external references.
 
 Integrated part of [DBreeze database](https://github.com/hhblaze/DBreeze), used in [Raft.NET](https://github.com/hhblaze/Raft.Net)
