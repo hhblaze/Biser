@@ -123,6 +123,7 @@ namespace BiserTest_Net
             enc.Add(new Dictionary<uint, TS4> { { 1, new TS4 { TermId = 1 } }, { 2, new TS4 { TermId = 5 } } }
             , r => { enc.Add(r.Key); enc.Add(r.Value); });
 
+            enc.Add(new TS4 { TermId = 188 });
 
             //Decoding
 
@@ -178,6 +179,7 @@ namespace BiserTest_Net
                     Console.WriteLine(item.Key + "; " + item.Value.TermId);
             }
 
+            Console.WriteLine(TS4.BiserDecode(extDecoder: decoder).TermId);
         }
 
 
