@@ -42,6 +42,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Biser\BiserExtensions.cs">
+      <Link>BiserExtensions.cs</Link>
+    </Compile>
     <Compile Include="..\Biser\Decoder.cs">
       <Link>Decoder.cs</Link>
     </Compile>

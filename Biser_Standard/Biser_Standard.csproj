@@ -16,6 +16,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="..\Biser\BiserExtensions.cs" Link="BiserExtensions.cs" />
     <Compile Include="..\Biser\Decoder.cs" Link="Decoder.cs" />
     <Compile Include="..\Biser\Encoder.cs" Link="Encoder.cs" />
     <Compile Include="..\Biser\IEncoder.cs" Link="IEncoder.cs" />

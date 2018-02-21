@@ -4,9 +4,8 @@
 */
 
 using System;
-using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
+
 
 namespace Biser
 {
@@ -64,59 +63,5 @@ namespace Biser
         }
 
 
-
-        #region "testing extensions"
-        public static byte[] SerializeBiser(this IEncoder obj)
-        {
-            return new Encoder().Add(obj).Encode();
-        }
-
-        public static byte[] SerializeBiserList(this IEnumerable<IEncoder> objs)
-        {
-            //Check DeserializeBiserList
-
-            var en = new Encoder();
-            en.Add(objs, r => { en.Add(r); });
-            return en.Encode();
-        }
-        
-        public static void DeserializeBiserList<T>(byte[] enc, IList<T> lst)
-        {
-            //Emulates extension for fast encoding/decoding list
-            //Of course, not so efficeint, because of GetInstanceCreator and a serie of casts
-
-            /*
-              TS5 voc = new TS5()
-            {
-                TermId = 12,
-                VoteType = TS5.eVoteType.VoteReject
-            };
-           
-            var lst = new List<TS5> { voc, voc, voc };
-            var bt1= Biser.Biser.SerializeBiserList(lst);
-
-            var lst1 = new List<TS5>();
-            Biser.Biser.DeserializeBiserList(bt1, lst1);             
-             */
-
-            var decoder = new Decoder(enc);
-            var o = GetInstanceCreator(typeof(T))();
-            decoder.GetCollection(() => { return (T)(((IDecoder)o).BiserDecoderV1(decoder)); }, lst, false);
-        }
-
-        /// <summary>
-        /// Creates an instance type
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        public static Func<object> GetInstanceCreator(Type type)
-        {
-            var constructorCallExpression = Expression.New(type);
-            var constructorCallingLambda = Expression
-                .Lambda<Func<object>>(constructorCallExpression)
-                .Compile();
-            return constructorCallingLambda;
-        }
-        #endregion
     }
 }

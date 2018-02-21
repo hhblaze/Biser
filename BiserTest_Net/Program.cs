@@ -9,6 +9,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Biser;
+
 namespace BiserTest_Net
 {
     class Program
@@ -75,7 +77,7 @@ namespace BiserTest_Net
             //TestMultiDimensionArray
             //TestCustom();
             //TestPrimitives();
-            //TestT5();
+            TestT5();
             //TestListDictionary();
 
             Console.ReadLine();
@@ -194,11 +196,9 @@ namespace BiserTest_Net
                 VoteType = TS5.eVoteType.VoteReject
             };
            
-            var lst = new List<TS5> { voc, voc, voc };
-            var bt1= Biser.Biser.SerializeBiserList(lst);
-
-            var lst1 = new List<TS5>();
-            Biser.Biser.DeserializeBiserList(bt1, lst1);
+            var lst = new List<TS5> { voc, voc, voc };            
+            var btEn = lst.BiserEncode();            
+            var lst1 = btEn.BiserDecodeList<TS5>();            
         }
 
         static void TestT4()

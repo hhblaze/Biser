@@ -68,13 +68,23 @@ namespace BiserTest_Net
         }
 
         /// <summary>
-        /// To create extension (check IDecoder interface implementaiton and Program.)
+        /// To create extensions (check IDecoder interface implementaiton, Program.cs and BiserExtension.cs)
         /// </summary>
         /// <param name="extDecoder"></param>
         /// <returns></returns>
-        public object BiserDecoderV1(Biser.Decoder extDecoder)
+        public object BiserDecodeToObect(Biser.Decoder extDecoder)
         {
             return TS5.BiserDecode(null, extDecoder);
+        }
+
+        /// <summary>
+        /// To create extensions (check IDecoder interface implementaiton, Program.cs and BiserExtension.cs)
+        /// </summary>
+        /// <param name="enc"></param>
+        /// <returns></returns>
+        public object BiserDecodeToObect(byte[] encoded)
+        {
+            return TS5.BiserDecode(encoded);
         }
     }
 }
