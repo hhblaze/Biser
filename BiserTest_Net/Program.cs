@@ -77,7 +77,7 @@ namespace BiserTest_Net
             //TestMultiDimensionArray
             //TestCustom();
             //TestPrimitives();
-            TestT5();
+            //TestT5();
             //TestListDictionary();
 
             Console.ReadLine();

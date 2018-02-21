@@ -57,9 +57,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Biser_Net\Biser_Net.csproj">
+    <ProjectReference Include="..\Biser\Biser.csproj">
       <Project>{095e58f4-b9c1-4032-a389-c2e5aee0bb60}</Project>
-      <Name>Biser_Net</Name>
+      <Name>Biser</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
