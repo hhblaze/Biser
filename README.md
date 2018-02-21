@@ -183,6 +183,7 @@ Integrated encoder.Add(IEnumerable) doesn’t know the length of the collection 
 effectively storing all necessary information without iterating collection twice.
 
 
+-------------
 ### Biser extensions
 
 There is a set of useful extensions are concentrated in [BiserExtensions.cs](https://github.com/hhblaze/Biser/blob/master/Biser/BiserExtensions.cs)
