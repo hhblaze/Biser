@@ -185,9 +185,9 @@ effectively storing all necessary information without iterating collection twice
 
 ### Biser extensions
 
-There is a set of useful extensions are concentrated in BiserExtensions.cs
+There is a set of useful extensions are concentrated in [BiserExtensions.cs](https://github.com/hhblaze/Biser/blob/master/Biser/BiserExtensions.cs)
 
-It can be copied and pasted into your project or used directly from DLL. Note that decoding extensions based on IDecoder interface for custom objects.
+It can be copied and pasted into your project or used directly from DLL. Note that decoding extensions based on [IDecoder](https://github.com/hhblaze/Biser/blob/master/Biser/IEncoder.cs) interface for custom objects.
 Also automatic creation of instances (like in Biser.BiserExtensions.BiserDecodeList example) is not always efficient as an explicit instance creation, 
 though for someone it can be very handy.
 
