@@ -20,6 +20,81 @@ Integrated part of [DBreeze database](https://github.com/hhblaze/DBreeze), used 
 
 ![dp10](https://github.com/hhblaze/Biser/blob/master/Docu/dp10.jpg?raw=true)
 
+```C#
+        static void TestListDictionary()
+        {
+            //Encoding
+            Biser.Encoder enc = new Biser.Encoder();
+            enc.Add((int)123);            
+            enc.Add(new List<string> { "Hi", "there" }, r => { enc.Add(r); });
+            enc.Add((float)-458.4f);
+
+            enc.Add(new Dictionary<uint, string> { { 1, "Well" }, { 2, "done" } }
+           , r => { enc.Add(r.Key); enc.Add(r.Value); });
+
+            enc.Add((decimal)-587.7m);
+
+            //TS4 implements IEncoder
+            enc.Add(new Dictionary<uint, TS4> { { 1, new TS4 { TermId = 1 } }, { 2, new TS4 { TermId = 5 } } }
+            , r => { enc.Add(r.Key); enc.Add(r.Value); });
+
+
+            //Decoding
+
+            var decoder = new Biser.Decoder(enc.Encode());
+
+            Console.WriteLine(decoder.GetInt());
+
+
+            //////Alternative to the following instruction. Slower than supplying List directly
+            ////foreach (var item in decoder.GetCollection().Select(r => r.GetString()))
+            ////{
+            ////    Console.WriteLine(item);
+            ////}
+
+            List<string> lst = decoder.CheckNull() ? null : new List<string>();      
+            if (lst != null)
+            {
+                decoder.GetCollection(() => { return decoder.GetString(); }, lst, true);
+                foreach (var item in lst)
+                    Console.WriteLine(item);
+            }
+
+            Console.WriteLine(decoder.GetFloat());
+
+
+            ////////Alternative to the following instruction. Slower than supplying Dictionary directly
+            //////foreach (var item in decoder.GetCollection())
+            //////{
+            //////    Console.WriteLine($"K: {item.GetUInt()}; V: {item.GetString()}");
+            //////}
+
+            Dictionary<uint, string> d1 = decoder.CheckNull() ? null : new Dictionary<uint, string>();
+            if (d1 != null)
+            {
+                decoder.GetCollection(
+                    () => { return decoder.GetUInt(); },
+                    () => { return decoder.GetString(); },
+                    d1, true);
+                foreach (var item in d1)
+                    Console.WriteLine(item.Key + "; " + item.Value);
+            }
+
+            Console.WriteLine(decoder.GetDecimal());
+
+            Dictionary<uint, TS4> d2 = decoder.CheckNull() ? null : new Dictionary<uint, TS4>();
+            if (d2 != null)
+            {
+                decoder.GetCollection(
+                    () => { return decoder.GetUInt(); },
+                    () => { return TS4.BiserDecode(extDecoder: decoder); },
+                    d2, true);
+                foreach (var item in d2)
+                    Console.WriteLine(item.Key + "; " + item.Value.TermId);
+            }
+
+        }
+```
 #### Encoding custom objects
 
 In Biser serializing and deserializing functions (encoding/decoding) are supplied together with POCO class (A Plain Old CLR Objects) as a partial class extension. 
