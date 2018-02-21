@@ -109,9 +109,8 @@ namespace BiserTest_Net
             //var d4 = decoder.GetFloat();
         }
 
-
         static void TestBE1()
-        {
+        {            
             //Testing slower biser extensions
             var ttz= ((int)15).BiserEncode();
             var btx = (new HashSet<TS5> { new TS5 { TermId = 15 }, new TS5 { TermId = 16 }, new TS5 { TermId = 17 } }).BiserEncodeList();

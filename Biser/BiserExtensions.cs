@@ -13,103 +13,23 @@ namespace Biser
 
     public static class BiserExtensions
     {
-        static Dictionary<Type, Tuple<Action<Encoder, object>, Func<Decoder, object>>> dCoders = new Dictionary<Type, Tuple<Action<Encoder, object>, Func<Decoder, object>>>();
-        static object lock_dCoders = new object();
-        static Type TIDecoder = typeof(IDecoder);
-        static Type TIEncoder = typeof(IEncoder);
+       
 
         public static byte[] BiserEncodeList<T>(this IEnumerable<T> objs)
-        {
-            Tuple<Action<Encoder, object>, Func<Decoder, object>> f = null;
-            Type t = typeof(T);
-            //Check BiserDecodeList
+        {               
+            Tuple<Action<Encoder, object>, Func<Decoder, object>> f = GetTypeOfCollection<T>();         
             var enc = new Encoder();
-
-            if (dCoders.TryGetValue(t, out f))
-            {
-                enc.Add(objs, r => { f.Item1(enc,r); });
-                return enc.Encode();
-            }                
-
-            if (TIEncoder.IsAssignableFrom(t))
-            {
-                f = new Tuple<Action<Encoder, object>, Func<Decoder, object>>(
-                    (e, o) =>
-                    {
-                        e.Add((IEncoder)o);
-                    },
-                    (d) => {
-                        if (TIDecoder.IsAssignableFrom(t))
-                            return (T)(((IDecoder)GetInstanceCreator(typeof(T))()).BiserDecodeToObject(d));
-                        else
-                            throw new Exception($"Biser: type {t.ToString()} doesn't implement IDecoder");                        
-                    });
-
-                lock(lock_dCoders)
-                    dCoders[t] = f;
-
-                enc.Add(objs, r => { f.Item1(enc, r); });
-                return enc.Encode();
-            }
-
-            FillDecoder();
-
-            if (dCoders.TryGetValue(t, out f))
-            {
-                enc.Add(objs, r => { f.Item1(enc, r); });
-                return enc.Encode();
-            }
-
-            throw new Exception($"Biser: type {t.ToString()} doesn't implement IEncoder");
+            enc.Add(objs, r => { f.Item1(enc, r); });
+            return enc.Encode();            
         }
 
 
         public static byte[] BiserEncode<T>(this T obj)
         {
-                        
-            Type t = typeof(T);          
-            Tuple<Action<Encoder, object>, Func<Decoder, object>> f = null;
-
-            //Check BiserDecodeList
+            Tuple<Action<Encoder, object>, Func<Decoder, object>> f = GetTypeOfCollection<T>();
             var enc = new Encoder();
-
-            if (dCoders.TryGetValue(t, out f))
-            {
-                f.Item1(enc, obj);
-                return enc.Encode();
-            }
-
-            if (TIEncoder.IsAssignableFrom(t))
-            {
-                f = new Tuple<Action<Encoder, object>, Func<Decoder, object>>(
-                    (e, o) =>
-                    {
-                        e.Add((IEncoder)o);
-                    },
-                    (d) => {
-                        if (TIDecoder.IsAssignableFrom(t))
-                            return (T)(((IDecoder)GetInstanceCreator(typeof(T))()).BiserDecodeToObject(d));
-                        else
-                            throw new Exception($"Biser: type {t.ToString()} doesn't implement IDecoder");
-                    });
-
-                lock (lock_dCoders)
-                    dCoders[t] = f;
-
-                f.Item1(enc, obj);
-                return enc.Encode();
-            }
-
-            FillDecoder();
-
-            if (dCoders.TryGetValue(t, out f))
-            {
-                f.Item1(enc, obj);
-                return enc.Encode();
-            }
-
-            throw new Exception($"Biser: type {t.ToString()} doesn't implement IEncoder");
-
+            f.Item1(enc, obj);
+            return enc.Encode();
         }
 
 
@@ -135,172 +55,94 @@ namespace Biser
         /// <returns></returns>
         public static T BiserDecode<T>(this Decoder decoder)
         {
-            Tuple<Action<Encoder,object>, Func<Decoder, object>> f = null;
-            Type t = typeof(T);            
-            
-            if (dCoders.TryGetValue(t, out f))
-                return (T)f.Item2(decoder);
-
-            if (TIDecoder.IsAssignableFrom(t))
-            {
-                f = new Tuple<Action<Encoder, object>, Func<Decoder, object>>(
-                    (e, o) =>
-                    {
-                        if (TIEncoder.IsAssignableFrom(t))
-                            e.Add((IEncoder)o);
-                        else
-                            throw new Exception($"Biser: type {t.ToString()} doesn't implement IEncoder");
-                    },
-                    (d) =>
-                    {
-                        return (T)(((IDecoder)GetInstanceCreator(typeof(T))()).BiserDecodeToObject(d));
-                    }
-                );
-
-                lock (lock_dCoders)
-                    dCoders[t] = f;
-
-                return (T)f.Item2(decoder);              
-            }
-
-            FillDecoder();
-
-            if (dCoders.TryGetValue(t, out f))
-                return (T)f.Item2(decoder);
-
-            throw new Exception($"Biser: type {t.ToString()} doesn't implement IDecoder");
+            Tuple<Action<Encoder, object>, Func<Decoder, object>> f = GetTypeOfCollection<T>();
+            return (T)f.Item2(decoder);            
         }
 
         public static List<T> BiserDecodeList<T>(this byte[] enc)
-        {
-            //Emulates extension for fast encoding/decoding list
-            //Of course, NOT SO EFFICIENT as an explicit instance creation because of GetInstanceCreator and a serie of casts
-
-            /*
-             TS5 voc = new TS5()
-            {
-                TermId = 12,
-                VoteType = TS5.eVoteType.VoteReject
-            };
-           
-            var lst = new List<TS5> { voc, voc, voc };            
-            var btEn = lst.BiserEncode();            
-            var lst1 = btEn.BiserDecodeList<TS5>();  
-            
-             */
-
+        { 
             if (enc == null)
                 return null;
-
-            Tuple<Action<Encoder, object>, Func<Decoder, object>> f = null;
-            Type t = typeof(T);
-
+            
             var t1 = (List<T>)GetInstanceCreator(typeof(List<T>))();
             var decoder = new Decoder(enc);
-            
-            if (dCoders.TryGetValue(t, out f))
-            {
-                decoder.GetCollection(() => { return (T)f.Item2(decoder); }, t1, false);
-                return t1;
-            }
-
-            if (TIDecoder.IsAssignableFrom(t))
-            {
-                f = new Tuple<Action<Encoder, object>, Func<Decoder, object>>(
-                (e, o) =>
-                {
-                    if (TIEncoder.IsAssignableFrom(t))
-                        e.Add((IEncoder)o);
-                    else
-                        throw new Exception($"Biser: type {t.ToString()} doesn't implement IEncoder");
-                },
-                (d) =>
-                {
-                    return (T)(((IDecoder)GetInstanceCreator(typeof(T))()).BiserDecodeToObject(d));
-                });
-
-                lock (lock_dCoders)
-                    dCoders[t] = f;
-
-                decoder.GetCollection(() => { return (T)f.Item2(decoder); }, t1, false);
-                return t1;
-            }
-
-            FillDecoder();
-
-            if (dCoders.TryGetValue(t, out f))
-            {
-                decoder.GetCollection(() => { return (T)f.Item2(decoder); }, t1, false);
-                return t1;
-            }
-
-            throw new Exception($"Biser: type {t.ToString()} doesn't implement IDecoder");
+            Tuple<Action<Encoder, object>, Func<Decoder, object>> f = GetTypeOfCollection<T>();
+            decoder.GetCollection(() => { return (T)f.Item2(decoder); }, t1, false);
+            return t1;
         }
 
         public static HashSet<T> BiserDecodeHashSet<T>(this byte[] enc)
         {
-            //Emulates extension for fast encoding/decoding hashset
-            //Of course, NOT SO EFFICIENT as an explicit instance creation because of GetInstanceCreator and a serie of casts
-
             if (enc == null)
                 return null;
 
-            Tuple<Action<Encoder, object>, Func<Decoder, object>> f = null;
-            Type t = typeof(T);
-
             var t1 = (HashSet<T>)GetInstanceCreator(typeof(HashSet<T>))();
             var decoder = new Decoder(enc);
+            Tuple<Action<Encoder, object>, Func<Decoder, object>> f = GetTypeOfCollection<T>();
+            decoder.GetCollection(() => { return (T)f.Item2(decoder); }, t1, false);
+            return t1;            
+        }
+
+
+        #region "Technical block"
+        
+
+        static Dictionary<Type, Tuple<Action<Encoder, object>, Func<Decoder, object>>> dCoders = new Dictionary<Type, Tuple<Action<Encoder, object>, Func<Decoder, object>>>();
+        static object lock_dCoders = new object();
+        static Type TIDecoder = typeof(IDecoder);
+        static Type TIEncoder = typeof(IEncoder);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        static Tuple<Action<Encoder, object>, Func<Decoder, object>> GetTypeOfCollection<T>()
+        {
+            Type t = typeof(T);
+            Tuple<Action<Encoder, object>, Func<Decoder, object>> f = null;
 
             if (dCoders.TryGetValue(t, out f))
-            {
-                decoder.GetCollection(() => { return (T)f.Item2(decoder); }, t1, false);
-                return t1;
-            }
+                return f;
 
-            if (TIDecoder.IsAssignableFrom(t))
+            if (TIEncoder.IsAssignableFrom(t))
             {
                 f = new Tuple<Action<Encoder, object>, Func<Decoder, object>>(
-                (e, o) =>
-                {
-                    if (TIEncoder.IsAssignableFrom(t))
+                    (e, o) =>
+                    {
                         e.Add((IEncoder)o);
-                    else
-                        throw new Exception($"Biser: type {t.ToString()} doesn't implement IEncoder");
-                },
-                (d) =>
-                {
-                    return (T)(((IDecoder)GetInstanceCreator(typeof(T))()).BiserDecodeToObject(d));
-                });
+                    },
+                    (d) => {
+                        if (TIDecoder.IsAssignableFrom(t))
+                            return (T)(((IDecoder)GetInstanceCreator(typeof(T))()).BiserDecodeToObject(d));
+                        else
+                            throw new Exception($"Biser: type {t.ToString()} doesn't implement IDecoder");
+                    });
 
                 lock (lock_dCoders)
                     dCoders[t] = f;
-
-                decoder.GetCollection(() => { return (T)f.Item2(decoder); }, t1, false);
-                return t1;
+                return f;
             }
 
             FillDecoder();
 
             if (dCoders.TryGetValue(t, out f))
-            {
-                decoder.GetCollection(() => { return (T)f.Item2(decoder); }, t1, false);
-                return t1;
-            }
+                return f;
 
-            throw new Exception($"Biser: type {t.ToString()} doesn't implement IDecoder");
+            throw new Exception($"Biser: type {t.ToString()} doesn't implement IEncoder");
+
+
         }
 
 
         static void FillDecoder()
-        {
-            if (dCoders.Count > 0)
-                return;
-
+        {           
             lock (lock_dCoders)
             {
                 if (dCoders.ContainsKey(typeof(long)))
                     return;
-
+                
                 dCoders[typeof(long)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((long)o); }, (d) => { return d.GetLong(); });
                 dCoders[typeof(long?)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((long?)o); }, (d) => { return d.GetLong_NULL(); });
                 dCoders[typeof(int)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((int)o); }, (d) => { return d.GetInt(); });
@@ -335,9 +177,7 @@ namespace Biser
                 dCoders[typeof(Guid?)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((Guid?)o); }, (d) => { return d.GetGuid_NULL(); });
             }
         }
-
-
-
+        
 
         /// <summary>
         /// Holder of compiled instance creators
@@ -360,5 +200,7 @@ namespace Biser
             dInstanceCreator[type] = constructorCallingLambda;
             return constructorCallingLambda;
         }
+
+        #endregion
     }
 }
