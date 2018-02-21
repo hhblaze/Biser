@@ -179,7 +179,7 @@ Custom serialization:
 ![dp8](https://github.com/hhblaze/Biser/blob/master/Docu/dp8.jpg?raw=true)
 ![dp9](https://github.com/hhblaze/Biser/blob/master/Docu/dp9.jpg?raw=true)
 
-If the length of the collection is known in advance, it is possible to economize 1 byte for NULL representation and add collection length as -1.
+If the length of the collection is known in advance, it is possible to economize 1 byte for NULL representation by adding collection length equal to -1.
 Integrated encoder.Add(IEnumerable) doesn’t know the length of the collection in advance and works a bit different than in this example,
 effectively storing all necessary information without iterating collection twice.
 
