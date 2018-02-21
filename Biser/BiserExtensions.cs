@@ -14,7 +14,7 @@ namespace Biser
 
         public static byte[] BiserEncode(this IEnumerable<IEncoder> objs)
         {
-            //Check DeserializeBiserList
+            //Check BiserDecodeList
 
             var en = new Encoder();
             en.Add(objs, r => { en.Add(r); });
@@ -24,7 +24,7 @@ namespace Biser
         public static List<T> BiserDecodeList<T>(this byte[] enc)
         {
             //Emulates extension for fast encoding/decoding list
-            //Of course, NOT SO EFFICIENT, because of GetInstanceCreator and a serie of casts
+            //Of course, NOT SO EFFICIENT as an explicit instance creation because of GetInstanceCreator and a serie of casts
 
             /*
              TS5 voc = new TS5()
@@ -46,7 +46,7 @@ namespace Biser
 
             var decoder = new Decoder(enc);
             var o = GetInstanceCreator(typeof(T))();
-            decoder.GetCollection(() => { return (T)(((IDecoder)o).BiserDecodeToObect(decoder)); }, t1, false);
+            decoder.GetCollection(() => { return (T)(((IDecoder)o).BiserDecodeToObject(decoder)); }, t1, false);
             return t1;
             
         }

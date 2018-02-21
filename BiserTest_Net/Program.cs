@@ -188,7 +188,7 @@ namespace BiserTest_Net
 
         static void TestT5()
         {
-            //Testing extensions with IDecoder interface
+            //Testing extensions with IDecoder and Biser.Extension interface
 
             TS5 voc = new TS5()
             {

@@ -72,7 +72,7 @@ namespace BiserTest_Net
         /// </summary>
         /// <param name="extDecoder"></param>
         /// <returns></returns>
-        public object BiserDecodeToObect(Biser.Decoder extDecoder)
+        public object BiserDecodeToObject(Biser.Decoder extDecoder)
         {
             return TS5.BiserDecode(null, extDecoder);
         }
@@ -82,7 +82,7 @@ namespace BiserTest_Net
         /// </summary>
         /// <param name="enc"></param>
         /// <returns></returns>
-        public object BiserDecodeToObect(byte[] encoded)
+        public object BiserDecodeToObject(byte[] encoded)
         {
             return TS5.BiserDecode(encoded);
         }

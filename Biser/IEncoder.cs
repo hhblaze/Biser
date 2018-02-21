@@ -15,7 +15,7 @@ namespace Biser
 
     public interface IDecoder
     {
-        object BiserDecodeToObect(Decoder extDecoder);
-        object BiserDecodeToObect(byte[] encoded);
+        object BiserDecodeToObject(Decoder extDecoder);
+        object BiserDecodeToObject(byte[] encoded);
     }
 }
