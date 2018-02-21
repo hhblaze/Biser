@@ -185,7 +185,12 @@ namespace Biser
         /// <param name="isNullChecked"></param>
         public void GetCollection<K>(Func<K> fk, IList<K> lst, bool isNullChecked = false)
         {
-            GetCollection(fk, fk, null, lst, isNullChecked);
+            GetCollection(fk, fk, null, lst, null, isNullChecked);
+        }
+
+        public void GetCollection<K>(Func<K> fk, ISet<K> set, bool isNullChecked = false)
+        {
+            GetCollection(fk, fk, null, null, set,  isNullChecked);
         }
 
         /// <summary>
@@ -199,10 +204,10 @@ namespace Biser
         /// <param name="isNullChecked"></param>
         public void GetCollection<K, V>(Func<K> fk, Func<V> fv, IDictionary<K, V> dict, bool isNullChecked = false)
         {
-            GetCollection(fk, fv, dict, null, isNullChecked);
+            GetCollection(fk, fv, dict, null, null, isNullChecked);
         }
 
-        void GetCollection<K, V>(Func<K> fk, Func<V> fv, IDictionary<K, V> dict, IList<K> lst, bool isNullChecked = false)
+        void GetCollection<K, V>(Func<K> fk, Func<V> fv, IDictionary<K, V> dict, IList<K> lst, ISet<K> set, bool isNullChecked = false)
         {
             ulong prot = 0;
             if (!isNullChecked)
@@ -213,7 +218,7 @@ namespace Biser
                 if (!collectionIsFinished)
                 {
                     Decoder nDecoder = new Decoder(this, true);
-                    nDecoder.GetCollection(fk, fv, dict, lst, isNullChecked);
+                    nDecoder.GetCollection(fk, fv, dict, lst, set, isNullChecked);
                     return;
                 }
 
@@ -245,10 +250,16 @@ namespace Biser
 
                 while (true)
                 {
-                    if (lst == null)
-                        dict.Add(fk(), fv());
+                    if(dict == null)
+                    {
+                        if (lst == null)
+                            set.Add(fk());
+                        else
+                            lst.Add(fk());
+                    }
                     else
-                        lst.Add(fk());
+                        dict.Add(fk(), fv());
+
 
                     if ((this.rootDecoder.encPos - (cp - collectionShift)) == collectionLength)
                     {
@@ -476,6 +487,20 @@ namespace Biser
             }
 
             return ret;
+        }
+
+        public Guid GetGuid()
+        {
+            var res = GetByteArray();         
+            return new Guid(res);
+        }
+
+        public Guid? GetGuid_NULL()
+        {
+            var res = GetByteArray();
+            if (res == null)
+                return null;
+            return new Guid(res);
         }
 
     }//eoc Decoder

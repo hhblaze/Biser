@@ -379,6 +379,22 @@ namespace Biser
             return Add(value.To_UTF8Bytes());
         }
 
+        public Encoder Add(Guid guid)
+        {           
+            return Add(guid.ToByteArray());
+        }
+
+        public Encoder Add(Guid? guid)
+        {
+            if (guid == null)
+            {
+                ms.Write(new byte[] { 1 }, 0, 1);
+                return this;
+            }
+
+            return Add(((Guid)guid).ToByteArray());
+        }
+
         public Encoder Add(byte[] value)
         {
             if (value == null)

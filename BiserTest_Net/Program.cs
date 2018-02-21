@@ -77,6 +77,7 @@ namespace BiserTest_Net
             //TestMultiDimensionArray
             //TestCustom();
             //TestPrimitives();
+            TestBE1();
             //TestT5();
             //TestListDictionary();
 
@@ -107,6 +108,18 @@ namespace BiserTest_Net
             //var d3 = decoder.GetFloat();
             //var d4 = decoder.GetFloat();
         }
+
+
+        static void TestBE1()
+        {
+            //Testing slower biser extensions
+            var ttz= ((int)15).BiserEncode();
+            var btx = (new HashSet<TS5> { new TS5 { TermId = 15 }, new TS5 { TermId = 16 }, new TS5 { TermId = 17 } }).BiserEncodeList();
+            var ttzD = ttz.BiserDecode<int>();
+            var btxD = btx.BiserDecodeHashSet<TS5>();
+            
+        }
+
 
         static void TestListDictionary()
         {
@@ -183,8 +196,7 @@ namespace BiserTest_Net
 
             Console.WriteLine(TS4.BiserDecode(extDecoder: decoder).TermId);
         }
-
-
+        
 
         static void TestT5()
         {
@@ -198,7 +210,8 @@ namespace BiserTest_Net
            
             var lst = new List<TS5> { voc, voc, voc };            
             var btEn = lst.BiserEncode();            
-            var lst1 = btEn.BiserDecodeList<TS5>();            
+            var lst1 = btEn.BiserDecodeList<TS5>();
+            
         }
 
         static void TestT4()
