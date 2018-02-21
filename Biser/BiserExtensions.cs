@@ -24,7 +24,7 @@ namespace Biser
         public static List<T> BiserDecodeList<T>(this byte[] enc)
         {
             //Emulates extension for fast encoding/decoding list
-            //Of course, not so efficeint, because of GetInstanceCreator and a serie of casts
+            //Of course, NOT SO EFFICIENT, because of GetInstanceCreator and a serie of casts
 
             /*
              TS5 voc = new TS5()
@@ -52,6 +52,9 @@ namespace Biser
         }
         
 
+        /// <summary>
+        /// Holder of compiled instance creators
+        /// </summary>
         static Dictionary<Type, Func<object>> dInstanceCreator = new Dictionary<Type, Func<object>>();
         /// <summary>
         /// Returns an instance creator for the given type

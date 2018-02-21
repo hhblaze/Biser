@@ -183,4 +183,29 @@ Integrated encoder.Add(IEnumerable) doesn’t know the length of the collection 
 effectively storing all necessary information without iterating collection twice.
 
 
+### Biser extensions
+
+There is a set of useful extensions are concentrated in BiserExtensions.cs
+
+It can be copied and pasted into your project or used directly from DLL. Note that decoding extensions based on IDecoder interface for custom objects.
+Also automatic creation of instances (like in Biser.BiserExtensions.BiserDecodeList example) is not always efficient as an explicit instance creation, 
+though for someone it can be very handy.
+
+```C#
+	static void TestT5()
+	{
+		//Testing extensions with IDecoder and Biser.Extension interface
+
+		TS5 voc = new TS5()    //implements IEncoder and IDecoder
+		{
+			TermId = 12,
+			VoteType = TS5.eVoteType.VoteReject
+		};
+	   
+		var lst = new List<TS5> { voc, voc, voc };            
+		var btEn = lst.BiserEncode();            
+		var lst1 = btEn.BiserDecodeList<TS5>();            
+	}
+```
+
 hhblaze@gmail.com
