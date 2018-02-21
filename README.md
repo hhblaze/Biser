@@ -192,6 +192,8 @@ It can be copied and pasted into your project or used directly from DLL. Note th
 Also automatic creation of instances (like in Biser.BiserExtensions.BiserDecodeList example) is not always efficient as an explicit instance creation, 
 though for someone it can be very handy.
 
+[TS5 implements IEncoder and IDecoder](https://github.com/hhblaze/Biser/blob/master/BiserTest_Net/TS5.cs)
+
 ```C#
 	static void TestT5()
 	{
