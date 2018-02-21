@@ -1,18 +1,22 @@
-﻿using System;
+﻿/* 
+  Copyright (C) 2012 tiesky.com / Alex Solovyov
+  It's a free software for those, who think that it should be free.
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq.Expressions;
 
 namespace Biser
 {
+
     public static class BiserExtensions
     {
-        static Dictionary<Type, Tuple<Action<Encoder, object>, Func<Decoder, object>>> dSimpleDecoders = new Dictionary<Type, Tuple<Action<Encoder, object>, Func<Decoder, object>>>();
+        static Dictionary<Type, Tuple<Action<Encoder, object>, Func<Decoder, object>>> dCoders = new Dictionary<Type, Tuple<Action<Encoder, object>, Func<Decoder, object>>>();
+        static object lock_dCoders = new object();
         static Type TIDecoder = typeof(IDecoder);
         static Type TIEncoder = typeof(IEncoder);
-        
-
-        
 
         public static byte[] BiserEncodeList<T>(this IEnumerable<T> objs)
         {
@@ -21,7 +25,7 @@ namespace Biser
             //Check BiserDecodeList
             var enc = new Encoder();
 
-            if (dSimpleDecoders.TryGetValue(t, out f))
+            if (dCoders.TryGetValue(t, out f))
             {
                 enc.Add(objs, r => { f.Item1(enc,r); });
                 return enc.Encode();
@@ -41,7 +45,8 @@ namespace Biser
                             throw new Exception($"Biser: type {t.ToString()} doesn't implement IDecoder");                        
                     });
 
-                dSimpleDecoders[t] = f;
+                lock(lock_dCoders)
+                    dCoders[t] = f;
 
                 enc.Add(objs, r => { f.Item1(enc, r); });
                 return enc.Encode();
@@ -49,7 +54,7 @@ namespace Biser
 
             FillDecoder();
 
-            if (dSimpleDecoders.TryGetValue(t, out f))
+            if (dCoders.TryGetValue(t, out f))
             {
                 enc.Add(objs, r => { f.Item1(enc, r); });
                 return enc.Encode();
@@ -68,7 +73,7 @@ namespace Biser
             //Check BiserDecodeList
             var enc = new Encoder();
 
-            if (dSimpleDecoders.TryGetValue(t, out f))
+            if (dCoders.TryGetValue(t, out f))
             {
                 f.Item1(enc, obj);
                 return enc.Encode();
@@ -88,7 +93,8 @@ namespace Biser
                             throw new Exception($"Biser: type {t.ToString()} doesn't implement IDecoder");
                     });
 
-                dSimpleDecoders[t] = f;
+                lock (lock_dCoders)
+                    dCoders[t] = f;
 
                 f.Item1(enc, obj);
                 return enc.Encode();
@@ -96,7 +102,7 @@ namespace Biser
 
             FillDecoder();
 
-            if (dSimpleDecoders.TryGetValue(t, out f))
+            if (dCoders.TryGetValue(t, out f))
             {
                 f.Item1(enc, obj);
                 return enc.Encode();
@@ -132,7 +138,7 @@ namespace Biser
             Tuple<Action<Encoder,object>, Func<Decoder, object>> f = null;
             Type t = typeof(T);            
             
-            if (dSimpleDecoders.TryGetValue(t, out f))
+            if (dCoders.TryGetValue(t, out f))
                 return (T)f.Item2(decoder);
 
             if (TIDecoder.IsAssignableFrom(t))
@@ -151,14 +157,15 @@ namespace Biser
                     }
                 );
 
-                dSimpleDecoders[t] = f;
+                lock (lock_dCoders)
+                    dCoders[t] = f;
 
                 return (T)f.Item2(decoder);              
             }
 
             FillDecoder();
 
-            if (dSimpleDecoders.TryGetValue(t, out f))
+            if (dCoders.TryGetValue(t, out f))
                 return (T)f.Item2(decoder);
 
             throw new Exception($"Biser: type {t.ToString()} doesn't implement IDecoder");
@@ -191,7 +198,7 @@ namespace Biser
             var t1 = (List<T>)GetInstanceCreator(typeof(List<T>))();
             var decoder = new Decoder(enc);
             
-            if (dSimpleDecoders.TryGetValue(t, out f))
+            if (dCoders.TryGetValue(t, out f))
             {
                 decoder.GetCollection(() => { return (T)f.Item2(decoder); }, t1, false);
                 return t1;
@@ -212,7 +219,8 @@ namespace Biser
                     return (T)(((IDecoder)GetInstanceCreator(typeof(T))()).BiserDecodeToObject(d));
                 });
 
-                dSimpleDecoders[t] = f;
+                lock (lock_dCoders)
+                    dCoders[t] = f;
 
                 decoder.GetCollection(() => { return (T)f.Item2(decoder); }, t1, false);
                 return t1;
@@ -220,7 +228,7 @@ namespace Biser
 
             FillDecoder();
 
-            if (dSimpleDecoders.TryGetValue(t, out f))
+            if (dCoders.TryGetValue(t, out f))
             {
                 decoder.GetCollection(() => { return (T)f.Item2(decoder); }, t1, false);
                 return t1;
@@ -243,7 +251,7 @@ namespace Biser
             var t1 = (HashSet<T>)GetInstanceCreator(typeof(HashSet<T>))();
             var decoder = new Decoder(enc);
 
-            if (dSimpleDecoders.TryGetValue(t, out f))
+            if (dCoders.TryGetValue(t, out f))
             {
                 decoder.GetCollection(() => { return (T)f.Item2(decoder); }, t1, false);
                 return t1;
@@ -264,7 +272,8 @@ namespace Biser
                     return (T)(((IDecoder)GetInstanceCreator(typeof(T))()).BiserDecodeToObject(d));
                 });
 
-                dSimpleDecoders[t] = f;
+                lock (lock_dCoders)
+                    dCoders[t] = f;
 
                 decoder.GetCollection(() => { return (T)f.Item2(decoder); }, t1, false);
                 return t1;
@@ -272,7 +281,7 @@ namespace Biser
 
             FillDecoder();
 
-            if (dSimpleDecoders.TryGetValue(t, out f))
+            if (dCoders.TryGetValue(t, out f))
             {
                 decoder.GetCollection(() => { return (T)f.Item2(decoder); }, t1, false);
                 return t1;
@@ -284,41 +293,47 @@ namespace Biser
 
         static void FillDecoder()
         {
-            if (dSimpleDecoders.Count > 0)
+            if (dCoders.Count > 0)
                 return;
-            
-            dSimpleDecoders[typeof(long)] =new Tuple<Action<Encoder,object>, Func<Decoder, object>>((e,o)=> { e.Add((long)o); }, (d) => { return d.GetLong(); });
-            dSimpleDecoders[typeof(long?)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((long?)o); }, (d) => { return d.GetLong_NULL(); });
-            dSimpleDecoders[typeof(int)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((int)o); }, (d) => { return d.GetInt(); });
-            dSimpleDecoders[typeof(int?)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((int?)o); }, (d) => { return d.GetInt_NULL(); });            
-            dSimpleDecoders[typeof(ulong)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((ulong)o); }, (d) => { return d.GetULong(); });
-            dSimpleDecoders[typeof(ulong?)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((ulong?)o); }, (d) => { return d.GetULong_NULL(); });
-            dSimpleDecoders[typeof(uint)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((uint)o); }, (d) => { return d.GetUInt(); });
-            dSimpleDecoders[typeof(uint?)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((uint?)o); }, (d) => { return d.GetUInt_NULL(); });
-            dSimpleDecoders[typeof(short)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((short)o); }, (d) => { return d.GetShort(); });
-            dSimpleDecoders[typeof(short?)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((short?)o); }, (d) => { return d.GetShort_NULL(); });
-            dSimpleDecoders[typeof(ushort)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((ushort)o); }, (d) => { return d.GetUShort(); });
-            dSimpleDecoders[typeof(ushort?)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((ushort?)o); }, (d) => { return d.GetUShort_NULL(); });
-            dSimpleDecoders[typeof(byte)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((byte)o); }, (d) => { return d.GetByte(); });
-            dSimpleDecoders[typeof(byte?)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((byte?)o); }, (d) => { return d.GetByte_NULL(); });
-            dSimpleDecoders[typeof(float)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((float)o); }, (d) => { return d.GetFloat(); });
-            dSimpleDecoders[typeof(float?)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((float?)o); }, (d) => { return d.GetFloat_NULL(); });
-            dSimpleDecoders[typeof(double)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((double)o); }, (d) => { return d.GetDouble(); });
-            dSimpleDecoders[typeof(double?)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((double?)o); }, (d) => { return d.GetDouble_NULL(); });
-            dSimpleDecoders[typeof(decimal)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((decimal)o); }, (d) => { return d.GetDecimal(); });
-            dSimpleDecoders[typeof(decimal?)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((decimal?)o); }, (d) => { return d.GetDecimal_NULL(); });
-            dSimpleDecoders[typeof(DateTime)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((DateTime)o); }, (d) => { return d.GetDateTime(); });
-            dSimpleDecoders[typeof(DateTime?)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((DateTime?)o); }, (d) => { return d.GetDateTime_NULL(); });
-            dSimpleDecoders[typeof(sbyte)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((sbyte)o); }, (d) => { return d.GetSByte(); });
-            dSimpleDecoders[typeof(sbyte?)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((sbyte?)o); }, (d) => { return d.GetSByte_NULL(); });
-            dSimpleDecoders[typeof(bool)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((bool)o); }, (d) => { return d.GetBool(); });
-            dSimpleDecoders[typeof(bool?)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((bool?)o); }, (d) => { return d.GetBool_NULL(); });
-            dSimpleDecoders[typeof(string)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((string)o); }, (d) => { return d.GetString(); });
-            dSimpleDecoders[typeof(byte[])] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((byte[])o); }, (d) => { return d.GetByteArray(); });
-            dSimpleDecoders[typeof(char)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((char)o); }, (d) => { return d.GetChar(); });
-            dSimpleDecoders[typeof(char?)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((char?)o); }, (d) => { return d.GetChar_NULL(); });
-            dSimpleDecoders[typeof(Guid)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((Guid)o); }, (d) => { return d.GetGuid(); });
-            dSimpleDecoders[typeof(Guid?)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((Guid?)o); }, (d) => { return d.GetGuid_NULL(); });
+
+            lock (lock_dCoders)
+            {
+                if (dCoders.ContainsKey(typeof(long)))
+                    return;
+
+                dCoders[typeof(long)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((long)o); }, (d) => { return d.GetLong(); });
+                dCoders[typeof(long?)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((long?)o); }, (d) => { return d.GetLong_NULL(); });
+                dCoders[typeof(int)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((int)o); }, (d) => { return d.GetInt(); });
+                dCoders[typeof(int?)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((int?)o); }, (d) => { return d.GetInt_NULL(); });
+                dCoders[typeof(ulong)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((ulong)o); }, (d) => { return d.GetULong(); });
+                dCoders[typeof(ulong?)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((ulong?)o); }, (d) => { return d.GetULong_NULL(); });
+                dCoders[typeof(uint)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((uint)o); }, (d) => { return d.GetUInt(); });
+                dCoders[typeof(uint?)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((uint?)o); }, (d) => { return d.GetUInt_NULL(); });
+                dCoders[typeof(short)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((short)o); }, (d) => { return d.GetShort(); });
+                dCoders[typeof(short?)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((short?)o); }, (d) => { return d.GetShort_NULL(); });
+                dCoders[typeof(ushort)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((ushort)o); }, (d) => { return d.GetUShort(); });
+                dCoders[typeof(ushort?)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((ushort?)o); }, (d) => { return d.GetUShort_NULL(); });
+                dCoders[typeof(byte)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((byte)o); }, (d) => { return d.GetByte(); });
+                dCoders[typeof(byte?)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((byte?)o); }, (d) => { return d.GetByte_NULL(); });
+                dCoders[typeof(float)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((float)o); }, (d) => { return d.GetFloat(); });
+                dCoders[typeof(float?)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((float?)o); }, (d) => { return d.GetFloat_NULL(); });
+                dCoders[typeof(double)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((double)o); }, (d) => { return d.GetDouble(); });
+                dCoders[typeof(double?)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((double?)o); }, (d) => { return d.GetDouble_NULL(); });
+                dCoders[typeof(decimal)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((decimal)o); }, (d) => { return d.GetDecimal(); });
+                dCoders[typeof(decimal?)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((decimal?)o); }, (d) => { return d.GetDecimal_NULL(); });
+                dCoders[typeof(DateTime)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((DateTime)o); }, (d) => { return d.GetDateTime(); });
+                dCoders[typeof(DateTime?)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((DateTime?)o); }, (d) => { return d.GetDateTime_NULL(); });
+                dCoders[typeof(sbyte)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((sbyte)o); }, (d) => { return d.GetSByte(); });
+                dCoders[typeof(sbyte?)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((sbyte?)o); }, (d) => { return d.GetSByte_NULL(); });
+                dCoders[typeof(bool)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((bool)o); }, (d) => { return d.GetBool(); });
+                dCoders[typeof(bool?)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((bool?)o); }, (d) => { return d.GetBool_NULL(); });
+                dCoders[typeof(string)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((string)o); }, (d) => { return d.GetString(); });
+                dCoders[typeof(byte[])] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((byte[])o); }, (d) => { return d.GetByteArray(); });
+                dCoders[typeof(char)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((char)o); }, (d) => { return d.GetChar(); });
+                dCoders[typeof(char?)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((char?)o); }, (d) => { return d.GetChar_NULL(); });
+                dCoders[typeof(Guid)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((Guid)o); }, (d) => { return d.GetGuid(); });
+                dCoders[typeof(Guid?)] = new Tuple<Action<Encoder, object>, Func<Decoder, object>>((e, o) => { e.Add((Guid?)o); }, (d) => { return d.GetGuid_NULL(); });
+            }
         }
 
 

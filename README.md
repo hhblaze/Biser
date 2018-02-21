@@ -196,19 +196,14 @@ though for someone it can be very handy.
 [TS5 implements IEncoder and IDecoder](https://github.com/hhblaze/Biser/blob/master/BiserTest_Net/TS5.cs)
 
 ```C#
-	static void TestT5()
+	static void TestBE1()
 	{
 		//Testing extensions with IDecoder and Biser.Extension interface
-
-		TS5 voc = new TS5()    //implements IEncoder and IDecoder
-		{
-			TermId = 12,
-			VoteType = TS5.eVoteType.VoteReject
-		};
-	   
-		var lst = new List<TS5> { voc, voc, voc };            
-		var btEn = lst.BiserEncode();            
-		var lst1 = btEn.BiserDecodeList<TS5>();            
+		    
+            var ttz= ((int)15).BiserEncode();
+            var btx = (new HashSet<TS5> { new TS5 { TermId = 15 }, new TS5 { TermId = 16 }, new TS5 { TermId = 17 } }).BiserEncodeList();
+            var ttzD = ttz.BiserDecode<int>();
+            var btxD = btx.BiserDecodeHashSet<TS5>();       
 	}
 ```
 
