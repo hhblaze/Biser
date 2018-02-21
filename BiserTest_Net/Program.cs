@@ -76,7 +76,7 @@ namespace BiserTest_Net
             //TestCustom();
             //TestPrimitives();
             //TestT5();
-            TestListDictionary();
+            //TestListDictionary();
 
             Console.ReadLine();
 
@@ -119,6 +119,7 @@ namespace BiserTest_Net
 
             enc.Add((decimal)-587.7m);
 
+            //TS4 implements IEncoder
             enc.Add(new Dictionary<uint, TS4> { { 1, new TS4 { TermId = 1 } }, { 2, new TS4 { TermId = 5 } } }
             , r => { enc.Add(r.Key); enc.Add(r.Value); });
 
@@ -130,7 +131,7 @@ namespace BiserTest_Net
             Console.WriteLine(decoder.GetInt());
 
 
-            //////Alternative, slower than supplying List directly
+            //////Alternative to the following instruction. Slower than supplying List directly
             ////foreach (var item in decoder.GetCollection().Select(r => r.GetString()))
             ////{
             ////    Console.WriteLine(item);
@@ -147,11 +148,11 @@ namespace BiserTest_Net
             Console.WriteLine(decoder.GetFloat());
 
 
-            //Alternative, slower than supplying List directly
-            foreach (var item in decoder.GetCollection())
-            {
-                Console.WriteLine($"K: {item.GetUInt()}; V: {item.GetString()}");
-            }
+            ////////Alternative to the following instruction. Slower than supplying Dictionary directly
+            //////foreach (var item in decoder.GetCollection())
+            //////{
+            //////    Console.WriteLine($"K: {item.GetUInt()}; V: {item.GetString()}");
+            //////}
 
             Dictionary<uint, string> d1 = decoder.CheckNull() ? null : new Dictionary<uint, string>();
             if (d1 != null)
