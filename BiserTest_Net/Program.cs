@@ -78,7 +78,7 @@ namespace BiserTest_Net
             //TestCustom();
             //TestPrimitives();
             //TestBE1();
-            //TestT5();
+            TestT5();
             //TestListDictionary();
 
             Console.ReadLine();
@@ -207,8 +207,8 @@ namespace BiserTest_Net
                 VoteType = TS5.eVoteType.VoteReject
             };
            
-            var lst = new List<TS5> { voc, voc, voc };            
-            var btEn = lst.BiserEncode();            
+            var lst = new List<TS5> { voc, voc, voc };
+            var btEn = lst.BiserEncodeList();           
             var lst1 = btEn.BiserDecodeList<TS5>();
             
         }
