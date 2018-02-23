@@ -26,7 +26,7 @@ namespace Biser
 
         public static byte[] BiserEncode<T>(this T obj)
         {
-            Tuple<Action<Encoder, object>, Func<Decoder, object>> f = GetTypeOfCollection<T>();
+            var f = GetTypeOfCollection<T>();
             var enc = new Encoder();
             f.Item1(enc, obj);
             return enc.Encode();
@@ -55,7 +55,7 @@ namespace Biser
         /// <returns></returns>
         public static T BiserDecode<T>(this Decoder decoder)
         {
-            Tuple<Action<Encoder, object>, Func<Decoder, object>> f = GetTypeOfCollection<T>();
+            var f = GetTypeOfCollection<T>();
             return (T)f.Item2(decoder);            
         }
 
