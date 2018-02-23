@@ -66,7 +66,7 @@ namespace Biser
             
             var t1 = (List<T>)GetInstanceCreator(typeof(List<T>))();
             var decoder = new Decoder(enc);
-            Tuple<Action<Encoder, object>, Func<Decoder, object>> f = GetTypeOfCollection<T>();
+            var f = GetTypeOfCollection<T>();
             decoder.GetCollection(() => { return (T)f.Item2(decoder); }, t1, false);
             return t1;
         }
@@ -78,7 +78,7 @@ namespace Biser
 
             var t1 = (HashSet<T>)GetInstanceCreator(typeof(HashSet<T>))();
             var decoder = new Decoder(enc);
-            Tuple<Action<Encoder, object>, Func<Decoder, object>> f = GetTypeOfCollection<T>();
+            var f = GetTypeOfCollection<T>();
             decoder.GetCollection(() => { return (T)f.Item2(decoder); }, t1, false);
             return t1;            
         }
