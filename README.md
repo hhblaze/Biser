@@ -2,7 +2,7 @@
 Binary serializer for .NET dotnet ("biser" in Russian means "beads")
 
 - Can be an alternative to protobuf-net in some circumstances. 
-- Has the same operational speed as protobuf-net, smaller payload and 15KB DLL size 
+- Has the same [operational speed (Benchmark)](https://github.com/hhblaze/Biser/blob/master/Benchmark/Program.cs) as protobuf-net, smaller payload and 15KB DLL size 
 or +8KB to the final compiled length, when embedded as a source code.
 - Has custom encoding possibilities of any complexity.
 - Different encoding/decoding scenarios for one object are supported.
