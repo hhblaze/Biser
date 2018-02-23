@@ -60,6 +60,7 @@ namespace Benchmark
 
             System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
 
+            // It's an operational class from https://github.com/hhblaze/Raft.Net/blob/master/Raft/StateMachine/StateLogEntry.cs
             StateLogEntry obj = new StateLogEntry()
             {
                 Data = new byte[] { 1, 2, 3, 4, 5 },
@@ -137,6 +138,7 @@ namespace Benchmark
 
             System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
 
+            // It's an operational class from https://github.com/hhblaze/Raft.Net/blob/master/Raft/StateMachine/StateLogEntry.cs
             StateLogEntry sle = new StateLogEntry()
             {
                 Data = new byte[] { 1, 2, 3, 4, 5 },
@@ -148,6 +150,7 @@ namespace Benchmark
                 Term = 99
             };
 
+            // It's an operational class from https://github.com/hhblaze/Raft.Net/blob/master/Raft/Objects/StateLogEntrySuggestion.cs
             StateLogEntrySuggestion obj = new StateLogEntrySuggestion()
             {
                 IsCommitted = true,
