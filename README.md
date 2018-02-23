@@ -1,4 +1,8 @@
 # Biser.NET
+![Image of Build](https://img.shields.io/badge/License-BSD%203,%20FOSS-FC0574.svg) 
+![Image of Build](https://img.shields.io/badge/Roadmap-completed-33CC33.svg)
+![Image of Build](https://img.shields.io/badge/Powered%20by-tiesky.com-1883F5.svg)
+
 Binary serializer for .NET dotnet ("biser" in Russian means "beads")
 
 - Can be an alternative to protobuf-net in some circumstances. 
