@@ -1,8 +1,6 @@
 # Biser.NET
-![Image of Build](https://img.shields.io/badge/License-BSD%203,%20FOSS-FC0574.svg) 
+[![Image of Build](https://img.shields.io/badge/License-BSD%203,%20FOSS-FC0574.svg)](https://github.com/hhblaze/Biser/blob/master/LICENSE)
 ![Image of Build](https://img.shields.io/badge/Roadmap-completed-33CC33.svg)
-![Image of Build](https://img.shields.io/badge/Powered%20by-tiesky.com-1883F5.svg)
-
 [![Image of Build](https://img.shields.io/badge/Powered%20by-tiesky.com-1883F5.svg)](http://tiesky.com)
 
 Binary serializer for .NET dotnet ("biser" in Russian means "beads")
