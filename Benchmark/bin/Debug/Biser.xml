@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Biser</name>
+    </assembly>
+    <members>
+        <member name="M:Biser.BiserExtensions.BiserDecode``1(System.Byte[])">
+            <summary>
+            Creates new decoder. 
+            <para>Decoding type must be either .NET primitive or to implement IDecoder</para>
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="enc"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Biser.BiserExtensions.BiserDecode``1(Biser.Decoder)">
+            <summary>
+            Re-uses existing decoder.
+            <para>Decoding type must be either .NET primitive or to implement IDecoder</para>
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="decoder"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Biser.BiserExtensions.GetTypeOfCollection``1">
+            <summary>
+            
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="t"></param>
+            <returns></returns>
+        </member>
+        <member name="F:Biser.BiserExtensions.dInstanceCreator">
+            <summary>
+            Holder of compiled instance creators
+            </summary>
+        </member>
+        <member name="M:Biser.BiserExtensions.GetInstanceCreator(System.Type)">
+            <summary>
+            Returns an instance creator for the given type
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="F:Biser.Decoder.qb">
+            <summary>
+            Quantity of bytes needed to form latest varint
+            </summary>
+        </member>
+        <member name="F:Biser.Decoder.IsNull">
+            <summary>
+            true in case if object is null
+            </summary>
+        </member>
+        <member name="M:Biser.Decoder.#ctor(System.Byte[])">
+            <summary>
+            
+            </summary>
+            <param name="encoded"></param>
+        </member>
+        <member name="M:Biser.Decoder.#ctor(Biser.Decoder,System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="decoder"></param>
+        </member>
+        <member name="M:Biser.Decoder.CheckNull">
+            <summary>
+            Is used for checking next collection on null, before getting one of the itterators.
+            </summary>
+            <returns>true if null</returns>
+        </member>
+        <member name="M:Biser.Decoder.GetCollection(System.Boolean)">
+            <summary>
+            Universal, but a bit slower (because of the yield returns) than those ones with IDictionary or IList
+            </summary>
+            <param name="isNullChecked"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Biser.Decoder.GetCollection``1(System.Func{``0},System.Collections.Generic.IList{``0},System.Boolean)">
+            <summary>
+            
+            </summary>
+            <typeparam name="K"></typeparam>
+            <param name="fk"></param>
+            <param name="lst"></param>
+            <param name="isNullChecked"></param>
+        </member>
+        <member name="M:Biser.Decoder.GetCollection``2(System.Func{``0},System.Func{``1},System.Collections.Generic.IDictionary{``0,``1},System.Boolean)">
+            <summary>
+            
+            </summary>
+            <typeparam name="K"></typeparam>
+            <typeparam name="V"></typeparam>
+            <param name="fk"></param>
+            <param name="fv"></param>
+            <param name="dict"></param>
+            <param name="isNullChecked"></param>
+        </member>
+        <member name="T:Biser.Encoder">
+            <summary>
+            Binary serializer "biser", that can be translated as "beads" from Russian
+            </summary>   
+        </member>
+        <member name="T:Biser.Biser">
+            <summary>
+            Binary serializer "biser", that can be translated as "beads" from Russian
+            </summary>
+        </member>
+    </members>
+</doc>
