@@ -108,17 +108,17 @@ namespace Biser
 
             if (TIEncoder.IsAssignableFrom(t))
             {
+                Func<Decoder, object> df = null;
+                if (TIDecoder.IsAssignableFrom(t))
+                    df = (d) => { return (T)(((IDecoder)GetInstanceCreator(typeof(T))()).BiserDecodeToObject(d)); };
+                else
+                    df = (d) => { throw new Exception($"Biser: type {t.ToString()} doesn't implement IDecoder"); };
+
                 f = new Tuple<Action<Encoder, object>, Func<Decoder, object>>(
-                    (e, o) =>
-                    {
-                        e.Add((IEncoder)o);
-                    },
-                    (d) => {
-                        if (TIDecoder.IsAssignableFrom(t))
-                            return (T)(((IDecoder)GetInstanceCreator(typeof(T))()).BiserDecodeToObject(d));
-                        else
-                            throw new Exception($"Biser: type {t.ToString()} doesn't implement IDecoder");
-                    });
+                    (e, o) => { e.Add((IEncoder)o);}
+                    , 
+                    df
+                );
 
                 lock (lock_dCoders)
                     dCoders[t] = f;
