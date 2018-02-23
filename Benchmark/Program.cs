@@ -14,8 +14,31 @@ namespace Benchmark
         {
             Console.WriteLine("Start");
 
-            //t1();
+            t1();
+            /*
+           Start
+                  Protobuf obj length: 22
+                  Biser obj length: 17
+                  Protobuf encode: 891 ms
+                  Protobuf decode: 1242 ms
+                  Biser encode: 523 ms
+                  Biser decode: 410 ms
+           Press any key
+           */
+
+
             t2();
+            /*
+           Start
+               Protobuf obj length: 28
+               Biser obj length: 20
+               Protobuf encode: 1377 ms
+               Protobuf decode: 1613 ms
+               Biser encode: 588 ms
+               Biser decode: 577 ms
+           Press any key
+            */
+
 
             Console.WriteLine("Press any key");
             Console.ReadLine();
