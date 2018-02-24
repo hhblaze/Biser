@@ -11,7 +11,7 @@ Binary serializer for .NET dotnet ("biser" in Russian means "beads")
 or +8KB to the final compiled length, when embedded as a source code.
 - Has custom encoding possibilities of any complexity.
 - Different encoding/decoding scenarios for one object are supported.
-- Thread safe. No need to "warm up" serializing/encoding entites.
+- Thread safe. No need to "warm up" serializing/encoding entities.
 - Managed code without external references.
 
 Integrated part of [DBreeze database](https://github.com/hhblaze/DBreeze), used in [Raft.NET](https://github.com/hhblaze/Raft.Net)
