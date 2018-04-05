@@ -4,7 +4,7 @@
 [![NuGet Badge](https://buildstats.info/nuget/Biser)](https://www.nuget.org/packages/Biser/)
 [![Image of Build](https://img.shields.io/badge/Powered%20by-tiesky.com-1883F5.svg)](http://tiesky.com)
 
-Binary serializer for .NET dotnet and javascript ("biser" in Russian means "beads")
+Cross-platform binary serializer for .NET dotnet and javascript ("biser" in Russian means "beads")
 
 - Can be an alternative to [protobuf-net](https://github.com/mgravell/protobuf-net) in some circumstances. 
 - Has the same [operational speed (Benchmark)](https://github.com/hhblaze/Biser/blob/master/Benchmark/Program.cs) as protobuf-net, smaller payload and 15KB DLL size 
@@ -13,7 +13,7 @@ or +8KB to the final compiled length, when embedded as a source code.
 - Different encoding/decoding scenarios for one object are supported.
 - Thread safe. No need to "warm up" serializing/encoding entities.
 - Managed code without external references.
-- Crossplatform serializer dotnet - javascript ([documentation](https://github.com/hhblaze/Biser#biser-as-a-cross-platform-serializer)).
+- Contains cross-platform serializing functions for dotnet - javascript chain ([documentation](https://github.com/hhblaze/Biser#biser-as-a-cross-platform-serializer)).
 
 Integrated part of [DBreeze database](https://github.com/hhblaze/DBreeze), used in [Raft.NET](https://github.com/hhblaze/Raft.Net)
 
