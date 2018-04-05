@@ -101,7 +101,7 @@ namespace Biser
         }
 
         #region "JS add"
-        public Encoder Add(IJSEncoder item)
+        public Encoder JSAdd(IJSEncoder item)
         {
             if (item == null)
             {
