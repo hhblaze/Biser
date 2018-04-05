@@ -2,19 +2,19 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>Biser</id>
-        <version>1.2.0</version>
+        <version>1.3.0</version>
         <title>Biser.NET dotnet binary serializer</title>
         <authors>Alex Solovyov</authors>
         <owners>tiesky.com / Alex Solovyov</owners>
         <licenseUrl>https://github.com/hhblaze/Biser/blob/master/LICENSE</licenseUrl>
         <projectUrl>https://github.com/hhblaze/Biser</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <description>Biser.NET dotnet binary serializer</description>
-        <summary>Biser.NET dotnet binary serializer</summary>
-        <releaseNotes>added IDecoder and BiserExtensions.cs</releaseNotes>
+        <description>Biser.NET dotnet javascript binary serializer</description>
+        <summary>Biser.NET dotnet javascript binary serializer</summary>
+        <releaseNotes>added javascript compatibility functions</releaseNotes>
         <copyright>Copyright © 2018 tiesky.com / Alex Solovyov</copyright>
         <language>es-US</language>
-        <tags>Biser protobuf alternative dbreeze serializer binary serialization netcore netstandard net framework</tags>
+        <tags>Biser protobuf alternative dbreeze serializer binary serialization netcore netstandard net javascript framework</tags>
     </metadata>
     <files>
         <file src="Biser\bin\Release\Biser.dll" target="lib\net45\Biser.dll" />

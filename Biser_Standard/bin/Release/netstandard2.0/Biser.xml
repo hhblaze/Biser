@@ -97,10 +97,38 @@
             <param name="dict"></param>
             <param name="isNullChecked"></param>
         </member>
+        <member name="M:Biser.Decoder.JSGetLong">
+            <summary>
+             Javascript Biser decoder
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Biser.Decoder.JSGetString">
+            <summary>
+            Javascript Biser decoder
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Biser.Decoder.JSGetDouble">
+            <summary>
+             Javascript Biser decoder
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Biser.Encoder">
             <summary>
             Binary serializer "biser", that can be translated as "beads" from Russian
             </summary>   
+        </member>
+        <member name="T:Biser.IJSEncoder">
+            <summary>
+            Starting from JSAdd
+            </summary>
+        </member>
+        <member name="T:Biser.IJSDecoder">
+            <summary>
+            Starting from JSGet
+            </summary>
         </member>
         <member name="T:Biser.Biser">
             <summary>
