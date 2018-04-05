@@ -223,7 +223,7 @@ Starting from version 1.3 can prepare byte[] readable by C# and javascript.
 For .NET special IJSEncoder, IJSDecoder are available.
 Encoder's JSAdd function and Decoder's JSGet functions prepare compatible with javascript conversions.
 
-For React Vue javascript [Biser.js](https://www.npmjs.com/package/biser) can be taken from [www.npmjs.org](https://www.npmjs.com/package/biser)
+For React, Vue, Node.js etc. [Biser.js](https://www.npmjs.com/package/biser) can be taken as npm package from [www.npmjs.org](https://www.npmjs.com/package/biser)
 or directly from here [Biser.js](https://raw.githubusercontent.com/hhblaze/Biser/master/js/biser.js) or here [Biser-min.js](https://raw.githubusercontent.com/hhblaze/Biser/master/js/Biser/biser.js)
 
 Set of primitive convertible  types is limited to: long, double, string, byte[], bool, DateTime. 
