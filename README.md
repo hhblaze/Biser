@@ -215,9 +215,18 @@ though for someone it can be very handy.
 
 
 -------------
-### Biser as a crossplatform serializer
 
-[Biser](https://github.com/hhblaze/Biser) as a binary serializer for javascript and .NET (dotnet C# VB.NET).
+### Biser as a crossplatform serializer. Starting from versio 1.3 can prepare byte[] readable by C# and javascript.
+
+For .NET special IJSEncoder, IJSDecoder are prepared, also in Encoder all JSAdd function and in Decoder all JSGet
+functions will prepare compatible with javascript conversions.
+
+For javascript [Biser.js](https://www.npmjs.com/package/biser) can be taken from www.npmjs.org
+
+Set of primitive convertible  types is limited to: long, double, string, byte[], bool, DateTime. 
+And arrays containing any of these types. 
+Complex types (objects classes) are possible.
+
 
 ### Javascript. Encoding / Decoding example.
 
