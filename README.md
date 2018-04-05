@@ -216,10 +216,12 @@ though for someone it can be very handy.
 
 -------------
 
-### Biser as a crossplatform serializer. Starting from versio 1.3 can prepare byte[] readable by C# and javascript.
+### Biser as a cross-platform serializer. 
 
-For .NET special IJSEncoder, IJSDecoder are prepared, also in Encoder all JSAdd function and in Decoder all JSGet
-functions will prepare compatible with javascript conversions.
+Starting from version 1.3 can prepare byte[] readable by C# and javascript.
+
+For .NET special IJSEncoder, IJSDecoder are prepared. Encoder's JSAdd function and Decoder's JSGet
+functions prepare compatible with javascript conversions.
 
 For javascript [Biser.js](https://www.npmjs.com/package/biser) can be taken from www.npmjs.org
 
