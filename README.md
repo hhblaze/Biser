@@ -13,7 +13,7 @@ or +8KB to the final compiled length, when embedded as a source code.
 - Different encoding/decoding scenarios for one object are supported.
 - Thread safe. No need to "warm up" serializing/encoding entities.
 - Managed code without external references.
-- Contains set of function to exchange serialized data between dotnet and javascript ([documentation](https://github.com/hhblaze/Biser#biser-as-a-cross-platform-serializer)).
+- Crossplatform serializer dotnet - javascript ([documentation](https://github.com/hhblaze/Biser#biser-as-a-cross-platform-serializer)).
 
 Integrated part of [DBreeze database](https://github.com/hhblaze/DBreeze), used in [Raft.NET](https://github.com/hhblaze/Raft.Net)
 
@@ -220,7 +220,7 @@ though for someone it can be very handy.
 
 Starting from version 1.3 can prepare byte[] readable by C# and javascript.
 
-For .NET special IJSEncoder, IJSDecoder are prepared. 
+For .NET special IJSEncoder, IJSDecoder are available.
 Encoder's JSAdd function and Decoder's JSGet functions prepare compatible with javascript conversions.
 
 For React Vue javascript [Biser.js](https://www.npmjs.com/package/biser) can be taken from [www.npmjs.org](https://www.npmjs.com/package/biser)
