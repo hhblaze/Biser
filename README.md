@@ -13,7 +13,7 @@ or +8KB to the final compiled length, when embedded as a source code.
 - Different encoding/decoding scenarios for one object are supported.
 - Thread safe. No need to "warm up" serializing/encoding entities.
 - Managed code without external references.
-- Encoder.JSAdd and Decoder.JSGet make compatible byte[] for exchanging data between javascript runtime (check documentation).
+- Contains set of function to exchange serialized data between dotnet and javascript [documentation](https://github.com/hhblaze/Biser#biser-as-a-cross-platform-serializer).
 
 Integrated part of [DBreeze database](https://github.com/hhblaze/DBreeze), used in [Raft.NET](https://github.com/hhblaze/Raft.Net)
 
