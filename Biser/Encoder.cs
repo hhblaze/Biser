@@ -100,6 +100,78 @@ namespace Biser
             return Add(((DateTime)value).Ticks);
         }
 
+        #region "JS add"
+        public Encoder JSAdd(long value)
+        {
+            if (value > 999999999999999 || value < -999999999999999)
+                throw new Exception("Biser.Encoder.JSAdd(long) value is out of range -999999999999999...999999999999999 ");
+
+            GetVarintBytes((ulong)Biser.EncodeZigZag(value, 64));
+            return this;
+        }
+        public Encoder JSAdd(ulong value)
+        {
+            return JSAdd((long)value);
+        }
+        public Encoder JSAdd(int value)
+        {
+            return JSAdd((long)value);
+        }
+        public Encoder JSAdd(uint value)
+        {
+            return JSAdd((long)value);
+        }
+        public Encoder JSAdd(DateTime value)
+        {
+            if (value.Kind != DateTimeKind.Utc)
+                return JSAdd(Convert.ToInt64(value.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds));
+            return JSAdd(Convert.ToInt64(value
+                .Subtract(new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds));           
+        }
+        public Encoder JSAdd(float value)
+        {
+            return JSAdd((double)value);
+        }
+        public Encoder JSAdd(decimal value)
+        {
+            return JSAdd((double)value);
+        }
+        public Encoder JSAdd(double value)
+        {
+            //BitConverter.IsLittleEndian
+            ms.Write(new byte[] { (byte)(BitConverter.IsLittleEndian ? 0 : 1) }, 0, 1);
+            ms.Write(BitConverter.GetBytes(value), 0, 8);
+            return this;
+        }
+        public Encoder JSAdd(string value)
+        {
+            List<long> lst = new List<long>();
+            foreach (var c in value)
+                lst.Add((long)c);
+            this.Add(lst, r => { this.JSAdd(r); });
+
+            return this;
+        }
+        public Encoder JSAdd(bool value)
+        {
+            ms.Write(new byte[] { (byte)(value ? 1 : 0) }, 0, 1);
+
+            return this;
+        }
+        public Encoder JSAdd(byte[] value)
+        {   
+            if(value == null || value.Length<1)
+                JSAdd((long)0);
+            else
+            {
+                JSAdd((long)value.Length);
+                ms.Write(value, 0, value.Length);
+            }
+
+            return this;
+        }
+        #endregion
+
         public Encoder Add(long value)
         {
             GetVarintBytes((ulong)Biser.EncodeZigZag(value, 64));

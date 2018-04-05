@@ -17,6 +17,90 @@ namespace BiserTest_Net
     {
         static void Main(string[] args)
         {
+            //var le = BitConverter.IsLittleEndian;
+            Biser.Encoder enn = new Biser.Encoder();
+            byte[] btEnn = null;
+
+            double flv = -17.32;
+
+            enn.Add(flv);
+            //enn.Add((long)1);
+            btEnn = enn.Encode();
+            var res = true ^ false;
+            //BitConverter.ToDouble()
+            var fltBts = BitConverter.GetBytes(flv);
+            return;
+
+            
+            //enn.Add((long)-123879);            
+            enn.Add((ulong)1521797378957);
+            btEnn=enn.Encode();
+
+            long tr = 1521797378957;
+
+            do
+            {
+                tr = tr >> 7;
+                Console.WriteLine("М " + tr);
+            } while (tr != 0);
+
+            
+
+            Biser.Decoder denn = new Biser.Decoder(btEnn);
+            //var hzj = denn.GetLong();
+            var hzj = denn.GetULong();
+
+            var tt = Biser.Biser.EncodeZigZag((long)-123879, 64);
+            var value = -123879;
+            
+            var tt1 = (value << 1) ^ (value >> 63);
+           var tt2 =  Biser.Biser.DecodeZigZag((ulong)tt1);
+            Console.WriteLine("L=" + (value << 1));
+            Console.WriteLine("R=" + (value >> 63));
+            Console.WriteLine("T=" + tt1 + "; dec=" + tt2);
+
+            Console.WriteLine("tmp=" + (100000000000 & 0x7fffffff));
+            Console.WriteLine("tmp=" + ((-100000000000) & 0x7fffffff));
+
+            /*
+            var v1 = 123879;
+            var hi = 0x80000000;
+            var low = 0x7fffffff;
+            var hi1 = ~~(v1 / hi);
+            var low1 = v1 & low;
+            var v1b =  hi1 * hi + low1;
+            */
+
+            //var tm = new DateTime(1521797378957*10000, DateTimeKind.Utc);
+            var tm = new DateTime(1970,1,1,0,0,0,0,DateTimeKind.Utc)
+                .AddMilliseconds(1521797378957); //
+            
+            for(int i =0;i<256;i++)
+            {
+                //Console.WriteLine((sbyte)(i) + " _ " + (i & 0x80)+ " _ " + i + " _ " + (i - (i&0x80)));
+                sbyte p = (sbyte)(i);
+                sbyte s = (sbyte)(i);
+                byte b = (byte)((p + 128) + (1 - 2 * (((p + 128) & 0x80) >> 7)) * 128);                
+                byte b1 = (byte)(s + (256 & ((s & 0x80) << 1)) );
+                Console.WriteLine(i + " _ " + (sbyte)(i) + " _ " + (i - ((i & 128) << 1)) 
+                    + " _ "  + b + " _> " + b1
+                    ); //128 0x80 byte to sbyte converter
+            }
+            //double flv = 12.56;
+            //double flv = 124.56;
+            
+            var uBts = BitConverter.ToUInt64(fltBts, 0);
+
+            return;
+
+            //float flv = 12.56f;
+            //flv = 0;
+            //flv = float.MinValue;
+            //flv = float.MaxValue;
+            //var fltBts = BitConverter.GetBytes(flv);
+            //var uBts = BitConverter.ToUInt32(fltBts, 0);
+
+            return;
             TS3 ts3 = new TS3()
             {
                 P1 = "welldone",

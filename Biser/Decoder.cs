@@ -469,6 +469,76 @@ namespace Biser
             return bt.UTF8_GetString();
         }
 
+        #region "Javascript Biser decoder"
+        /// <summary>
+        ///  Javascript Biser decoder
+        /// </summary>
+        /// <returns></returns>
+        public long JSGetLong()
+        {
+            return Biser.DecodeZigZag(this.rootDecoder.GetDigit());
+        }
+
+        /// <summary>
+        /// Javascript Biser decoder
+        /// </summary>
+        /// <returns></returns>
+        public string JSGetString()
+        {
+            List<long> lst = this.CheckNull() ? null : new List<long>();
+            if (lst != null)
+            {
+                this.GetCollection(() => { return this.JSGetLong(); }, lst, true);
+                if (lst.Count == 0)
+                    return string.Empty;
+
+                StringBuilder sb = new StringBuilder();
+
+                foreach (var item in lst)
+                    sb.Append((char)item);
+
+                return sb.ToString();
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        ///  Javascript Biser decoder
+        /// </summary>
+        /// <returns></returns>
+        public double JSGetDouble()
+        {
+            var bt = this.Read(9);
+            if (BitConverter.IsLittleEndian ^ (bt[0] == 0))
+                Array.Reverse(bt, 1, 8);
+
+            return BitConverter.ToDouble(bt, 1);            
+        }
+
+        public DateTime JSGetDate()
+        {
+            return (new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).AddMilliseconds(this.JSGetLong());
+        }
+
+        public bool JSGetBool()
+        {
+            return this.Read(1)[0] == 1;
+        }
+
+        public byte[] JSGetByteArray()
+        {
+            byte[] ret = null;
+
+            var prot = this.JSGetLong();
+            if(prot > 0)
+                ret = Read((int)prot);         
+
+            return ret;
+        }
+
+        #endregion
+
 
         public byte[] GetByteArray()
         {

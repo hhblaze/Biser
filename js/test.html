@@ -1,0 +1,822 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+ <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+</head>
+<body>
+<img src="https://www.w3schools.com/html/pulpitrock.jpg" alt="rocks">
+<button type="button" onclick='testAsbest();'>Click Me!</button>
+<script>
+function testAsbest()
+{
+	var xhr = new XMLHttpRequest();	
+	xhr.open('POST', 'testBin');	
+	xhr.responseType = "arraybuffer";
+
+	xhr.onload = function() {
+		if (xhr.status === 200) {
+			
+			var arrayBuffer = xhr.response; // Note: not oReq.responseText
+			
+			  if (arrayBuffer) {
+			  //Receiving from C# server
+				/*
+				var byteArray = new Uint8Array(arrayBuffer);
+				for (var i = 0; i < byteArray.byteLength; i++) {
+				  console.log(byteArray[i]);
+				}
+				*/
+				var mb = new Biser();
+				mb.ear = new Uint8Array(arrayBuffer);
+				console.log(mb.DLong());
+				console.log(mb.DLong());
+				console.log(mb.DLong());
+				console.log(mb.DLong());
+				console.log(mb.DDate());
+				console.log(mb.DDate());
+				console.log(mb.DDouble());
+				console.log(mb.DDouble());
+				console.log(mb.DString());
+				
+				var arr1 = mb.DArray(function(){ return mb.DString();});
+					console.log(arr1.length + " of " + arr1[2]);	
+		
+				console.log(mb.DBool());
+				console.log(mb.DBool());
+				
+				var arr2 = mb.DArray(function(){ return (new obj1()).BiserDecode(mb);});
+					console.log(arr2.length + " of " + arr2[1].MyString + " and " + arr2[1].MyDigit);
+					
+				var uintarr = mb.DUint8Array();
+					console.log(uintarr[2]);
+					
+				var arr3 = mb.DArray(function(){ return mb.DUint8Array();});
+					console.log(arr3.length + " of " + arr3[2][1]);
+			  }
+			
+		}
+		else {
+			alert('Request failed.  Returned status of ' + xhr.status);
+		}
+	};
+	
+	//Prepare some objects to send
+	var tar1 = [];	
+	for (var i = 0; i < 33; i++) {		
+		tar1[i] = "AbcdefПривет";
+	}
+	
+	var cbp = new ArrayBuffer(3);
+	var ucbp= new Uint8Array(cbp);
+	ucbp[0] = 18;
+	ucbp[1] = 250;
+	ucbp[2] = 128;
+	
+	var tar2 = [];
+	for (var i = 0; i < 3; i++) {		
+		var o2 = new obj1();
+		o2.MyString = "kes1244";
+		o2.MyDigit = 27.789+i;
+		tar2[i] = o2;
+	}	
+	
+	//Sending to C# server
+	var isend=new Biser();
+		isend
+		.ELong(-999999999999999)		 //Works up to .ELong(999999999999999) or (-999999999999999) ulong can take one digit more.  this "99999999999999987" returns "99999999999999984", c# 9223372036854775807 -long.max
+		.ELong(125879)
+		.EDouble(-17000.3287)
+		.EString("abcHello привет hi")
+		.ELong(-125)
+		.EDate(new Date(Date.now()))
+		.EArray(tar1,function(x){isend.EString(x);})	
+		.EDouble(15.17)		
+		.EBool(false)	
+		.EBool(true)	
+		.EUint8Array(ucbp)
+		.EArray(tar2,function(x){ x.BiserEncode(isend);})
+		;
+		
+	xhr.send( new Uint8Array(isend.ear));
+
+}
+var Biser= function(){
+	var that = this; //ECMAScript 3/5 compatibility: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions	
+	this.RootBiser=this;	
+	this.ear = [];
+	this.earPos = -1;
+	this.decPos = -1;
+	this.qb = 0; //quantity of bytes, necessary to create latest varInt (used in getdigit)
+	this.ELong = function(value) 
+	{
+		this.GetVarintBytes(this.EncodeZigZag(value, 64));
+		return this;
+	};
+	this.DLong = function() 
+	{		
+		return this.DecodeZigZag(this.GetDigit());
+	};
+	this.ELong = function(value) 
+	{
+		this.GetVarintBytes(this.EncodeZigZag(value, 64));
+		return this;
+	};
+	this.EBool = function(value) 
+	{		
+		this.GetVarintBytes((value == true) ? 1 : 0);
+		return this;
+	};
+	this.DBool = function() 
+	{		
+		return this.GetDigit() == 1;
+	};	
+	this.EDate = function(value) 
+	{//ms since 1970		
+		that.ELong(value.getTime());			
+		return this;
+	};
+	this.DDate = function() 
+	{//restores from ms since 1970
+		return new Date(that.DLong());
+	};	
+	this.EDouble = function(value) 
+	{
+		//Doubles (2^53, maximal precision 15 digit with or without comma)
+		var buffer = new ArrayBuffer(8);
+		var dbl = new Float64Array(buffer);
+		dbl[0] = value;
+		var marr1 =  new Int8Array(buffer);			
+		this.RootBiser.ear[++this.RootBiser.earPos]= (IsBigEndian() == true ? 1 : 0); //1 when BigEndian architecture
+		for (var i = 0; i < marr1.length; i++)
+			this.RootBiser.ear[++this.RootBiser.earPos]= marr1[i];
+		return this;
+	};
+	this.DDouble = function() 
+	{
+		var buffer = new ArrayBuffer(8);		
+		var marr1 =  new Int8Array(buffer);
+		if(this.ReadNext() == 0){  //Little-Endian
+			for (var i = 0; i < marr1.length; i++)
+				marr1[i] = this.ReadNext();							
+		}
+		else{
+			for (var i = marr1.length-1; i >= 0; i--)
+				marr1[i] = this.ReadNext();
+		}
+		var dbl = new Float64Array(buffer);
+		return dbl[0];		
+	};
+	
+	this.EString = function(value) 
+	{
+		var btStr=[]; //will be array of ints		
+		var pos=0;
+		for (var i = 0; i < value.length; i++) 
+			btStr[i] = value.charCodeAt(i);
+			
+		this.EArray(btStr, function(x){ that.ELong(x);}	);
+				
+		return this;
+	};
+	this.DString = function() 
+	{	
+
+		var btStr = this.DArray(function(){ return that.DLong();});
+		var arr1=[];
+		
+		for (var i = 0; i < btStr.length; i++) 
+			arr1.push(String.fromCharCode(btStr[i]));
+	
+	//console.log("len " + arr1.length + "; " + btStr.length);
+		return arr1.join("");	
+		
+	};	
+	this.EUint8Array = function(value)
+	{	
+		that.ELong(value.length);
+		if(value.length>0)
+		{
+			for (var i = 0; i < value.length; i++)
+				this.RootBiser.ear[++this.RootBiser.earPos]= value[i];		
+		}
+		return this;
+	};
+	this.DUint8Array = function()	//use result.buffer to ArrayBuffer of it
+	{
+		var len = that.DLong();		
+		var buffer = new ArrayBuffer(len);
+		var byteArray = new Uint8Array(buffer);
+		if(len>0)
+		{
+			for (var i = 0; i < len; i++)
+				byteArray[i]= this.ReadNext();		
+		}
+		return byteArray;
+	};
+	this.EArray = function(pArr,foo) 
+	{	
+		if (pArr && pArr.length > 0) {			//&& (typeof foo == "function") - leaving out of check
+			this.RootBiser.ear[++this.RootBiser.earPos] = 0;
+			//console.log("A=" + earPos);
+			var ip=++this.RootBiser.earPos;	//initial position
+			this.RootBiser.ear[ip] = 0;
+			
+			for(var i=0; i<pArr.length; i++){
+				foo(pArr[i]);
+			}
+			//console.log("B=" + earPos);
+			//console.log("C=" + ip);
+			var len = this.RootBiser.earPos - ip;
+			//console.log("Len=" + len);
+			
+			var intLenSize = (len > 268435455) ? 5 : (len > 2097151) ? 4 : (len > 16383) ? 3 : (len > 127) ? 2 : 1;  //4 bytes max for collections and groups
+
+			var rp=0;
+			
+            if (intLenSize > 1)
+            {			
+				var jl = intLenSize - 1;
+				//console.log("jl=" + jl);
+				for(var j=0; j<jl; j++){
+					this.RootBiser.ear[++this.RootBiser.earPos] = this.RootBiser.ear[ip+1+j];
+				}
+				rp = this.RootBiser.earPos;
+				this.RootBiser.earPos = ip-1;
+				this.GetVarintBytes(len);	
+				this.RootBiser.earPos = rp;					
+            }
+            else
+            {			
+				rp = this.RootBiser.earPos;
+				this.RootBiser.earPos = ip-1;
+				this.GetVarintBytes(len);	
+				this.RootBiser.earPos = rp;				
+            }
+		}
+		else
+		{
+			this.RootBiser.ear[++this.RootBiser.earPos] = 1;
+		}
+		return this;
+	};
+	this.DArray = function(foo) 
+	{
+		var ret=[];
+		var byteValue = this.ReadNext();				
+		if (byteValue == 0) {	//&& (typeof foo == "function") - leaving out of check
+			var len = this.GetDigit();
+			//console.log("Len1=" + len);
+			//console.log("decPos=" + this.RootBiser.decPos);
+			var ip = this.RootBiser.decPos;
+			//var ip = 0;
+			var ri=0;			
+			this.collectionShift = 0;
+			var tail = this.RootBiser.qb;
+			
+			var activeCollectionShift = null;
+			var activeCollectionLen = null;
+			
+			if(tail>1){	//Collection has a tail
+				activeCollectionShift = this.RootBiser.collectionShift;
+				activeCollectionLen = this.RootBiser.collectionLen;				
+				this.RootBiser.collectionShift = this.RootBiser.qb - 1;
+				this.RootBiser.collectionLen = len;				
+			}
+			//console.log("DArrayStart len=" + len+"; tail=" + tail + "; decPos=" + this.RootBiser.decPos + "; curpos=" + ip +"; form=" + (len - (this.RootBiser.decPos - ip + tail))+"; ");
+				//while((len - ip)>0){
+				//while((this.RootBiser.decPos - ip)<len){											
+			while((len - (this.RootBiser.decPos - ip + (tail-1)))>0){											
+				//while((len - (this.RootBiser.decPos - ip ))>0){											
+				
+				ret[ri]= foo();				
+				
+				//console.log("DArrayWhile len=" + len + "; decPos=" + this.RootBiser.decPos + "; curpos=" + ip +"; form=" + (len - (this.RootBiser.decPos - ip + (tail-1)))+"; " + "ret(" + ri + ")=" + ret[ri-1] + "; " + String.fromCharCode(ret[ri-1]));	
+				////console.log("ret(" + ri + ")= "  + ret[ri]);				
+				ri++;
+				//ip+=this.RootBiser.qb;
+				
+			}
+			//console.log("DArrayEnd");
+			
+			//console.log("papa1=" + (len - (this.RootBiser.decPos - ip + 1)));
+			if(tail>1)
+			{
+				this.RootBiser.collectionShift = activeCollectionShift;
+				this.RootBiser.collectionLen = activeCollectionLen;				
+				this.RootBiser.decPos += tail-1;
+				//console.log("retlen=" + ret.length);			
+			}
+		}
+		
+		return ret;		
+	};
+	this.collectionShift = 0;	
+	this.collectionLen = 0;
+	this.ReadNext = function()
+	{
+		var byteValue = 0;	
+		if(this.RootBiser.collectionShift>0){
+			byteValue = this.RootBiser.ear[this.RootBiser.decPos + this.RootBiser.collectionLen + 1 - this.RootBiser.collectionShift];
+			this.RootBiser.collectionShift--;				
+		}
+		else
+			byteValue = this.RootBiser.ear[++this.RootBiser.decPos];
+			
+		return byteValue;
+	};
+	longShiftLeft= function(value, shiftBits)
+	{
+		var shift = Math.pow(2, shiftBits);
+		return Math.floor(value * shift);		
+	};	
+	longShiftRight= function(value, shiftBits)
+	{
+		
+		var shift = Math.pow(2, shiftBits);
+		return Math.floor(value / shift);		
+	};	
+	IsBigEndian = function ()
+	{ 
+		return (new Uint8Array(new Uint32Array([0x12345678]).buffer))[0] === 0x12; 
+	};
+	var hi=0x80000000;
+	var low = 0x7fffffff;
+	longAnd= function(v1,v2)
+	{
+		var hi1 = ~~(v1 / hi);
+		var low1 = v1 & low;		
+		var hi2 = ~~(v2 / hi);    
+		var low2 = v2 & low;
+		var h = hi1 & hi2;
+		var l = low1 & low2;	
+		return Math.floor(h*hi + l);
+		//return (h*hi + l);
+	};	
+	longOr= function(v1,v2)
+	{
+		var hi1 = ~~(v1 / hi);
+		var low1 = v1 & low;		
+		var hi2 = ~~(v2 / hi);    
+		var low2 = v2 & low;
+		var h = hi1 | hi2;
+		var l = low1 | low2;	
+		return Math.floor(h*hi + l);
+	};
+	longXOr= function(v1,v2)
+	{
+		var hi1 = ~~(v1 / hi);
+		var low1 = v1 & low;		
+		var hi2 = ~~(v2 / hi);    
+		var low2 = v2 & low;
+		var h = hi1 ^ hi2;
+		var l = low1 ^ low2;	
+		return Math.floor(h*hi + l);
+	};
+	this.EncodeZigZag = function(value, bitLength)
+	{	
+		if(value>=0)
+			return longShiftLeft(value,1);
+		else 
+			return longShiftLeft(-1 * value,1)-1;
+	
+		 //return (value << 1) ^ (value >> (bitLength - 1));
+	};
+	this.DecodeZigZag = function(value) //ulong value returns long
+	{
+		if (longAnd(value, 0x1) == 0x1)
+			return (-1 * (longShiftRight(value, 1) + 1));
+			
+		return longShiftRight(value, 1);
+		
+		/*
+		if ((value & 0x1) == 0x1)
+			return (-1 * ((value >> 1) + 1));
+
+		return (value >> 1);
+		*/
+		
+	};
+	this.GetDigit = function() 
+	{	
+		var byteValue = 0;
+		var result = 0;		
+		var shift = 0;
+		this.RootBiser.qb = 0;
+		while(true)
+		{
+			byteValue = this.ReadNext();			
+			//result |= (byteValue & 0x7f) << shift; 
+			result = longOr(result, longShiftLeft(longAnd(byteValue,0x7f),shift));			
+			//console.log("here-"+byteValue);
+			this.RootBiser.qb++;						
+			if ((byteValue & 0x80) != 0x80)
+				return result;
+			shift += 7;
+		}		
+	};
+	this.GetVarintBytes = function(value) 
+	{	
+		var byteVal;
+		do
+		{
+			byteVal = longAnd(value, 0x7f);
+			value = longShiftRight(value,7);
+			if (value != 0)
+				byteVal |= 0x80;						
+			this.RootBiser.ear[++this.RootBiser.earPos] = byteVal;			
+		} while (value != 0);	
+	/*
+		var byteVal;
+		do
+		{
+			byteVal = value & 0x7f;
+			value >>= 7;
+			//value /= 128;
+			if (value != 0)
+				byteVal |= 0x80;			
+			this.RootBiser.ear[++this.RootBiser.earPos] = byteVal;			
+		} while (value != 0);	
+		*/
+	};
+	GetVarintBytesInternal = function(value,array,pos) 
+	{
+		var byteVal;		
+		do
+		{
+			byteVal = longAnd(value, 0x7f);
+			value = longShiftRight(value,7);
+			//value >>= 7;			
+			if (value != 0)
+				byteVal |= 0x80;			
+			array[pos++] = byteVal;			
+		} while (value != 0);
+		return pos;
+		/*
+		var byteVal;		
+		do
+		{
+			byteVal = value & 0x7f;
+			value >>= 7;
+			//value /= 128;
+			if (value != 0)
+				byteVal |= 0x80;			
+			array[pos++] = byteVal;			
+		} while (value != 0);
+		return pos;
+		*/
+	};
+	this.Final = function()
+	{
+		console.log("---");		
+		for (var i = 0; i < this.RootBiser.ear.length; i++) {			
+			console.log('Entry ' + i + ': ' + this.RootBiser.ear[i]);
+		}
+		//console.log(this.earPos); 
+		//console.log(this.ear.length); 
+		
+		//String https://www.w3schools.com/jsref/jsref_charCodeAt.asp
+		//https://gist.github.com/faisalman/4213592   decimal hehadecimal to bin
+		//float https://stackoverflow.com/questions/25942516/double-to-byte-array-conversion-in-javascript
+		
+		//https://github.com/dotnet/coreclr/tree/master/src/mscorlib/shared/System
+		
+		//looks like, must be left long (cutted to 2^53 -1) or int(decoding only) 
+		//double byte[] string datetime bool byte[] 
+		
+		/* byte to sbyte and back
+		for (var i = 0; i < 256; i++) { 
+		  var sbyte = (i - ((i & 128) << 1)); //converting from byte (C#) to sbyte (js)
+		  //var bte = ((sbyte + 128) + (1 - 2 * (((sbyte + 128) & 0x80) >> 7)) * 128); //converting from sbyte (js) to byte (C#)
+		  var bte = sbyte + (256 & ((sbyte & 0x80) << 1)) 
+		  console.log('Entry ' + i + ': ' + sbyte +'; ' + bte);
+		  //console.log('Entry ' + i + ': ' + (i - ((i & 128) << 1)));
+		}
+		
+		*/
+	};
+	
+}
+
+function doubleToByteArray(number) {
+    var buffer = new ArrayBuffer(8);         // JS numbers are 8 bytes long, or 64 bits
+    var longNum = new Float64Array(buffer);  // so equivalent to Float64
+
+    longNum[0] = number;
+
+    return Array.from(new Int8Array(buffer));  // reverse to get little endian
+}
+
+var obj1=function()
+{
+	this.MyString = "";
+	this.MyDigit = 0;
+	this.BiserEncode = function(enc)
+	{
+		var mb1=new Biser();
+		mb1.RootBiser = enc.RootBiser;
+		mb1
+		.EString(this.MyString)
+		.EDouble(this.MyDigit)
+		;		
+	};
+	this.BiserDecode = function(enc)
+	{
+		var mb1=new Biser();
+		mb1.RootBiser = enc.RootBiser;
+		this.MyString = mb1.DString();
+		this.MyDigit = mb1.DDouble();
+		return this;		
+	};
+};
+
+function aFunc()
+{
+
+	var tar = [];	
+	for (var i = 0; i < 32; i++) {		
+		tar[i] = -146546886;
+	}	
+	var tar1 = [];	
+	for (var i = 0; i < 33; i++) {		
+		tar1[i] = "AbcdefПривет";
+	}
+	
+	var o1 = new obj1();
+	o1.MyString = "tes12";
+	o1.MyDigit = 15.47;	
+	
+	var tar2 = [];
+	for (var i = 0; i < 3; i++) {		
+		var o2 = new obj1();
+		o2.MyString = "kes1244";
+		o2.MyDigit = 27.789+i;
+		tar2[i] = o2;
+	}	
+	
+	var cbp = new ArrayBuffer(3);
+	var ucbp= new Uint8Array(cbp);
+	ucbp[0] = 18;
+	ucbp[1] = 19;
+	ucbp[2] = 20;
+	
+	
+	//Encoding
+	var mb = new Biser();
+	mb
+	.ELong(1521797378957)		
+	.ELong(-1521797378957)		
+	.ELong(-123879)	
+	.ELong(12378987878)	
+	.EArray(tar,function(x){mb.ELong(x);})
+	.EDouble(124e-112)
+	.EDouble(156.678)
+	.EString("HelloПривет1")		
+	.EArray(tar1,function(x){mb.EString(x);})
+	.EDouble(1666.12)
+	.EDate(new Date(Date.now()))
+	;	
+	
+	o1.BiserEncode(mb); //EObject that implements BiserEncode function?
+	
+	mb.EArray(tar2,function(x){ x.BiserEncode(mb);});
+	
+	var mb1=new Biser();
+	mb1.RootBiser = mb.RootBiser;
+	mb1
+	.ELong(12)
+	;
+	
+	mb.EUint8Array(ucbp);
+	mb.EBool(false);
+	mb.EBool(true);
+	mb.ELong(17);
+	
+	//Decoding
+	console.log(mb.DLong());
+	console.log(mb.DLong());
+	console.log(mb.DLong());
+	console.log(mb.DLong());	
+	var arr = mb.DArray(function(){ return mb.DLong();});
+		console.log(arr.length + " of " + arr[0]);			
+	console.log(mb.DDouble());
+	console.log(mb.DDouble());
+	console.log(mb.DString());
+	var arr1 = mb.DArray(function(){ return mb.DString();});
+		console.log(arr1.length + " of " + arr1[3]);	
+	console.log(mb.DDouble());
+	console.log(mb.DDate());
+
+	var o1b = (new obj1()).BiserDecode(mb);
+	console.log(o1b.MyString);
+	console.log(o1b.MyDigit);
+	
+	var arr2 = mb.DArray(function(){ return (new obj1()).BiserDecode(mb);});
+		console.log(arr2.length + " of " + arr2[1].MyString + " and " + arr2[1].MyDigit);
+	
+	var mbD1=new Biser();
+	mbD1.RootBiser = mb.RootBiser;
+	console.log(mbD1.DLong());
+		////console.log(mb.DLong());  //or on
+		
+	var uintarr = mb.DUint8Array();
+	console.log(uintarr[1]);
+	var mySecArray = new Uint8Array(uintarr.buffer);
+	console.log(mySecArray[2]);
+	
+	console.log(mb.DBool());
+	console.log(mb.DBool());
+	console.log(mb.DLong());
+		
+	console.log(mb.ear);
+	return;
+	
+	//https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/Sending_and_Receiving_Binary_Data
+	//https://www.html5rocks.com/en/tutorials/webgl/typed_arrays/
+	//Getting endianess https://gist.github.com/TooTallNate/4750953
+	//getting ArrayBuffer from Uint8Array:  var foobar = new Uint8Array([ab]); var arrayBuffer = foobar.buffer;
+
+	
+	
+	//Doubles (2^53 or 15 digit (with or without comma or expo))
+   var buffer = new ArrayBuffer(8);         // JS numbers are 8 bytes long, or 64 bits
+    var longNum = new Float64Array(buffer);  // so equivalent to Float64
+
+    //longNum[0] = 124.56;
+	longNum[0] = 124e-112;
+	//longNum[0] = 12345678.9012345;
+	//longNum[0] = 1234567.1;
+
+//var marr1 =  Array.from(new Int8Array(buffer));
+var marr1 =  new Int8Array(buffer);
+
+for (var i = 0; i < marr1.length; i++) { 
+  console.log('Entry ' + i + ': ' + marr1[i] + ' _ ');
+}
+//var nn=longNum[0];
+//console.log((nn+1));
+
+return;
+/*
+//HS string to byte[] and back to string
+ var str = "HelloПривет";
+ var btStr=[]; //will be array of ints
+ for (var i = 0; i < str.length; i++) { 
+  btStr[i] = str.charCodeAt(i);
+  console.log('Entry ' + i + ': ' + str.charCodeAt(i));
+}
+var arr1=[];
+for (var i = 0; i < btStr.length; i++) { 
+	arr1.push(String.fromCharCode(btStr[i]));
+}
+console.log("mstr: " + arr1.join(""));
+
+*/
+/*
+//number to-from byte[]
+//https://www.w3schools.com/js/js_numbers.asp
+//http://qnimate.com/javascript-arraybuffers-and-typed-arrays/
+
+var buffer = new ArrayBuffer(8);
+var view = new DataView(buffer);
+
+//first arguement -> offset, represent from which byte we want to write the value
+//second arguement -> value to be stored
+//third arguement -> boolean -> Endianness -> false represents big-endian
+//setInt32 represents write the value to 32bits. Value is signed integer. 
+//view.setInt32(0,24,false);//here we are writing 22 in big-endian after first byte.
+//view.setFloat64(0,1287.4587985,false);//here we are writing 22 in big-endian after first byte.
+view.setFloat64(0,45e-78,false);//here we are writing 22 in big-endian after first byte.
+
+//lets retrieve and print the value
+//var number = view.getInt32(0,false);
+var number = view.getFloat64(0,false);
+document.getElementById("number").innerHTML = number;
+*/
+
+return;
+    var buffer = new ArrayBuffer(8);         // JS numbers are 8 bytes long, or 64 bits
+    var longNum = new Float64Array(buffer);  // so equivalent to Float64
+
+    longNum[0] = 124.56;
+
+//var marr1 =  Array.from(new Int8Array(buffer));
+var marr1 =  new Int8Array(buffer);
+
+for (var i = 0; i < marr1.length; i++) { 
+  console.log('Entry ' + i + ': ' + marr1[i]);
+}
+/*
+for (var i = 0; i < marr1.length; i++) { 
+  console.log('Entry ' + i + ': ' + marr1[i]);
+}
+for (var i = 0; i < longNum.length; i++) { 
+  console.log('Entry ' + i + ': ' + longNum[i]);
+}
+*/
+return;
+var marr = doubleToByteArray(12.56);
+for (var i = 0; i < marr.length; i++) { 
+  console.log('Entry ' + i + ': ' + marr[i]);
+}
+/*
+//byte to sbyte and back converter C# to JS
+for (var i = 0; i < 256; i++) { 
+		  var sbyte = (i - ((i & 128) << 1)); //converting from byte (C#) to sbyte (js)
+		  //var bte = ((sbyte + 128) + (1 - 2 * (((sbyte + 128) & 0x80) >> 7)) * 128); //converting from sbyte (js) to byte (C#)
+		  var bte = sbyte + (256 & ((sbyte & 0x80) << 1)) 
+		  console.log('Entry ' + i + ': ' + sbyte +'; ' + bte);
+		  //console.log('Entry ' + i + ': ' + (i - ((i & 128) << 1)));
+		}
+
+*/
+
+/*
+var mb = new Biser()
+.ELong(123879)
+.ELong(-123);
+
+console.log(mb.DLong());
+console.log(mb.DLong());
+*/
+/*
+var mb = new Biser();
+mb.ELong(129879);
+mb.ELong(-123);
+//console.log(mb.DLong());
+//console.log(mb.DLong());
+
+var mb1 = new Biser();
+mb1.ear = mb.ear;
+
+console.log(mb1.DLong());
+console.log(mb1.DLong());
+return;
+*/
+/*
+Biser.Final();
+*/
+/*
+var buf=[]
+buf[0] = 1
+buf[1] = 2
+
+console.log(buf.length);
+*/
+/*
+var int8View = new Int8Array(20);
+
+for (var i = 0; i < int8View.length; i++) {
+  int8View[i] = i;
+  console.log('Entry ' + i + ': ' + int8View[i]);
+}
+*/
+
+//https://developer.mozilla.org/en-US/docs/Web/JavaScript/Typed_arrays
+/*
+var buffer = new ArrayBuffer(16);
+var int8View = new Int8Array(20);
+
+for (var i = 0; i < int8View.length; i++) {
+ int8View[i] = i;
+  console.log('Entry ' + i + ': ' + int8View[i]);
+}
+*/
+/*
+var buffer = new ArrayBuffer(16);
+var int32View = new Int32Array(buffer);
+
+for (var i = 0; i < int32View.length; i++) {
+  int32View[i] = i * 2;
+  //console.log(int32View[i]);
+}
+*/
+
+/*
+var buffer = new ArrayBuffer(16);
+var int16View = new Int16Array(buffer);
+
+for (var i = 0; i < int16View.length; i++) {
+  console.log('Entry ' + i + ': ' + int16View[i]);
+}
+*/
+/*
+var a = {
+	Decode : function() {console.log("pp");},
+	Set: "dfsdh"
+};
+a.Name="Hih";
+
+console.log(a.Name);
+a.Decode();
+console.log(a.Set);
+console.log(5 + 6);
+*/
+}
+
+aFunc();
+console.log("---done");
+</script>
+
+</body>
+</html> 
