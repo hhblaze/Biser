@@ -1,7 +1,7 @@
 var Biser= function(){
 	var that = this; //ECMAScript 3/5 compatibility: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions	
 	this.RootBiser=this;	
-	this.ear = [];
+	this.ear = [];	//main array filled after serialization and used for deserialization
 	this.earPos = -1;
 	this.decPos = -1;
 	this.qb = 0; //quantity of bytes, necessary to create latest varInt (used in getdigit)
@@ -9,7 +9,7 @@ var Biser= function(){
 	{		
 		return this.GetDigit() == 1; //1 - null, 0 - object will follow
 	};
-	this.ELong = function(value) 
+	this.ELong = function(value) //Max Range is -999999999999999  -  999999999999999, that is far away from C# (9223372036854775807)
 	{
 		this.GetVarintBytes(this.EncodeZigZag(value, 64));
 		return this;
@@ -43,7 +43,7 @@ var Biser= function(){
 	};	
 	this.EDouble = function(value) 
 	{
-		//Doubles (2^53, maximal precision 15 digit with or without comma)
+		//Doubles (2^53, maximal precision is 15 digit with or without comma)
 		var buffer = new ArrayBuffer(8);
 		var dbl = new Float64Array(buffer);
 		dbl[0] = value;
@@ -231,8 +231,7 @@ var Biser= function(){
 		var low2 = v2 & low;
 		var h = hi1 & hi2;
 		var l = low1 & low2;	
-		return Math.floor(h*hi + l);
-		//return (h*hi + l);
+		return Math.floor(h*hi + l);		
 	};	
 	longOr= function(v1,v2)
 	{
@@ -309,7 +308,7 @@ var Biser= function(){
 		} while (value != 0);
 		return pos;		
 	};
-	this.Final = function()
+	this.Final = function() //for showing ear content
 	{
 		console.log("---");		
 		for (var i = 0; i < this.RootBiser.ear.length; i++) {			
