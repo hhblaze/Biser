@@ -101,12 +101,24 @@ namespace Biser
         }
 
         #region "JS add"
+        public Encoder Add(IJSEncoder item)
+        {
+            if (item == null)
+            {
+                ms.WriteByte(1);                
+                return this;
+            }
+
+            item.BiserJSEncoder(this);
+            return this;
+        }
+
         public Encoder JSAdd(long value)
         {
             if (value > 999999999999999 || value < -999999999999999)
                 throw new Exception("Biser.Encoder.JSAdd(long) value is out of range -999999999999999...999999999999999 ");
 
-            GetVarintBytes((ulong)Biser.EncodeZigZag(value, 64));
+            Add(value);            
             return this;
         }
         public Encoder JSAdd(ulong value)
@@ -502,6 +514,8 @@ namespace Biser
             item.BiserEncoder(this);
             return this;
         }
+
+       
 
         public Encoder Add<T>(IEnumerable<T> items, Action<T> f)   //either well-known type or IEncoder
         {

@@ -18,4 +18,21 @@ namespace Biser
         object BiserDecodeToObject(Decoder extDecoder);
         object BiserDecodeToObject(byte[] encoded);
     }
+
+    /// <summary>
+    /// Starting from JSAdd
+    /// </summary>
+    public interface IJSEncoder
+    {
+        Encoder BiserJSEncoder(Encoder existingEncoder = null);
+    }
+
+    /// <summary>
+    /// Starting from JSGet
+    /// </summary>
+    public interface IJSDecoder
+    {
+        object BiserJSDecodeToObject(Decoder extDecoder);
+        object BiserJSDecodeToObject(byte[] encoded);
+    }
 }

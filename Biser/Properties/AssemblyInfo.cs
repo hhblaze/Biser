@@ -6,10 +6,10 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Biser")]
-[assembly: AssemblyDescription("Biser.NET dotnet binary serializer")]
+[assembly: AssemblyDescription("Biser.NET dotnet and javascript binary serializer")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("tiesky.com")]
-[assembly: AssemblyProduct("Biser.NET dotnet binary serializer")]
+[assembly: AssemblyProduct("Biser.NET dotnet and javascript binary serializer")]
 [assembly: AssemblyCopyright("Copyright © tiesky.com /Alex Solovyov 2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.2.2018.0222")]
-[assembly: AssemblyFileVersion("1.2.2018.0222")]
+[assembly: AssemblyVersion("1.3.2018.0405")]
+[assembly: AssemblyFileVersion("1.3.2018.0405")]

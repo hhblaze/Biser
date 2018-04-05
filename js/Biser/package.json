@@ -1,0 +1,25 @@
+{
+  "name": "biser",
+  "version": "1.0.0",
+  "description": "Binary serializer for javascript and .NET (c# csharp dotnet)",
+  "main": "biser.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hhblaze/Biser.git"
+  },
+  "keywords": [
+    "binary",
+    "serializer",
+    "javascript",
+    "dotnet"
+  ],
+  "author": "Alexey Solovyov, tiesky.com, hhblaze@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hhblaze/Biser/issues"
+  },
+  "homepage": "https://github.com/hhblaze/Biser"
+}
