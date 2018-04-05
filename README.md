@@ -498,8 +498,6 @@ if (lst != null)
 
 //Sending to JS client
 
-resp.TransferType = GccObjects.Net.Web.HttpResponseModule.eTransferType.AS_BYTE_ARRAY;
-
 List<string> lstStr = new List<string> { "hi", "nice", "приZtrüüü" };
 List<Tuple<string,double>> lstTpl = new List<Tuple<string, double>>
 {
@@ -527,7 +525,7 @@ enc
    .JSAdd(new byte[] { 8, 128 ,254})
    .Add(lstBta, r => { enc.JSAdd(r); })                       
 ;
-resp.Result_As_ByteArray = enc.Encode();	//this should be send to the browser
+byte[] sendToJsClient = enc.Encode();	//this should be send to the browser
 ```
 
 hhblaze@gmail.com
