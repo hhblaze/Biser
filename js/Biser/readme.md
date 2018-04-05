@@ -1,6 +1,6 @@
 # Biser
 
-[Biser](https://github.com/hhblaze/Biser) is a binary serializer for javascript and .NET (dotnet C# VB.NET).
+[Biser](https://github.com/hhblaze/Biser) is a cross-platform binary serializer for javascript and .NET (dotnet C# VB.NET).
 
 ### Javascript. Encoding / Decoding example.
 
