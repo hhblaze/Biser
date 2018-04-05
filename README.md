@@ -13,7 +13,7 @@ or +8KB to the final compiled length, when embedded as a source code.
 - Different encoding/decoding scenarios for one object are supported.
 - Thread safe. No need to "warm up" serializing/encoding entities.
 - Managed code without external references.
-- Contains cross-platform serializing functions for dotnet - javascript chain ([documentation](https://github.com/hhblaze/Biser#biser-as-a-cross-platform-serializer)).
+- Contains cross-platform serializing functions for dotnet - javascript serialized binary data exchange ([documentation](https://github.com/hhblaze/Biser#biser-as-a-cross-platform-serializer)).
 
 Integrated part of [DBreeze database](https://github.com/hhblaze/DBreeze), used in [Raft.NET](https://github.com/hhblaze/Raft.Net)
 
