@@ -4,7 +4,7 @@
 [![NuGet Badge](https://buildstats.info/nuget/Biser)](https://www.nuget.org/packages/Biser/)
 [![Image of Build](https://img.shields.io/badge/Powered%20by-tiesky.com-1883F5.svg)](http://tiesky.com)
 
-Cross-platform binary serializer for .NET dotnet and javascript ("biser" in Russian means "beads")
+Cross-platform binary serializer for .NET dotnet and [javascript ](https://github.com/hhblaze/Biser#biser-as-a-cross-platform-serializer) ("biser" in Russian means "beads")
 
 - Can be an alternative to [protobuf-net](https://github.com/mgravell/protobuf-net) in some circumstances. 
 - Has the same [operational speed (Benchmark)](https://github.com/hhblaze/Biser/blob/master/Benchmark/Program.cs) as protobuf-net, smaller payload and 15KB DLL size 
