@@ -17,12 +17,7 @@ var Biser= function(){
 	this.DLong = function() 
 	{		
 		return this.DecodeZigZag(this.GetDigit());
-	};
-	this.ELong = function(value) 
-	{
-		this.GetVarintBytes(this.EncodeZigZag(value, 64));
-		return this;
-	};
+	};	
 	this.EBool = function(value) 
 	{		
 		this.GetVarintBytes((value == true) ? 1 : 0);
