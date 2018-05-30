@@ -6,7 +6,7 @@
 
 Cross-platform binary serializer for .NET dotnet and [javascript ](https://github.com/hhblaze/Biser#biser-as-a-cross-platform-serializer) ("biser" in Russian means "beads")
 
-- Can be an alternative to [protobuf-net](https://github.com/mgravell/protobuf-net) in some circumstances. 
+- Can be an alternative to [protobuf-net](https://github.com/mgravell/protobuf-net) in some circumstances (works in [MONO WASM](https://github.com/aspnet/Blazor) ).
 - Has the same [operational speed (Benchmark)](https://github.com/hhblaze/Biser/blob/master/Benchmark/Program.cs) as protobuf-net, smaller payload and 15KB DLL size 
 or +8KB to the final compiled length, when embedded as a source code.
 - Has custom encoding possibilities of any complexity.

@@ -223,6 +223,11 @@ namespace Biser
                 }
 
                 collectionLength = (int)((uint)this.rootDecoder.GetDigit());
+                if(collectionLength == 0)
+                {
+                    collectionIsFinished = true;
+                    return;
+                }
                 collectionPos = 0;
                 collectionShift = 0;
                 collectionShiftToPass = 0;

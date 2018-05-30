@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,6 +18,27 @@ namespace BiserTest_Net
     {
         static void Main(string[] args)
         {
+
+            Biser.Encoder en2 = new Biser.Encoder();
+            en2.Add((int)12);
+            List<int> lst1 = new List<int>();
+            lst1.Add(1);
+            lst1.Add(2);
+            lst1.Add(3);
+            en2.Add(lst1, r => { en2.Add(r); });
+            en2.Add((int)14);
+            Biser.Decoder de2 = new Biser.Decoder(en2.Encode());
+            Debug.WriteLine(de2.GetInt());
+            List<int> lst = de2.CheckNull() ? null : new List<int>();
+            if (lst != null)
+            {
+                de2.GetCollection(() => { return de2.GetInt(); }, lst, true);
+                foreach (var item in lst)
+                    Debug.WriteLine(item);
+            }
+            Debug.WriteLine(de2.GetInt());
+            return;
+
             //var le = BitConverter.IsLittleEndian;
             Biser.Encoder enn = new Biser.Encoder();
             byte[] btEnn = null;

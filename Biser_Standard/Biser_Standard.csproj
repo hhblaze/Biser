@@ -4,9 +4,9 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>Biser</RootNamespace>
     <AssemblyName>Biser</AssemblyName>
-    <AssemblyVersion>1.2.2018.0222</AssemblyVersion>
-    <FileVersion>1.2.2018.0222</FileVersion>
-    <Version>1.2.0</Version>
+    <AssemblyVersion>1.4.2018.0530</AssemblyVersion>
+    <FileVersion>1.4.2018.0222</FileVersion>
+    <Version>1.4.0</Version>
     <Authors>tiesky.com / Alex Solovyov</Authors>
     <Company>tiesky.com</Company>
     <Description>Biser.NET dotnet binary serializer</Description>
