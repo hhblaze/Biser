@@ -21,20 +21,35 @@ namespace BiserTest_Net
 
             Biser.Encoder en2 = new Biser.Encoder();
             en2.Add((int)12);
-            List<int> lst1 = new List<int>();
-            lst1.Add(1);
-            lst1.Add(2);
-            lst1.Add(3);
-            en2.Add(lst1, r => { en2.Add(r); });
+            Dictionary<string, byte[]> dic1 = new Dictionary<string, byte[]>();
+            dic1.Add("str1", new byte[] { 1, 2, 3 });
+            dic1.Add("str2", new byte[] { 1, 2 });
+            dic1.Add("str3", null);
+            dic1.Add("str4", new byte[0]);
+            dic1.Add("str5", new byte[] { 1, 2,3,4,5 });
+            en2.Add(dic1, r => { en2.Add(r.Key); en2.Add(r.Value); });
+            //List<int> lst1 = new List<int>();
+            //lst1.Add(1);
+            //lst1.Add(2);
+            //lst1.Add(3);
+            //en2.Add(lst1, r => { en2.Add(r); });
             en2.Add((int)14);
             Biser.Decoder de2 = new Biser.Decoder(en2.Encode());
             Debug.WriteLine(de2.GetInt());
-            List<int> lst = de2.CheckNull() ? null : new List<int>();
-            if (lst != null)
+            //List<int> lst = de2.CheckNull() ? null : new List<int>();
+            //if (lst != null)
+            //{
+            //    de2.GetCollection(() => { return de2.GetInt(); }, lst, true);
+            //    foreach (var item in lst)
+            //        Debug.WriteLine(item);
+            //}
+            Dictionary<string, byte[]> dic = de2.CheckNull() ? null : new Dictionary<string, byte[]>();
+            if (dic != null)
             {
-                de2.GetCollection(() => { return de2.GetInt(); }, lst, true);
-                foreach (var item in lst)
-                    Debug.WriteLine(item);
+                de2.GetCollection(() => { return de2.GetString(); },
+                    () => { return de2.GetByteArray(); }, dic, true);
+                foreach (var item in dic)
+                    Debug.WriteLine(item.Key);
             }
             Debug.WriteLine(de2.GetInt());
             return;

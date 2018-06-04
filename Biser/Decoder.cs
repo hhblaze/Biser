@@ -223,7 +223,7 @@ namespace Biser
                 }
 
                 collectionLength = (int)((uint)this.rootDecoder.GetDigit());
-                if(collectionLength == 0)
+                if (collectionLength == 0) //JS not noted change
                 {
                     collectionIsFinished = true;
                     return;
@@ -231,14 +231,15 @@ namespace Biser
                 collectionPos = 0;
                 collectionShift = 0;
                 collectionShiftToPass = 0;
-
+              
                 int cp = this.rootDecoder.encPos;
 
                 if (this.rootDecoder.qb > 1)
                 {
                     collectionShift = this.rootDecoder.qb - 1;
                     collectionShiftToPass = 0;
-                    this.rootDecoder.encPos = cp + collectionLength - 1;
+                    //this.rootDecoder.encPos = cp + collectionLength - 1;
+                    this.rootDecoder.encPos = cp + collectionLength - collectionShift; //JS not noted change
                     collectionBuffer = Read(collectionShift);
                     this.rootDecoder.encPos = cp;
                     collectionPos += collectionShift;
