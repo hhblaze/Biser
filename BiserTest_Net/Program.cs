@@ -18,7 +18,154 @@ namespace BiserTest_Net
     {
         static void Main(string[] args)
         {
+            var jsres = NetJSON.NetJSON.Serialize((int)12); //12
+            var ojsres = NetJSON.NetJSON.Deserialize<int>(jsres);
 
+            var jsres2 = NetJSON.NetJSON.Serialize((double)12.45687); //12.45687
+            var ojsres2 = NetJSON.NetJSON.Deserialize<double>(jsres2);
+
+            Dictionary<string, byte[]> dic1d = new Dictionary<string, byte[]>();
+            dic1d.Add("str1", new byte[] { 1, 2, 3 });
+            dic1d.Add("str2", new byte[] { 1, 2 });
+            dic1d.Add("str3", null);
+
+            var jsres1 = NetJSON.NetJSON.Serialize(dic1d); //{"str1":"AQID","str2":"AQI=","str3":null}
+            var ojsres1 = NetJSON.NetJSON.Deserialize<Dictionary<string, byte[]>>(jsres1);
+
+            List<Dictionary<string, byte[]>> ldic1d = new List<Dictionary<string, byte[]>>();
+            ldic1d.Add(dic1d);
+            ldic1d.Add(dic1d);
+            var jsres3 = NetJSON.NetJSON.Serialize(ldic1d); //[{"str1":"AQID","str2":"AQI=","str3":null},{"str1":"AQID","str2":"AQI=","str3":null}]
+            var ojsres3 = NetJSON.NetJSON.Deserialize<List<Dictionary<string, byte[]>>>(jsres3);
+
+            var jsres4 = NetJSON.NetJSON.Serialize((string)"ds\"fs{d}f"); //"ds\"fs{d}f"
+            // var jsres4 = NetJSON.NetJSON.Serialize("dsf\"sdfdsf{fdgdfgdf{dsfdsf[sdf\"\"dfdsf}"); //"dsf\"sdfdsf{fdgdfgdf{dsfdsf[sdf\"\"dfdsf}"
+            var ojsres4 = NetJSON.NetJSON.Deserialize<string>(jsres4); //"ds"fsdf"
+
+            TS2 jts2 = new TS2()
+            {
+                P1 = long.MinValue,
+                P2 = 4587.4564,
+                P3 = new List<TS3> {
+                     new TS3 { P3 = DateTime.UtcNow.AddDays(-1) },
+                     null,
+                     //new TS3 { P3 = DateTime.UtcNow.AddDays(-2) },
+                     new TS3 { P3 = DateTime.UtcNow.AddDays(-3) }
+                },
+                P4 = new TS3 { P1 = "hi" },
+                P5 = 111
+            };
+
+            TS1 jts1 = new TS1()
+            {
+                P1 = 12,
+                P2 = 15,
+                P3 = 478.5879m,
+                P4 = new List<TS2> { jts2, jts2 },
+                P5 = new Dictionary<long, TS3> {
+                    { 1, new TS3{ P1 = "t1" } },
+                    { 2, new TS3{ P1 = "t2" } },
+                    { 3, new TS3{ P1 = "t3" } }
+                },
+                P6 = new Dictionary<uint, List<TS3>> {
+                    { 1, new List<TS3>{ new TS3 { P1 = "h1" }, new TS3 { P1 = "h2" }, new TS3 { P1 = "h3" } } },
+                    { 2, new List<TS3>{ new TS3 { P1 = "h2" }, new TS3 { P1 = "h2" }, new TS3 { P1 = "h4" } } },
+                    { 3, new List<TS3>{ new TS3 { P1 = "h3" }, new TS3 { P1 = "h2" }, new TS3 { P1 = "h5" } } },
+                    { 4, new List<TS3>{ new TS3 { P1 = "h4" }, new TS3 { P1 = "h2" }, new TS3 { P1 = "h6" } } }
+                },
+                P7 = new TS2 { P1 = -789 },
+                P8 = new List<Tuple<string, byte[], TS3>> {
+                    new Tuple<string, byte[], TS3>("tt1",new byte[] { 1,2,3},new TS3 { P1 = "z1" }),
+                    new Tuple<string, byte[], TS3>("tt2",new byte[] { 3,2,3},new TS3 { P1 = "z2" }),
+                    new Tuple<string, byte[], TS3>("tt3",new byte[] { 4,2,3},new TS3 { P1 = "z3" }),
+                },
+                P9 = new Tuple<float, TS2, TS3, decimal?>(-.8f, new TS2 { P2 = 45 }, new TS3 { P2 = 12 }, -58.8m),
+                P10 = "dsf\"sdfdsf{fdgdfgdf{dsfdsf[sdf\"\"dfdsf}"
+            };
+
+
+
+            var jsres5 = NetJSON.NetJSON.Serialize(jts1, new NetJSON.NetJSONSettings { DateFormat = NetJSON.NetJSONDateFormat.ISO, Format = NetJSON.NetJSONFormat.Prettify }); 
+            /*{"P1":12,"P2":15,"P3":478.5879,"P4":[{"P1":-9223372036854775808,"P2":4587.4564,"P3":[{"P3":"\/Date(15340651396274201)\/"},null,{"P3":"\/Date(15338923396274201)\/"}],"P4":{"P1":"hi"},"P5":111},{"P1":-9223372036854775808,"P2":4587.4564,"P3":[{"P3":"\/Date(15340651396274201)\/"},null,{"P3":"\/Date(15338923396274201)\/"}],"P4":{"P1":"hi"},"P5":111}],"P5":{"1":{"P1":"t1"},"2":{"P1":"t2"},"3":{"P1":"t3"}},"P6":{"1":[{"P1":"h1"},{"P1":"h2"},{"P1":"h3"}],"2":[{"P1":"h2"},{"P1":"h2"},{"P1":"h4"}],"3":[{"P1":"h3"},{"P1":"h2"},{"P1":"h5"}],"4":[{"P1":"h4"},{"P1":"h2"},{"P1":"h6"}]},"P7":{"P1":-789},"P8":[{"Item1":"tt1","Item2":"AQID","Item3":{"P1":"z1"}},{"Item1":"tt2","Item2":"AwID","Item3":{"P1":"z2"}},{"Item1":"tt3","Item2":"BAID","Item3":{"P1":"z3"}}],"P9":{"Item1":12.8,"Item2":{"P2":45},"Item3":{"P2":12},"Item4":-58.8}}*/
+            var ojsres5 = NetJSON.NetJSON.Deserialize<TS1>(jsres5); //"ds"fsdf"
+
+
+            Dictionary<int, byte[]> dic1d2 = new Dictionary<int, byte[]>(); //key will be transformed toString, so key can't be byte[]
+            dic1d2.Add(12, new byte[] { 1, 2, 3 });
+            dic1d2.Add(17, new byte[] { 1, 2 });
+            
+
+            var jsres6 = NetJSON.NetJSON.Serialize(dic1d2); //{"12":"AQID","17":"AQI="}
+            var ojsres6 = NetJSON.NetJSON.Deserialize<Dictionary<int, byte[]>>(jsres6);
+
+
+            Dictionary<int, string> dic1d3 = new Dictionary<int, string>(); //key will be transformed toString, so key can't be byte[]
+            dic1d3.Add(12, "dsf\"sdfdsf{fdgdfgdf{dsfdsf[sdf\"\"dfdsf}");
+            dic1d3.Add(17, "dsf\"sdfdsf{fdgddddf{dsfdsf[sdf\"\"dfdsf}");
+
+
+            var jsres7 = NetJSON.NetJSON.Serialize(dic1d3, new NetJSON.NetJSONSettings { DateFormat = NetJSON.NetJSONDateFormat.ISO, Format = NetJSON.NetJSONFormat.Prettify }); //{"12":"AQID","17":"AQI="}
+            var ojsres7 = NetJSON.NetJSON.Deserialize<Dictionary<int, string>>(jsres7);
+
+
+
+
+            //var jsres8 = NetJSON.NetJSON.Serialize((int?)null); //{"12":"AQID","17":"AQI="}
+            //var ojsres8 = NetJSON.NetJSON.Deserialize<int?>(jsres8);
+
+            //var jsres8 = NetJSON.NetJSON.Serialize("dsf\"sdfdsf{fdgdfgdf{dsfdsf[sdf\"\"dfdsf}"); //{"12":"AQID","17":"AQI="}
+            //var ojsres8 = NetJSON.NetJSON.Deserialize<string>(jsres8);
+
+            //Dictionary<int, int> dic1d4 = new Dictionary<int, int>(); //key will be transformed toString, so key can't be byte[]
+            //dic1d4.Add(12, 15);
+            //dic1d4.Add(17, 57);
+            //var jsres8 = NetJSON.NetJSON.Serialize(dic1d4); //{"12":"AQID","17":"AQI="}
+            //var ojsres8 = NetJSON.NetJSON.Deserialize<Dictionary<int, int>>(jsres8);
+
+            List<int> dic1d4 = new List<int>();
+            dic1d4.Add(324);
+            dic1d4.Add(33);
+            var jsres8 = NetJSON.NetJSON.Serialize(dic1d4); //{"12":"AQID","17":"AQI="}
+            //var ojsres8 = NetJSON.NetJSON.Deserialize<List<int, int>>(jsres8);
+
+
+
+            JsonDecoder jsdec = new JsonDecoder(jsres8); //{"12":15,"17":57}
+            //var iuz = jsdec.GetInt_NULL();
+            //var iuz = jsdec.GetString();
+            //Dictionary<int,int> iuzd = jsdec.CheckNull() ? null : new Dictionary<int, int>();
+            List<int> iuzd = jsdec.CheckNull() ? null : new List<int>();
+
+            if (iuzd != null)
+            {
+                //jsdec.GetCollection(() => { return jsdec.GetInt(); },
+                //    () => { return jsdec.GetInt(); }, iuzd, true);
+                //foreach (var item in iuzd)
+                //    Debug.WriteLine(item.Key);
+                jsdec.GetCollection(() => { return jsdec.GetInt(); }, iuzd, true);
+                foreach (var item in iuzd)
+                    Debug.WriteLine(item);
+            }
+
+            TS1 jsts1 = new TS1()
+            {
+                P1 = 12,
+                P2 = 17
+            };
+
+            jsts1.P11 = new Dictionary<int, int>();
+            jsts1.P11.Add(12, 14);
+            jsts1.P11.Add(17, 89);
+
+            jsts1.P5 = new Dictionary<long, TS3>();
+            jsts1.P5.Add(189, new TS3 { P1 ="dsf", P2 =45, P3 = DateTime.UtcNow });
+            jsts1.P5.Add(178, new TS3 { P1 = "sdfsdfsdfs", P2 = null, P3 = DateTime.UtcNow });
+
+            var jsres9 = NetJSON.NetJSON.Serialize(jsts1);
+
+            var jsts1d = TS1.BiserJsonDecode(jsres9);
+
+            return;
             Biser.Encoder en2 = new Biser.Encoder();
             en2.Add((int)12);
             Dictionary<string, byte[]> dic1 = new Dictionary<string, byte[]>();

@@ -34,6 +34,64 @@ namespace BiserTest_Net
             return enc;
         }
 
+
+        public static TS1 BiserJsonDecode(string enc = null, Biser.JsonDecoder extDecoder = null) //!!!!!!!!!!!!!! change return type
+        {
+            Biser.JsonDecoder decoder = null;
+
+            if (extDecoder == null)
+            {
+                if (enc == null || String.IsNullOrEmpty(enc))
+                    return null;
+                decoder = new Biser.JsonDecoder(enc);
+                if (decoder.CheckNull())
+                    return null;
+            }
+            else
+            {
+                decoder = new Biser.JsonDecoder(extDecoder);
+                if (decoder.CheckNull())    //????????????????????????????????????????????????????????
+                    return null;
+                //if (decoder.IsNull)  //????????????????????????????????????????????????????????
+                //    return null;
+            }
+
+            TS1 m = new TS1();  //!!!!!!!!!!!!!! change return type
+            while (true)
+            {
+                switch (decoder.GetPropertyName())
+                {
+                    case "P1":
+                        m.P1 = decoder.GetInt();
+                        break;
+                    case "P2":
+                        m.P2 = decoder.GetInt();
+                        break;
+                    case "P5":
+                        m.P5 = decoder.CheckNull() ? null : new Dictionary<long, TS3>();
+
+                        if (m.P5 != null)
+                        {
+                            decoder.GetCollection(() => { return decoder.GetLong(); },
+                                () => { return TS3.BiserJsonDecode(null,decoder); }, m.P5, true);
+                        }
+                        break;
+                    case "P11":
+                        m.P11 = decoder.CheckNull() ? null : new Dictionary<int, int>();
+
+                        if (m.P11 != null)
+                        {
+                            decoder.GetCollection(() => { return decoder.GetInt(); },
+                                () => { return decoder.GetInt(); }, m.P11, true);
+                        }
+                        break;
+                    default:
+                        return m;
+                }
+
+            }
+        }
+
         public static TS1 BiserDecode(byte[] enc = null, Biser.Decoder extDecoder = null) //!!!!!!!!!!!!!! change return type
         {
             Biser.Decoder decoder = null;

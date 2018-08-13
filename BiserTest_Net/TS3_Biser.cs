@@ -50,6 +50,52 @@ namespace BiserTest_Net
             m.P3 = decoder.GetDateTime();
 
             return m;
-        }
+        }//eof
+
+
+        public static TS3 BiserJsonDecode(string enc = null, Biser.JsonDecoder extDecoder = null) //!!!!!!!!!!!!!! change return type
+        {
+            Biser.JsonDecoder decoder = null;
+
+            if (extDecoder == null)
+            {
+                if (enc == null || String.IsNullOrEmpty(enc))
+                    return null;
+                decoder = new Biser.JsonDecoder(enc);
+                if (decoder.CheckNull())
+                    return null;
+            }
+            else
+            {
+                decoder = new Biser.JsonDecoder(extDecoder);
+                if (decoder.CheckNull())    //????????????????????????????????????????????????????????
+                    return null;
+                //if (decoder.IsNull)  //????????????????????????????????????????????????????????
+                //    return null;
+            }
+
+            TS3 m = new TS3();  //!!!!!!!!!!!!!! change return type
+            while (true)
+            {
+                switch (decoder.GetPropertyName())
+                {
+                    case "P1":
+                        m.P1 = decoder.GetString();
+                        break;
+                    case "P2":
+                        m.P2 = decoder.GetInt_NULL();
+                        break;
+                    case "P3":
+                        m.P3 = decoder.GetDateTime();
+                        break;
+                    default:
+                        return m;
+                }
+
+            }
+        }//eof
+
+
+
     }
 }
