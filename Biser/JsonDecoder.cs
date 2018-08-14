@@ -10,37 +10,27 @@ namespace Biser
     {
         internal string encoded = null;
         //internal char lastChar;
-        JsonDecoder rootDecoder = null;
+        //JsonDecoder rootDecoder = null;
         //bool externalDecoderExists = false;
 
         internal int encPos = -1;
+       
 
         public JsonDecoder(string encoded)
         {
 
-            this.rootDecoder = this;
+            //this = this;
+
             this.encoded = encoded;
             if (encoded == null || encoded.Length == 0)
                 return;
 
-
-            //this.rootDecoder = this;
-            //this.activeDecoder = this;
-
         }
 
-        public JsonDecoder(JsonDecoder decoder)//, bool isCollection = false)
-        {
-            this.rootDecoder = decoder.rootDecoder;
-            //externalDecoderExists = true;
-
-            //if (!isCollection)
-            //{
-            //    //var prot = this.rootDecoder.GetDigit();
-            //    //if (prot == 1)
-            //    //    IsNull = true;
-            //}
-        }
+        //public JsonDecoder(JsonDecoder decoder)//, bool isCollection = false)
+        //{
+        //    this = decoder.rootDecoder;         
+        //}
 
         bool CheckSkip(char c)
         {
@@ -52,36 +42,36 @@ namespace Biser
             bool ret = false;
             while (true)
             {
-                this.rootDecoder.encPos++;
-                if (this.rootDecoder.encPos >= this.rootDecoder.encoded.Length)
+                this.encPos++;
+                if (this.encPos >= this.encoded.Length)
                     break;
-                var c = this.rootDecoder.encoded[this.rootDecoder.encPos];
+                var c = this.encoded[this.encPos];
                 if (CheckSkip(c))
                     continue;
                 if (!ret)
                 {
                     if (c == 'n'
-                        &&
-                        this.rootDecoder.encoded[this.rootDecoder.encPos + 1] == 'u'
-                         &&
-                        this.rootDecoder.encoded[this.rootDecoder.encPos + 2] == 'l'
-                         &&
-                        this.rootDecoder.encoded[this.rootDecoder.encPos + 3] == 'l'
+                        //&&
+                        //this.encoded[this.encPos + 1] == 'u'
+                        // &&
+                        //this.encoded[this.encPos + 2] == 'l'
+                        // &&
+                        //this.encoded[this.encPos + 3] == 'l'
                         )
                     {
                         ret = true;
-                        this.rootDecoder.encPos += 3;
+                        this.encPos += 3;
                     }
                     else
                     {
-                        this.rootDecoder.encPos--;
+                        this.encPos--;
                         return false;
                     }
                 }
 
                 if (c == ',' || c == ']' || c == '}')
                 {
-                    this.rootDecoder.encPos--;                    
+                    this.encPos--;
                     break;
                 }
 
@@ -90,81 +80,88 @@ namespace Biser
             return ret;
         }
 
-        string GetNumber()
+        string GetNumber(bool checkNull)
         {
-            if (CheckNull())
+            if (checkNull && CheckNull())
                 return null;
             StringBuilder sb = new StringBuilder();
-            while(true)
+            while (true)
             {
-                this.rootDecoder.encPos++;
-                if (this.rootDecoder.encPos >= this.rootDecoder.encoded.Length)
+                this.encPos++;
+                if (this.encPos >= this.encoded.Length)
                     break;
-                var c = this.rootDecoder.encoded[this.rootDecoder.encPos];
+                var c = this.encoded[this.encPos];
                 if (CheckSkip(c))
                     continue;
-               // if (c == ',' || c == ':' || c == ']' || c == '}')
-               if (c == ',' || c == ']' || c == '}')
+                // if (c == ',' || c == ':' || c == ']' || c == '}')
+                if (c == ',' || c == ']' || c == '}')
                 {
-                    this.rootDecoder.encPos--;
+                    this.encPos--;
                     //lastChar = c;
                     break;
                 }
                 sb.Append(c);
             }
-            
+
             return sb.ToString();
             //return  ret == "null" ? null : ret;
         }
 
-        bool objectHasStarted = false;
+        //bool objectHasStarted = false;
 
         /// <summary>
         /// In case if object is deserialized, first we deserialize property and its name 
         /// will be returned back, then due to the property name can be choosen deserializer
         /// </summary>
         /// <returns></returns>
-        public string GetPropertyName()
+        public string GetProperty()
         {
             string s;
             while (true)
             {
-                this.rootDecoder.encPos++;
-                if (this.rootDecoder.encPos >= this.rootDecoder.encoded.Length)
+                this.encPos++;
+                if (this.encPos >= this.encoded.Length)
                     return String.Empty;
-                var c = this.rootDecoder.encoded[this.rootDecoder.encPos];
-                if (CheckSkip(c))
-                    continue;               
+                var c = this.encoded[this.encPos];
 
-                if (!objectHasStarted)
+                if (c == '{' || c == ',')
                 {
-                    if (c == '{')
-                    {                       
-                        objectHasStarted = true;
-                        s = GetString();
-                        if (!String.IsNullOrEmpty(s))
-                            SkipDelimiter();
-                        return s;
-                    }
+                    s = GetString(false);
+                    if (!String.IsNullOrEmpty(s))
+                        SkipDelimiter();
+                    return s;
                 }
-                else
-                {
-                    if (c == ',')
-                        continue;
-                    else if (c == '}')
-                        return String.Empty; //correct end of object
-                    else
-                    {
-                        this.rootDecoder.encPos--;
-                        s = GetString();
-                        if (!String.IsNullOrEmpty(s))
-                            SkipDelimiter();
-                        return s;
-                    }
-                }                
-            }            
+                else if (c == '}')
+                    return String.Empty; //correct end of object
+
+                continue;
+
+                //if (CheckSkip(c))
+                //continue;
+
+                //if (c == '{')
+                //{
+                //    s = GetString(false);
+                //    if (!String.IsNullOrEmpty(s))
+                //        SkipDelimiter();
+                //    return s;
+                //}
+                //else if (c == ',')
+                //    continue;
+                //else if (c == '}')
+                //    return String.Empty; //correct end of object
+                //else
+                //{
+                //    this.encPos--;
+                //    s = GetString(false);
+                //    if (!String.IsNullOrEmpty(s))
+                //        SkipDelimiter();
+                //    return s;
+                //}
+
+            }
         }
-      
+
 
         /// <summary>
         /// Skips :
@@ -173,89 +170,89 @@ namespace Biser
         {
             while (true)
             {
-                this.rootDecoder.encPos++;
-                if (this.rootDecoder.encPos >= this.rootDecoder.encoded.Length)
+                this.encPos++;
+                if (this.encPos >= this.encoded.Length)
                     break;
-                var c = this.rootDecoder.encoded[this.rootDecoder.encPos];
-                if (CheckSkip(c))
-                    continue;
+                var c = this.encoded[this.encPos];
+               
                 if (c == ':')
                     return;
+                else
+                    continue;
             }
         }
-        public string GetString()
+        public string GetString(bool checkNull = true)
         {
-            if (CheckNull())
+            if (checkNull && CheckNull())
                 return null;
 
             StringBuilder sb = new StringBuilder();
             int state = 0; //0 - before strting, 1 - inSTring
             while (true)
             {
-                this.rootDecoder.encPos++;
-                if (this.rootDecoder.encPos >= this.rootDecoder.encoded.Length)
+                this.encPos++;
+                if (this.encPos >= this.encoded.Length)
                     break;
-                var c = this.rootDecoder.encoded[this.rootDecoder.encPos];
-                if (state != 1 && CheckSkip(c))
-                    continue;
-                else if (state != 1 && c == '}') //probably end of object, that even didn't start
-                {
-                    return String.Empty;
-                }
-                else if (state == 1 && c == '\\')
-                {
-                    this.rootDecoder.encPos++;
-                    c = this.rootDecoder.encoded[this.rootDecoder.encPos];
-                }
-                else if (c == '\"')
-                {
-                    if (state == 1)
-                        break;
-                    else
-                    {
-                        state = 1;
-                        continue;
-                    }
-                }
+                var c = this.encoded[this.encPos];
 
-                sb.Append(c);
+                if (state != 1)
+                {
+                    if (c == '}')//probably end of object, that even didn't start
+                        return String.Empty;
+                    else if (c == '\"')
+                        state = 1;
+
+                    continue;
+                }
+                else
+                {
+                    if (c == '\\')
+                    {
+                        this.encPos++;
+                        c = this.encoded[this.encPos];
+                    }
+                    else if (c == '\"')
+                        break;
+
+                    sb.Append(c);
+                }
             }
-         
+
             return sb.ToString();
         }
 
         public DateTime GetDateTime()
         {
-            var s = GetString();
+            var s = GetString(false);
             return DateTime.UtcNow;
         }
 
         public DateTime? GetDateTime_NULL()
         {
-            var s = GetString();
+            var s = GetString(true);
             return s == null ? null : (DateTime?)DateTime.UtcNow;
         }
 
 
         public int GetInt()
         {
-            return Int32.Parse(GetNumber());            
+            return Int32.Parse(GetNumber(false));
         }
 
         public int? GetInt_NULL()
         {
-            var v = GetNumber();
+            var v = GetNumber(true);
             return v == null ? null : (int?)Int32.Parse(v);
         }
 
         public long GetLong()
         {
-            return Int64.Parse(GetNumber());
+            return Int64.Parse(GetNumber(false));
         }
 
         public long? GetLong_NULL()
         {
-            var v = GetNumber();
+            var v = GetNumber(true);
             return v == null ? null : (int?)Int64.Parse(v);
 
         }
@@ -299,7 +296,7 @@ namespace Biser
         {
             if (!isNullChecked)
             {
-                if(this.rootDecoder.CheckNull())
+                if (this.CheckNull())
                 {
                     dict = null;
                     lst = null;
@@ -315,11 +312,11 @@ namespace Biser
             string s;
             while (true)
             {
-                this.rootDecoder.encPos++;
-                if (this.rootDecoder.encPos >= this.rootDecoder.encoded.Length)
+                this.encPos++;
+                if (this.encPos >= this.encoded.Length)
                     return;
-                var c = this.rootDecoder.encoded[this.rootDecoder.encPos];
-                Console.WriteLine(c);
+                var c = this.encoded[this.encPos];
+
                 if (CheckSkip(c))
                     continue;
                 if (c == ',')
@@ -328,24 +325,28 @@ namespace Biser
                     return;
                 if (state == 0)
                 {
-                    if(c == soc)
+                    if (c == soc)
                         state = 1; //In collection
                 }
                 else
                 {
-                    this.rootDecoder.encPos--;
+                    this.encPos--;
                 }
 
-                if(state == 1)
+                if (state == 1)
                 {
                     if (lst != null)
+                    {
                         lst.Add(fk());
+                    }
                     else if (set != null)
+                    {
                         set.Add(fk());
+                    }
                     else if (dict != null)
                     {
-                        s = GetString();
-                        SkipDelimiter();
+                        s = GetString(false);
+                        SkipDelimiter();                        
                         dict.Add((K)Convert.ChangeType(s, typeof(K)), fv());
                     }
                 }

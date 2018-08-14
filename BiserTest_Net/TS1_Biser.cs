@@ -49,17 +49,17 @@ namespace BiserTest_Net
             }
             else
             {
-                decoder = new Biser.JsonDecoder(extDecoder);
-                if (decoder.CheckNull())    //????????????????????????????????????????????????????????
-                    return null;
-                //if (decoder.IsNull)  //????????????????????????????????????????????????????????
+                //decoder = new Biser.JsonDecoder(extDecoder);
+                decoder = extDecoder;
+                //if (decoder.CheckNull())   
                 //    return null;
+                
             }
 
             TS1 m = new TS1();  //!!!!!!!!!!!!!! change return type
             while (true)
             {
-                switch (decoder.GetPropertyName())
+                switch (decoder.GetProperty())
                 {
                     case "P1":
                         m.P1 = decoder.GetInt();
@@ -94,6 +94,32 @@ namespace BiserTest_Net
                         if (m.P14 != null)
                             decoder.GetCollection(() => { return decoder.GetInt(); },
                                     () => { return decoder.GetInt(); }, m.P14, true);
+                        break;
+                    case "P15":
+                        m.P15 = decoder.CheckNull() ? null : new List<List<TS3>>();
+                        if (m.P15 != null)
+                            decoder.GetCollection(
+                                       () =>
+                                       {
+                                           var il = decoder.CheckNull() ? null : new List<TS3>();
+                                           if(il != null)
+                                               decoder.GetCollection(
+                                                        () => { return TS3.BiserJsonDecode(null, decoder); }, il, true);
+                                           return il;
+                                       },m.P15,true);
+                        break;
+                    case "P16":
+                        m.P16 = decoder.CheckNull() ? null : new Dictionary<long, List<TS3>>();
+                        if (m.P16 != null)
+                            decoder.GetCollection(() => { return decoder.GetLong(); },
+                                       () =>
+                                       {
+                                           var il = decoder.CheckNull() ? null : new List<TS3>();
+                                           if(il != null)
+                                               decoder.GetCollection(
+                                                        () => { return TS3.BiserJsonDecode(null, decoder); }, il, true);
+                                           return il;
+                                       }, m.P16, true);
                         break;
                     default:
                         return m;

@@ -97,10 +97,74 @@
             <param name="dict"></param>
             <param name="isNullChecked"></param>
         </member>
+        <member name="M:Biser.Decoder.JSGetLong">
+            <summary>
+             Javascript Biser decoder
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Biser.Decoder.JSGetString">
+            <summary>
+            Javascript Biser decoder
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Biser.Decoder.JSGetDouble">
+            <summary>
+             Javascript Biser decoder
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Biser.Encoder">
             <summary>
             Binary serializer "biser", that can be translated as "beads" from Russian
             </summary>   
+        </member>
+        <member name="T:Biser.IJSEncoder">
+            <summary>
+            Starting from JSAdd
+            </summary>
+        </member>
+        <member name="T:Biser.IJSDecoder">
+            <summary>
+            Starting from JSGet
+            </summary>
+        </member>
+        <member name="M:Biser.JsonDecoder.GetProperty">
+            <summary>
+            In case if object is deserialized, first we deserialize property and its name 
+            will be returned back, then due to the property name can be choosen deserializer
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Biser.JsonDecoder.SkipDelimiter">
+            <summary>
+            Skips :
+            </summary>
+        </member>
+        <member name="M:Biser.JsonDecoder.GetCollection``2(System.Func{``0},System.Func{``1},System.Collections.Generic.IDictionary{``0,``1},System.Boolean)">
+            <summary>
+            
+            </summary>
+            <typeparam name="K"></typeparam>
+            <typeparam name="V"></typeparam>
+            <param name="fk"></param>
+            <param name="fv"></param>
+            <param name="dict"></param>
+            <param name="isNullChecked"></param>
+        </member>
+        <member name="M:Biser.JsonDecoder.GetCollection``2(System.Func{``0},System.Func{``1},System.Collections.Generic.IDictionary{``0,``1},System.Collections.Generic.IList{``0},System.Collections.Generic.ISet{``0},System.Boolean)">
+            <summary>
+            
+            </summary>
+            <typeparam name="K"></typeparam>
+            <typeparam name="V"></typeparam>
+            <param name="fk"></param>
+            <param name="fv"></param>
+            <param name="dict"></param>
+            <param name="lst"></param>
+            <param name="set"></param>
+            <param name="isNullChecked"></param>
         </member>
         <member name="T:Biser.Biser">
             <summary>

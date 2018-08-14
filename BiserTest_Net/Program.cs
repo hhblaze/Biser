@@ -173,11 +173,44 @@ namespace BiserTest_Net
             jsts1.P13.Add(new TS3 { P1 = "dsf", P2 = 45, P3 = DateTime.UtcNow });
             jsts1.P13.Add(new TS3 { P1 = "sdfsdfsdfs", P2 = null, P3 = DateTime.UtcNow });
 
+            jsts1.P15 = new List<List<TS3>>();
+            jsts1.P15.Add(jsts1.P13);
+            jsts1.P15.Add(jsts1.P13);
 
-            var jsres9 = NetJSON.NetJSON.Serialize(jsts1, new NetJSON.NetJSONSettings() { Format = NetJSON.NetJSONFormat.Prettify });
+            jsts1.P16 = new Dictionary<long, List<TS3>>();
+            jsts1.P16.Add(12, jsts1.P13);
+            jsts1.P16.Add(14, jsts1.P13);
+            jsts1.P16.Add(28, jsts1.P13);
 
-            var jsts1d = TS1.BiserJsonDecode(jsres9);
+            //var jsres9 = NetJSON.NetJSON.Serialize(jsts1, new NetJSON.NetJSONSettings() { Format = NetJSON.NetJSONFormat.Prettify });
+            var jsres9 = NetJSON.NetJSON.Serialize(jsts1);
+            TS1 jsts1d = null;
 
+
+
+            System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+            sw.Start();
+            for (int i = 0; i < 10000; i++)
+            {
+                jsts1d = TS1.BiserJsonDecode(jsres9);
+            }
+            sw.Stop();
+            Console.WriteLine($"Biser decode: {sw.ElapsedMilliseconds} ms");
+            sw.Reset();
+
+            sw.Start();
+            for (int i = 0; i < 10000; i++)
+            {
+                jsts1d = NetJSON.NetJSON.Deserialize<TS1>(jsres9);
+            }
+            sw.Stop();
+            Console.WriteLine($"NetJSON decode: {sw.ElapsedMilliseconds} ms");
+            sw.Reset();
+
+
+
+            jsts1d = TS1.BiserJsonDecode(jsres9);
+            Console.ReadLine();
             return;
             Biser.Encoder en2 = new Biser.Encoder();
             en2.Add((int)12);
