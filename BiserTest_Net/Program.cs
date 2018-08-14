@@ -182,11 +182,19 @@ namespace BiserTest_Net
             jsts1.P16.Add(14, jsts1.P13);
             jsts1.P16.Add(28, jsts1.P13);
 
-            jsts1.P17 = Guid.NewGuid();
+
+            jsts1.P17 = new DateTime(2012, 1, 5, 17,44,15);
 
             //var jsres9 = NetJSON.NetJSON.Serialize(jsts1, new NetJSON.NetJSONSettings() { Format = NetJSON.NetJSONFormat.Prettify });
-            var jsres9 = NetJSON.NetJSON.Serialize(jsts1);
+            var jsres9 = NetJSON.NetJSON.Serialize(jsts1, new NetJSON.NetJSONSettings() { Format = NetJSON.NetJSONFormat.Prettify,
+                DateFormat = NetJSON.NetJSONDateFormat.Default });
+            //var jsres9 = NetJSON.NetJSON.Serialize(jsts1);
             TS1 jsts1d = null;
+
+            var tt1f = jsts1.P17.Subtract(DateTime.MinValue).TotalSeconds;
+            var tt2f = jsts1.P17.Subtract(DateTime.MinValue).TotalMilliseconds;
+            var tt3f = jsts1.P17.ToUniversalTime().Subtract(new DateTime(1970,1,1,0,0,0,DateTimeKind.Utc)).TotalMilliseconds;
+            var tt4f = jsts1.P17.Subtract(new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds;
 
             jsts1d = TS1.BiserJsonDecode(jsres9);
             Console.ReadLine();

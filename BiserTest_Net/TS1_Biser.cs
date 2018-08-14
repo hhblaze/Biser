@@ -122,7 +122,7 @@ namespace BiserTest_Net
                                        }, m.P16, true);
                         break;
                     case "P17":
-                        m.P17 = decoder.GetGuid();
+                        m.P17 = decoder.GetDateTime();
                         break;
                     default:
                         return m;

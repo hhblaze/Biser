@@ -335,6 +335,12 @@ namespace Biser
             return s == null ? null : (DateTime?)DateTime.UtcNow;
         }
 
+        public TimeSpan GetTimeSpan()
+        {
+            var s = GetStr(true);
+            return s == null ? new TimeSpan() : (TimeSpan)TimeSpan.Parse(s);
+        }
+
 
         public int GetInt()
         {
