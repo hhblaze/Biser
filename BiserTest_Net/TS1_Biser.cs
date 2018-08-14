@@ -121,6 +121,9 @@ namespace BiserTest_Net
                                            return il;
                                        }, m.P16, true);
                         break;
+                    case "P17":
+                        m.P17 = decoder.GetGuid();
+                        break;
                     default:
                         return m;
                 }

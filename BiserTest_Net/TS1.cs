@@ -30,7 +30,6 @@ namespace BiserTest_Net
         public Dictionary<int, int> P14 { get; set; }
         public List<List<TS3>> P15 { get; set; }
         public Dictionary<long,List<TS3>> P16 { get; set; }
-
-
+        public Guid P17 { get; set; }
     }
 }

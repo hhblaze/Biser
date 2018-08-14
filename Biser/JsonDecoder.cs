@@ -104,10 +104,36 @@ namespace Biser
             }
 
             return sb.ToString();
-            //return  ret == "null" ? null : ret;
+           
         }
 
-        //bool objectHasStarted = false;
+        string GetBoolean(bool checkNull)
+        {
+            if (checkNull && CheckNull())
+                return null;
+            StringBuilder sb = new StringBuilder();
+            while (true)
+            {
+                this.encPos++;
+                if (this.encPos >= this.encoded.Length)
+                    break;
+                var c = this.encoded[this.encPos];
+                if (CheckSkip(c))
+                    continue;
+                // if (c == ',' || c == ':' || c == ']' || c == '}')
+                if (c == ',' || c == ']' || c == '}')
+                {
+                    this.encPos--;
+                    //lastChar = c;
+                    break;
+                }
+                sb.Append(c);
+            }
+
+            return sb.ToString();
+
+        }
+
 
         /// <summary>
         /// In case if object is deserialized, first we deserialize property and its name 
@@ -126,7 +152,7 @@ namespace Biser
 
                 if (c == '{' || c == ',')
                 {
-                    s = GetString(false);
+                    s = GetStr(false);
                     if (!String.IsNullOrEmpty(s))
                         SkipDelimiter();
                     return s;
@@ -135,29 +161,6 @@ namespace Biser
                     return String.Empty; //correct end of object
 
                 continue;
-
-                //if (CheckSkip(c))
-                //continue;
-
-                //if (c == '{')
-                //{
-                //    s = GetString(false);
-                //    if (!String.IsNullOrEmpty(s))
-                //        SkipDelimiter();
-                //    return s;
-                //}
-                //else if (c == ',')
-                //    continue;
-                //else if (c == '}')
-                //    return String.Empty; //correct end of object
-                //else
-                //{
-                //    this.encPos--;
-                //    s = GetString(false);
-                //    if (!String.IsNullOrEmpty(s))
-                //        SkipDelimiter();
-                //    return s;
-                //}
 
             }
         }
@@ -181,7 +184,7 @@ namespace Biser
                     continue;
             }
         }
-        public string GetString(bool checkNull = true)
+        string GetStr(bool checkNull = true)
         {
             if (checkNull && CheckNull())
                 return null;
@@ -220,42 +223,7 @@ namespace Biser
 
             return sb.ToString();
         }
-
-        public DateTime GetDateTime()
-        {
-            var s = GetString(false);
-            return DateTime.UtcNow;
-        }
-
-        public DateTime? GetDateTime_NULL()
-        {
-            var s = GetString(true);
-            return s == null ? null : (DateTime?)DateTime.UtcNow;
-        }
-
-
-        public int GetInt()
-        {
-            return Int32.Parse(GetNumber(false));
-        }
-
-        public int? GetInt_NULL()
-        {
-            var v = GetNumber(true);
-            return v == null ? null : (int?)Int32.Parse(v);
-        }
-
-        public long GetLong()
-        {
-            return Int64.Parse(GetNumber(false));
-        }
-
-        public long? GetLong_NULL()
-        {
-            var v = GetNumber(true);
-            return v == null ? null : (int?)Int64.Parse(v);
-
-        }
+               
 
         /// <summary>
         /// 
@@ -345,7 +313,7 @@ namespace Biser
                     }
                     else if (dict != null)
                     {
-                        s = GetString(false);
+                        s = GetStr(false);
                         SkipDelimiter();                        
                         dict.Add((K)Convert.ChangeType(s, typeof(K)), fv());
                     }
@@ -354,5 +322,190 @@ namespace Biser
 
         }//eof 
 
-    }
-}
+
+        public DateTime GetDateTime()
+        {
+            var s = GetStr(false);
+            return DateTime.UtcNow;
+        }
+
+        public DateTime? GetDateTime_NULL()
+        {
+            var s = GetStr(true);
+            return s == null ? null : (DateTime?)DateTime.UtcNow;
+        }
+
+
+        public int GetInt()
+        {
+            return Int32.Parse(GetNumber(false));
+        }
+
+        public int? GetInt_NULL()
+        {
+            var v = GetNumber(true);
+            return v == null ? null : (int?)Int32.Parse(v);
+        }
+
+        public long GetLong()
+        {
+            return Int64.Parse(GetNumber(false));
+        }
+
+        public long? GetLong_NULL()
+        {
+            var v = GetNumber(true);
+            return v == null ? null : (long?)Int64.Parse(v);
+
+        }
+
+        public ulong GetULong()
+        {
+            return UInt64.Parse(GetNumber(false));
+        }
+
+        public ulong? GetULong_NULL()
+        {
+            var v = GetNumber(true);
+            return v == null ? null : (ulong?)UInt64.Parse(v);
+
+        }
+
+        public uint GetUInt()
+        {
+            return UInt32.Parse(GetNumber(false));
+        }
+
+        public uint? GetUInt_NULL()
+        {
+            var v = GetNumber(true);
+            return v == null ? null : (uint?)UInt32.Parse(v);
+        }
+
+        public short GetShort()
+        {
+            return short.Parse(GetNumber(false));
+        }
+
+        public short? GetShort_NULL()
+        {
+            var v = GetNumber(true);
+            return v == null ? null : (short?)short.Parse(v);
+        }
+
+        public ushort GetUShort()
+        {
+            return ushort.Parse(GetNumber(false));
+        }
+
+        public ushort? GetUShort_NULL()
+        {
+            var v = GetNumber(true);
+            return v == null ? null : (ushort?)ushort.Parse(v);
+        }
+
+        public bool GetBool()
+        {
+            var v = GetBoolean(false);
+            return v.Equals("true", StringComparison.OrdinalIgnoreCase) ? true : false;
+        }
+
+        public bool? GetBool_NULL()
+        {
+            var v = GetBoolean(true);
+            return v == null ? null : (bool?)(v.Equals("true",StringComparison.OrdinalIgnoreCase) ? true : false);
+        }
+
+        public sbyte GetSByte()
+        {
+            return sbyte.Parse(GetNumber(false));
+        }
+
+        public sbyte? GetSByte_NULL()
+        {
+            var v = GetNumber(true);
+            return v == null ? null : (sbyte?)sbyte.Parse(v);
+        }
+
+        public byte GetByte()
+        {
+            return byte.Parse(GetNumber(false));
+        }
+
+        public byte? GetByte_NULL()
+        {
+            var v = GetNumber(true);
+            return v == null ? null : (byte?)byte.Parse(v);
+        }
+
+        public float GetFloat()
+        {
+            return float.Parse(GetNumber(false), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture);
+        }
+
+        public float? GetFloat_NULL()
+        {
+            var v = GetNumber(true);
+            return v == null ? null : (float?)float.Parse(v, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture);
+        }
+
+        public double GetDouble()
+        {
+            return double.Parse(GetNumber(false), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture);
+        }
+
+        public double? GetDouble_NULL()
+        {
+            var v = GetNumber(true);
+            return v == null ? null : (double?)double.Parse(v, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture);
+
+        }
+
+        public decimal GetDecimal()
+        {
+            return decimal.Parse(GetNumber(false), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture);
+        }
+
+        public decimal? GetDecimal_NULL()
+        {
+            var v = GetNumber(true);
+            return v == null ? null : (decimal?)decimal.Parse(v, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture);
+        }
+
+        public char GetChar()
+        {
+            return GetStr(false)[0];
+        }
+
+        public char? GetChar_NULL()
+        {
+            var v = GetStr(true);
+            return v == null ? null : (char?)v[0];
+
+        }
+
+        public string GetString()
+        {
+            return GetStr(true);
+        }
+
+        public byte[] GetByteArray()
+        {
+            var v = GetStr(true);
+            return v == null ? null : Convert.FromBase64String(v);
+        }
+
+        public Guid GetGuid()
+        {
+            var v = GetStr(false);
+            return new Guid(v);
+        }
+
+        public Guid? GetGuid_NULL()
+        {
+            var v = GetStr(true);
+            return v == null ? null : (Guid?)(new Guid(v));
+        }
+
+    }//eoc
+}//eon

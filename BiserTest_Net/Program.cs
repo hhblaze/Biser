@@ -182,10 +182,14 @@ namespace BiserTest_Net
             jsts1.P16.Add(14, jsts1.P13);
             jsts1.P16.Add(28, jsts1.P13);
 
+            jsts1.P17 = Guid.NewGuid();
+
             //var jsres9 = NetJSON.NetJSON.Serialize(jsts1, new NetJSON.NetJSONSettings() { Format = NetJSON.NetJSONFormat.Prettify });
             var jsres9 = NetJSON.NetJSON.Serialize(jsts1);
             TS1 jsts1d = null;
 
+            jsts1d = TS1.BiserJsonDecode(jsres9);
+            Console.ReadLine();
 
 
             System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
