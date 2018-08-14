@@ -25,7 +25,10 @@ namespace BiserTest_Net
         //public string P10 = "";
         public string P10;
         public Dictionary<int, int> P11 { get; set; }
-      
+        public int P12 { get; set; }
+        public List<TS3> P13 { get; set; }
+        public Dictionary<int, int> P14 { get; set; }
+
 
     }
 }

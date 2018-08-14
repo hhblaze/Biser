@@ -69,21 +69,31 @@ namespace BiserTest_Net
                         break;
                     case "P5":
                         m.P5 = decoder.CheckNull() ? null : new Dictionary<long, TS3>();
-
                         if (m.P5 != null)
-                        {
                             decoder.GetCollection(() => { return decoder.GetLong(); },
-                                () => { return TS3.BiserJsonDecode(null,decoder); }, m.P5, true);
-                        }
+                                    () => { return TS3.BiserJsonDecode(null, decoder); }, m.P5, true);
                         break;
                     case "P11":
                         m.P11 = decoder.CheckNull() ? null : new Dictionary<int, int>();
-
                         if (m.P11 != null)
-                        {
                             decoder.GetCollection(() => { return decoder.GetInt(); },
-                                () => { return decoder.GetInt(); }, m.P11, true);
-                        }
+                                    () => { return decoder.GetInt(); }, m.P11, true);
+                        break;
+                    case "P12":
+                        m.P12 = decoder.GetInt();
+                        break;
+                    case "P13":
+
+                        m.P13 = decoder.CheckNull() ? null : new List<TS3>();
+                        if (m.P13 != null)
+                            decoder.GetCollection(
+                                       () => { return TS3.BiserJsonDecode(null, decoder); }, m.P13, true);
+                        break;
+                    case "P14":
+                        m.P14 = decoder.CheckNull() ? null : new Dictionary<int, int>();
+                        if (m.P14 != null)
+                            decoder.GetCollection(() => { return decoder.GetInt(); },
+                                    () => { return decoder.GetInt(); }, m.P14, true);
                         break;
                     default:
                         return m;

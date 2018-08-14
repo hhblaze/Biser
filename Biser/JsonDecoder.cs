@@ -9,9 +9,9 @@ namespace Biser
     public class JsonDecoder
     {
         internal string encoded = null;
-        internal char lastChar;
+        //internal char lastChar;
         JsonDecoder rootDecoder = null;
-        bool externalDecoderExists = false;
+        //bool externalDecoderExists = false;
 
         internal int encPos = -1;
 
@@ -29,17 +29,17 @@ namespace Biser
 
         }
 
-        public JsonDecoder(JsonDecoder decoder, bool isCollection = false)
+        public JsonDecoder(JsonDecoder decoder)//, bool isCollection = false)
         {
             this.rootDecoder = decoder.rootDecoder;
-            externalDecoderExists = true;
+            //externalDecoderExists = true;
 
-            if (!isCollection)
-            {
-                //var prot = this.rootDecoder.GetDigit();
-                //if (prot == 1)
-                //    IsNull = true;
-            }
+            //if (!isCollection)
+            //{
+            //    //var prot = this.rootDecoder.GetDigit();
+            //    //if (prot == 1)
+            //    //    IsNull = true;
+            //}
         }
 
         bool CheckSkip(char c)
@@ -81,7 +81,7 @@ namespace Biser
 
                 if (c == ',' || c == ']' || c == '}')
                 {
-                    lastChar = c;
+                    this.rootDecoder.encPos--;                    
                     break;
                 }
 
@@ -103,15 +103,17 @@ namespace Biser
                 var c = this.rootDecoder.encoded[this.rootDecoder.encPos];
                 if (CheckSkip(c))
                     continue;
-                if (c == ',' || c == ':' || c == ']' || c == '}')
+               // if (c == ',' || c == ':' || c == ']' || c == '}')
+               if (c == ',' || c == ']' || c == '}')
                 {
-                    lastChar = c;
+                    this.rootDecoder.encPos--;
+                    //lastChar = c;
                     break;
                 }
                 sb.Append(c);
             }
-            var ret = sb.ToString();
-            return ret;
+            
+            return sb.ToString();
             //return  ret == "null" ? null : ret;
         }
 
@@ -124,37 +126,51 @@ namespace Biser
         /// <returns></returns>
         public string GetPropertyName()
         {
+            string s;
             while (true)
             {
+                this.rootDecoder.encPos++;
+                if (this.rootDecoder.encPos >= this.rootDecoder.encoded.Length)
+                    return String.Empty;
+                var c = this.rootDecoder.encoded[this.rootDecoder.encPos];
+                if (CheckSkip(c))
+                    continue;               
+
                 if (!objectHasStarted)
                 {
-                    this.rootDecoder.encPos++;
-                    if (this.rootDecoder.encPos >= this.rootDecoder.encoded.Length)
-                        break;
-                    var c = this.rootDecoder.encoded[this.rootDecoder.encPos];
-                    if (CheckSkip(c))
-                        continue;
                     if (c == '{')
-                    {
+                    {                       
                         objectHasStarted = true;
-                        return GetString();
+                        s = GetString();
+                        if (!String.IsNullOrEmpty(s))
+                            SkipDelimiter();
+                        return s;
                     }
                 }
-                else if (lastChar == '}')
-                    return String.Empty;
                 else
-                    return GetString();
-            }
-            return String.Empty;
+                {
+                    if (c == ',')
+                        continue;
+                    else if (c == '}')
+                        return String.Empty; //correct end of object
+                    else
+                    {
+                        this.rootDecoder.encPos--;
+                        s = GetString();
+                        if (!String.IsNullOrEmpty(s))
+                            SkipDelimiter();
+                        return s;
+                    }
+                }                
+            }            
         }
+      
 
-        public string GetString()
+        /// <summary>
+        /// Skips :
+        /// </summary>
+        void SkipDelimiter()
         {
-            if (CheckNull())
-                return null;
-
-            StringBuilder sb = new StringBuilder();
-            int state = 0; //0 before strting, 1 - inSTring, 2 out of string
             while (true)
             {
                 this.rootDecoder.encPos++;
@@ -163,32 +179,46 @@ namespace Biser
                 var c = this.rootDecoder.encoded[this.rootDecoder.encPos];
                 if (CheckSkip(c))
                     continue;
+                if (c == ':')
+                    return;
+            }
+        }
+        public string GetString()
+        {
+            if (CheckNull())
+                return null;
 
-                if (state == 2 && (c == ',' || c == ':' || c == ']' || c == '}'))
-                {
-                    lastChar = c;
+            StringBuilder sb = new StringBuilder();
+            int state = 0; //0 - before strting, 1 - inSTring
+            while (true)
+            {
+                this.rootDecoder.encPos++;
+                if (this.rootDecoder.encPos >= this.rootDecoder.encoded.Length)
                     break;
+                var c = this.rootDecoder.encoded[this.rootDecoder.encPos];
+                if (state != 1 && CheckSkip(c))
+                    continue;
+                else if (state != 1 && c == '}') //probably end of object, that even didn't start
+                {
+                    return String.Empty;
                 }
-                else if(c == '\\')
+                else if (state == 1 && c == '\\')
                 {
                     this.rootDecoder.encPos++;
                     c = this.rootDecoder.encoded[this.rootDecoder.encPos];
                 }
                 else if (c == '\"')
                 {
-                    switch(state)
+                    if (state == 1)
+                        break;
+                    else
                     {
-                        case 0:
-                            state = 1;
-                            continue;
-                        case 1:
-                            state = 2;
-                            continue;
-                    }                   
+                        state = 1;
+                        continue;
+                    }
                 }
 
-                if(state==1)
-                    sb.Append(c);
+                sb.Append(c);
             }
          
             return sb.ToString();
@@ -278,63 +308,46 @@ namespace Biser
                 }
             }
 
+            char eoc = (dict != null) ? '}' : ']'; //end of collection
+            char soc = (dict != null) ? '{' : '['; //start of collection
+
             int state = 0; //collection start
-            while(true)
+            string s;
+            while (true)
             {
+                this.rootDecoder.encPos++;
+                if (this.rootDecoder.encPos >= this.rootDecoder.encoded.Length)
+                    return;
+                var c = this.rootDecoder.encoded[this.rootDecoder.encPos];
+                Console.WriteLine(c);
+                if (CheckSkip(c))
+                    continue;
+                if (c == ',')
+                    continue;
+                if (c == eoc)
+                    return;
                 if (state == 0)
                 {
-                    this.rootDecoder.encPos++;
-                    if (this.rootDecoder.encPos >= this.rootDecoder.encoded.Length)
-                        return;
-                    var c = this.rootDecoder.encoded[this.rootDecoder.encPos];
-                    if (CheckSkip(c))
-                        continue;
-
-                    if (
-                           ((lst != null || set != null) && c == '[')
-                           ||
-                           (dict != null && c == '{')
-                           )
-                    {
+                    if(c == soc)
                         state = 1; //In collection
-                    }
                 }
-                else if (state == 2)
+                else
                 {
-                    this.rootDecoder.encPos++;
-                    if (this.rootDecoder.encPos >= this.rootDecoder.encoded.Length)
-                        return;
-                    var c = this.rootDecoder.encoded[this.rootDecoder.encPos];
-                    if (CheckSkip(c))
-                        continue;
-                    if (c == '}')
-                        return; //end of colection
-                    else
-                    {
-                        this.rootDecoder.encPos--;
-                        state = 1; //In collection
-                    }
+                    this.rootDecoder.encPos--;
                 }
 
-                if (lst != null)
+                if(state == 1)
                 {
-                    lst.Add(fk());
-                    if (lastChar == ']')
-                        return;
-                }
-                else if (set != null)
-                {
-                    set.Add(fk());
-                    if (lastChar == ']')
-                        return;
-                }
-                else if (dict != null)
-                {   
-                    dict.Add((K)Convert.ChangeType(GetString(), typeof(K)), fv());                 
-                    if (lastChar == '}')
-                        return;
-                    else if (lastChar == ':')
-                        state = 2; //searching end of collection
+                    if (lst != null)
+                        lst.Add(fk());
+                    else if (set != null)
+                        set.Add(fk());
+                    else if (dict != null)
+                    {
+                        s = GetString();
+                        SkipDelimiter();
+                        dict.Add((K)Convert.ChangeType(s, typeof(K)), fv());
+                    }
                 }
             }
 
