@@ -173,14 +173,18 @@ namespace BiserTest_Net
             jsts1.P13.Add(new TS3 { P1 = "dsf", P2 = 45, P3 = DateTime.UtcNow });
             jsts1.P13.Add(new TS3 { P1 = "sdfsdfsdfs", P2 = null, P3 = DateTime.UtcNow });
 
-            //jsts1.P15 = new List<List<TS3>>();
-            //jsts1.P15.Add(jsts1.P13);
-            //jsts1.P15.Add(jsts1.P13);
+            //jsts1.P18 = new List<int>();
+            //jsts1.P18.Add(178);
+            //jsts1.P18.Add(912);
 
-            //jsts1.P16 = new Dictionary<long, List<TS3>>();
-            //jsts1.P16.Add(12, jsts1.P13);
-            //jsts1.P16.Add(14, jsts1.P13);
-            //jsts1.P16.Add(28, jsts1.P13);
+            jsts1.P15 = new List<List<TS3>>();
+            jsts1.P15.Add(jsts1.P13);
+            jsts1.P15.Add(jsts1.P13);
+
+            jsts1.P16 = new Dictionary<long, List<TS3>>();
+            jsts1.P16.Add(12, jsts1.P13);
+            jsts1.P16.Add(14, jsts1.P13);
+            jsts1.P16.Add(28, jsts1.P13);
 
 
             jsts1.P17 = new DateTime(2018, 6, 5, 17,44,15,443, DateTimeKind.Utc);
@@ -211,15 +215,12 @@ namespace BiserTest_Net
             //});
 
             JsonEncoder jenc = new JsonEncoder(new JsonSettings { DateFormat = JsonSettings.DateTimeStyle.ISO, JsonStringFormat = JsonSettings.JsonStringStyle.Default });
-            jenc.Add("P17", jsts1.P17);
-
+            jsts1.BiserJsonEncode(jenc);
 
 
             string wow1 = jenc.GetJSON();
+
             var jsts1d1 = TS1.BiserJsonDecode(wow1, null, new JsonSettings { DateFormat = JsonSettings.DateTimeStyle.ISO });
-
-
-
 
 
             Console.ReadLine();

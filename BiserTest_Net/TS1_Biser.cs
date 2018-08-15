@@ -14,7 +14,7 @@ namespace BiserTest_Net
     /// <summary>
     /// Biser Extension
     /// </summary>
-    public partial class TS1 : Biser.IEncoder
+    public partial class TS1 : Biser.IEncoder, Biser.IJsonEncoder
     {
         public Biser.Encoder BiserEncoder(Biser.Encoder existingEncoder = null)
         {
@@ -34,6 +34,20 @@ namespace BiserTest_Net
             return enc;
         }
 
+        public void BiserJsonEncode(Biser.JsonEncoder encoder) 
+        {
+            encoder.Add("P1", this.P1);
+            encoder.Add("P2", this.P2);
+            encoder.Add("P17", this.P17);
+            //encoder.Add("P13", this.P13,(r)=> { r.BiserJsonEncode(encoder); });
+            encoder.Add("P13", this.P13, (r) => { encoder.Add(r); });
+            encoder.Add("P18", this.P18, (r) => { encoder.Add(r); });
+
+            encoder.Add("P16", this.P16, (r) => { encoder.Add(r, (r1) => { encoder.Add(r1); }); });
+
+            //encoder.Add("P15", this.P15, (r) => { encoder.Add(r,(r1)=> { r1.BiserJsonEncode(encoder); }); });
+            encoder.Add("P15", this.P15, (r) => { encoder.Add(r, (r1) => { encoder.Add(r1); }); });
+        }
 
         public static TS1 BiserJsonDecode(string enc = null,Biser.JsonDecoder extDecoder = null, Biser.JsonSettings settings = null) //!!!!!!!!!!!!!! change return type
         {
@@ -120,6 +134,13 @@ namespace BiserTest_Net
                         break;
                     case "P17":
                         m.P17 = decoder.GetDateTime();
+                        break;
+                    case "P18":
+
+                        m.P18 = decoder.CheckNull() ? null : new List<int>();
+                        if (m.P18 != null)
+                            decoder.GetCollection(
+                                       () => { return decoder.GetInt(); }, m.P18, true);
                         break;
                     default:
                         return m;

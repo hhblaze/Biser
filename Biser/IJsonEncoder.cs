@@ -8,5 +8,6 @@ namespace Biser
 {
     public interface IJsonEncoder
     {
+        void BiserJsonEncode(JsonEncoder encoder);
     }
 }
