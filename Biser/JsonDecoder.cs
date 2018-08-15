@@ -14,13 +14,13 @@ namespace Biser
         //bool externalDecoderExists = false;
 
         internal int encPos = -1;
-       
 
-        public JsonDecoder(string encoded)
+        JsonSettings jsonSettings = null;
+
+        public JsonDecoder(string encoded, JsonSettings settings=null)
         {
-
-            //this = this;
-
+            jsonSettings = (settings == null) ? new JsonSettings() : settings;
+           
             this.encoded = encoded;
             if (encoded == null || encoded.Length == 0)
                 return;
@@ -325,14 +325,53 @@ namespace Biser
 
         public DateTime GetDateTime()
         {
-            var s = GetStr(false);
-            return DateTime.UtcNow;
+            return ParseDateTime();           
         }
 
         public DateTime? GetDateTime_NULL()
         {
-            var s = GetStr(true);
-            return s == null ? null : (DateTime?)DateTime.UtcNow;
+            if (CheckNull())
+                return null;
+            return ParseDateTime();           
+        }
+
+        DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
+        DateTime ParseDateTime()
+        {
+            ulong v;            
+            DateTime rdt;
+            string s;
+            switch (this.jsonSettings.DateFormat)
+            {
+                case JsonSettings.DateTimeStyle.Default:
+                    //var tt3f = jsts1.P17.ToUniversalTime().Subtract(new DateTime(1970,1,1,0,0,0,DateTimeKind.Utc)).TotalMilliseconds * 10000;   
+                    /*"\/Date(13257180000000000)\/"*/
+                    s = GetStr(false);                    
+                    v = Convert.ToUInt64(s.Substring(0, s.Length - 2).Replace("/Date(", "")) / 10000;
+                    //time if not UTC must be brought to UTC, stored in UTC and restored in UTC
+                    rdt = epoch.AddMilliseconds(v);
+                    return DateTime.SpecifyKind(rdt, DateTimeKind.Utc);
+              
+                case JsonSettings.DateTimeStyle.EpochTime:
+                    //var tt3f = jsts1.P17.ToUniversalTime().Subtract(new DateTime(1970,1,1,0,0,0,DateTimeKind.Utc)).TotalMilliseconds * 10000;   
+                    /*"P17":13257818550000000*/
+                    v = Convert.ToUInt64(GetNumber(false)) / 10000;
+                    //time if not UTC must be brought to UTC, stored in UTC and restored in UTC
+                    rdt = epoch.AddMilliseconds(v);
+                    return DateTime.SpecifyKind(rdt, DateTimeKind.Utc);
+                case JsonSettings.DateTimeStyle.ISO:
+                case JsonSettings.DateTimeStyle.Javascript:
+                    /*
+                     * Encoder
+                     * new DateTime(2018, 6, 5, 17,44,15,443, DateTimeKind.Local).ToString("o"); //Encoder ISO "2018-06-05T17:44:15.4430000Z" or "2018-06-05T17:44:15.4430000+02:00"
+                     */
+                    s = GetStr(false);
+                    return DateTime.Parse(s, null, System.Globalization.DateTimeStyles.RoundtripKind);
+
+            }
+
+            return DateTime.MinValue;
         }
 
         public TimeSpan GetTimeSpan()

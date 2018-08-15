@@ -53,7 +53,7 @@ namespace BiserTest_Net
         }//eof
 
 
-        public static TS3 BiserJsonDecode(string enc = null, Biser.JsonDecoder extDecoder = null) //!!!!!!!!!!!!!! change return type
+        public static TS3 BiserJsonDecode(string enc = null, Biser.JsonDecoder extDecoder = null, Biser.JsonSettings settings = null) //!!!!!!!!!!!!!! change return type
         {
             Biser.JsonDecoder decoder = null;
 
@@ -61,16 +61,14 @@ namespace BiserTest_Net
             {
                 if (enc == null || String.IsNullOrEmpty(enc))
                     return null;
-                decoder = new Biser.JsonDecoder(enc);
+                decoder = new Biser.JsonDecoder(enc,settings);
                 if (decoder.CheckNull())
                     return null;
             }
             else
             {
-                //decoder = new Biser.JsonDecoder(extDecoder);
+                //JSONSettings of the existing decoder will be used
                 decoder = extDecoder;
-                //if (decoder.CheckNull())
-                //    return null;                
             }
 
             TS3 m = new TS3();  //!!!!!!!!!!!!!! change return type
