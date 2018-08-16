@@ -50,10 +50,17 @@ namespace BiserTest_Net
             ////encoder.Add("P15", this.P15, (r) => { encoder.Add(r,(r1)=> { r1.BiserJsonEncode(encoder); }); });
             encoder.Add("P15", this.P15, (r) => { encoder.Add(r, (r1) => { encoder.Add(r1); }); });
 
+            //As object
             encoder.Add("P19", new Dictionary<string, Action>() {
                 { "Item1", ()=>encoder.Add(this.P19.Item1)},
                 { "Item2", ()=>encoder.Add(this.P19.Item2)},
             });
+
+            ////As Array
+            //encoder.Add("P19", new List<Action>() {
+            //    ()=>encoder.Add(this.P19.Item1),
+            //    ()=>encoder.Add(this.P19.Item2)
+            //});
         }
 
         public static TS1 BiserJsonDecode(string enc = null,Biser.JsonDecoder extDecoder = null, Biser.JsonSettings settings = null) //!!!!!!!!!!!!!! change return type
@@ -150,12 +157,17 @@ namespace BiserTest_Net
                                        () => { return decoder.GetInt(); }, m.P18, true);
                         break;
                     case "P19":
-                        if(decoder.CheckNull())
+                        if (decoder.CheckNull())
                         {
                             m.P19 = null;
                         }
                         else
+                        {
+                            //for Dictionary
                             m.P19 = new Tuple<int, TS3>(decoder.SkipProperty().GetInt(), TS3.BiserJsonDecode(null, decoder.SkipProperty()));
+                            //for List
+                            //m.P19 = new Tuple<int, TS3>(decoder.SkipProperty(true).GetInt(), TS3.BiserJsonDecode(null, decoder.SkipProperty(true)));
+                        }
 
                         break;
                     default:

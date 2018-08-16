@@ -26,19 +26,23 @@ namespace Biser
         void AddProp(string str)
         {
             if(lastchar != '{' && lastchar != '[' && lastchar != ',')
-                sb.Append(",");           
-            sb.Append("\"");
-            sb.Append(str);
-            sb.Append("\":");
+                sb.Append(",");
 
-            //lastchar = ',';
+            AddStr(str);
+            sb.Append(":");
             lastchar = ':';
         }
 
         void AddStr(string str)
         {
             sb.Append("\"");
-            sb.Append(str);
+            foreach (var ch in str)
+            {
+                if (ch == '\"')
+                    sb.Append('\\');
+                sb.Append(ch);
+            }
+
             sb.Append("\"");
         }
 
@@ -135,6 +139,7 @@ namespace Biser
             }
         }
 
+
         public JsonEncoder Add(string propertyName, int val)
         {
             if (!String.IsNullOrEmpty(propertyName))
@@ -173,6 +178,32 @@ namespace Biser
         }
 
 
+     
+        public JsonEncoder Add(string propertyName, string val)
+        {
+            if (!String.IsNullOrEmpty(propertyName))
+            {
+                if (val == null)
+                    return this;
+                else
+                    AddProp(propertyName);
+            }
+            else if (val == null)
+            {
+                AddNull();
+                return this;
+            }
+
+            AddStr(val);            
+            return this;
+        }
+
+        public JsonEncoder Add(string val)
+        {
+            return Add(null, val);
+        }
+        
+
 
         public JsonEncoder Add(string propertyName, long val)
         {
@@ -210,6 +241,507 @@ namespace Biser
         {
             return Add(null, val);
         }
+
+
+        public JsonEncoder Add(string propertyName, ulong val)
+        {
+            if (!String.IsNullOrEmpty(propertyName))
+                AddProp(propertyName);
+            sb.Append(val);
+            return this;
+        }
+
+        public JsonEncoder Add(string propertyName, ulong? val)
+        {
+            if (!String.IsNullOrEmpty(propertyName))
+            {
+                if (val == null)
+                    return this;
+                else
+                    AddProp(propertyName);
+            }
+            else if (val == null)
+            {
+                AddNull();
+                return this;
+            }
+
+            sb.Append(val);
+            return this;
+        }
+
+        public JsonEncoder Add(ulong val)
+        {
+            return Add(null, val);
+        }
+
+        public JsonEncoder Add(ulong? val)
+        {
+            return Add(null, val);
+        }
+
+
+        public JsonEncoder Add(string propertyName, uint val)
+        {
+            if (!String.IsNullOrEmpty(propertyName))
+                AddProp(propertyName);
+            sb.Append(val);
+            return this;
+        }
+
+        public JsonEncoder Add(string propertyName, uint? val)
+        {
+            if (!String.IsNullOrEmpty(propertyName))
+            {
+                if (val == null)
+                    return this;
+                else
+                    AddProp(propertyName);
+            }
+            else if (val == null)
+            {
+                AddNull();
+                return this;
+            }
+
+            sb.Append(val);
+            return this;
+        }
+
+        public JsonEncoder Add(uint val)
+        {
+            return Add(null, val);
+        }
+
+        public JsonEncoder Add(uint? val)
+        {
+            return Add(null, val);
+        }
+
+        public JsonEncoder Add(string propertyName, short val)
+        {
+            if (!String.IsNullOrEmpty(propertyName))
+                AddProp(propertyName);
+            sb.Append(val);
+            return this;
+        }
+
+        public JsonEncoder Add(string propertyName, short? val)
+        {
+            if (!String.IsNullOrEmpty(propertyName))
+            {
+                if (val == null)
+                    return this;
+                else
+                    AddProp(propertyName);
+            }
+            else if (val == null)
+            {
+                AddNull();
+                return this;
+            }
+
+            sb.Append(val);
+            return this;
+        }
+
+        public JsonEncoder Add(short val)
+        {
+            return Add(null, val);
+        }
+
+        public JsonEncoder Add(short? val)
+        {
+            return Add(null, val);
+        }
+
+        public JsonEncoder Add(string propertyName, ushort val)
+        {
+            if (!String.IsNullOrEmpty(propertyName))
+                AddProp(propertyName);
+            sb.Append(val);
+            return this;
+        }
+
+        public JsonEncoder Add(string propertyName, ushort? val)
+        {
+            if (!String.IsNullOrEmpty(propertyName))
+            {
+                if (val == null)
+                    return this;
+                else
+                    AddProp(propertyName);
+            }
+            else if (val == null)
+            {
+                AddNull();
+                return this;
+            }
+
+            sb.Append(val);
+            return this;
+        }
+
+        public JsonEncoder Add(ushort val)
+        {
+            return Add(null, val);
+        }
+
+        public JsonEncoder Add(ushort? val)
+        {
+            return Add(null, val);
+        }
+
+        public JsonEncoder Add(string propertyName, sbyte val)
+        {
+            if (!String.IsNullOrEmpty(propertyName))
+                AddProp(propertyName);
+            sb.Append(val);
+            return this;
+        }
+
+        public JsonEncoder Add(string propertyName, sbyte? val)
+        {
+            if (!String.IsNullOrEmpty(propertyName))
+            {
+                if (val == null)
+                    return this;
+                else
+                    AddProp(propertyName);
+            }
+            else if (val == null)
+            {
+                AddNull();
+                return this;
+            }
+
+            sb.Append(val);
+            return this;
+        }
+
+        public JsonEncoder Add(sbyte val)
+        {
+            return Add(null, val);
+        }
+
+        public JsonEncoder Add(sbyte? val)
+        {
+            return Add(null, val);
+        }
+
+        public JsonEncoder Add(string propertyName, byte val)
+        {
+            if (!String.IsNullOrEmpty(propertyName))
+                AddProp(propertyName);
+            sb.Append(val);
+            return this;
+        }
+
+        public JsonEncoder Add(string propertyName, byte? val)
+        {
+            if (!String.IsNullOrEmpty(propertyName))
+            {
+                if (val == null)
+                    return this;
+                else
+                    AddProp(propertyName);
+            }
+            else if (val == null)
+            {
+                AddNull();
+                return this;
+            }
+
+            sb.Append(val);
+            return this;
+        }
+
+        public JsonEncoder Add(byte val)
+        {
+            return Add(null, val);
+        }
+
+        public JsonEncoder Add(byte? val)
+        {
+            return Add(null, val);
+        }
+
+        public JsonEncoder Add(string propertyName, bool val)
+        {
+            if (!String.IsNullOrEmpty(propertyName))
+                AddProp(propertyName);
+            sb.Append(val);
+            return this;
+        }
+
+        public JsonEncoder Add(string propertyName, bool? val)
+        {
+            if (!String.IsNullOrEmpty(propertyName))
+            {
+                if (val == null)
+                    return this;
+                else
+                    AddProp(propertyName);
+            }
+            else if (val == null)
+            {
+                AddNull();
+                return this;
+            }
+
+            sb.Append(val);
+            return this;
+        }
+
+        public JsonEncoder Add(bool val)
+        {
+            return Add(null, val);
+        }
+
+        public JsonEncoder Add(bool? val)
+        {
+            return Add(null, val);
+        }
+
+
+        public JsonEncoder Add(string propertyName, char val)
+        {
+            if (!String.IsNullOrEmpty(propertyName))
+                AddProp(propertyName);
+            sb.Append(val);
+            return this;
+        }
+
+        public JsonEncoder Add(string propertyName, char? val)
+        {
+            if (!String.IsNullOrEmpty(propertyName))
+            {
+                if (val == null)
+                    return this;
+                else
+                    AddProp(propertyName);
+            }
+            else if (val == null)
+            {
+                AddNull();
+                return this;
+            }
+
+            sb.Append(val);
+            return this;
+        }
+
+        public JsonEncoder Add(char val)
+        {
+            return Add(null, val);
+        }
+
+        public JsonEncoder Add(char? val)
+        {
+            return Add(null, val);
+        }
+
+        public JsonEncoder Add(string propertyName, float val)
+        {
+            if (!String.IsNullOrEmpty(propertyName))
+                AddProp(propertyName);
+            sb.Append(val);
+            return this;
+        }
+
+        public JsonEncoder Add(string propertyName, float? val)
+        {
+            if (!String.IsNullOrEmpty(propertyName))
+            {
+                if (val == null)
+                    return this;
+                else
+                    AddProp(propertyName);
+            }
+            else if (val == null)
+            {
+                AddNull();
+                return this;
+            }
+
+            sb.Append(val);
+            return this;
+        }
+
+        public JsonEncoder Add(float val)
+        {
+            return Add(null, val);
+        }
+
+        public JsonEncoder Add(float? val)
+        {
+            return Add(null, val);
+        }
+
+        public JsonEncoder Add(string propertyName, double val)
+        {
+            if (!String.IsNullOrEmpty(propertyName))
+                AddProp(propertyName);
+            sb.Append(val);
+            return this;
+        }
+
+        public JsonEncoder Add(string propertyName, double? val)
+        {
+            if (!String.IsNullOrEmpty(propertyName))
+            {
+                if (val == null)
+                    return this;
+                else
+                    AddProp(propertyName);
+            }
+            else if (val == null)
+            {
+                AddNull();
+                return this;
+            }
+
+            sb.Append(val);
+            return this;
+        }
+
+        public JsonEncoder Add(double val)
+        {
+            return Add(null, val);
+        }
+
+        public JsonEncoder Add(double? val)
+        {
+            return Add(null, val);
+        }
+
+        public JsonEncoder Add(string propertyName, decimal val)
+        {
+            if (!String.IsNullOrEmpty(propertyName))
+                AddProp(propertyName);
+            sb.Append(val);
+            return this;
+        }
+
+        public JsonEncoder Add(string propertyName, decimal? val)
+        {
+            if (!String.IsNullOrEmpty(propertyName))
+            {
+                if (val == null)
+                    return this;
+                else
+                    AddProp(propertyName);
+            }
+            else if (val == null)
+            {
+                AddNull();
+                return this;
+            }
+
+            sb.Append(val);
+            return this;
+        }
+
+        public JsonEncoder Add(decimal val)
+        {
+            return Add(null, val);
+        }
+
+        public JsonEncoder Add(decimal? val)
+        {
+            return Add(null, val);
+        }
+
+
+        public JsonEncoder Add(string propertyName, Guid val)
+        {
+            if (!String.IsNullOrEmpty(propertyName))
+                AddProp(propertyName);
+            sb.Append(val);
+            return this;
+        }
+
+        public JsonEncoder Add(string propertyName, Guid? val)
+        {
+            if (!String.IsNullOrEmpty(propertyName))
+            {
+                if (val == null)
+                    return this;
+                else
+                    AddProp(propertyName);
+            }
+            else if (val == null)
+            {
+                AddNull();
+                return this;
+            }
+
+            sb.Append(val);
+            return this;
+        }
+
+        public JsonEncoder Add(Guid val)
+        {
+            return Add(null, val);
+        }
+
+        public JsonEncoder Add(Guid? val)
+        {
+            return Add(null, val);
+        }
+
+
+        public JsonEncoder Add(string propertyName, byte[] val)
+        {
+            if (!String.IsNullOrEmpty(propertyName))
+            {
+                if (val == null)
+                    return this;
+                else
+                    AddProp(propertyName);
+            }
+            else if (val == null)
+            {
+                AddNull();
+                return this;
+            }
+
+            sb.Append(Convert.ToBase64String(val));
+            return this;
+        }
+
+
+        public JsonEncoder Add(byte[] val)
+        {
+            return Add(null, val);
+        }
+
+        public JsonEncoder Add(string propertyName, TimeSpan val)
+        {
+            if (!String.IsNullOrEmpty(propertyName))
+            {
+                if (val == null)
+                    return this;
+                else
+                    AddProp(propertyName);
+            }
+            else if (val == null)
+            {
+                AddNull();
+                return this;
+            }
+
+            sb.Append(val);
+            return this;
+        }
+
+
+        public JsonEncoder Add(TimeSpan val)
+        {
+            return Add(null, val);
+        }
+
+
 
         /// <summary>
         /// To supply heterogen values inside of Dictionary
@@ -263,71 +795,50 @@ namespace Biser
             return this;
         }
 
-        //public JsonEncoder Add<K, V>(string propertyName, IDictionary<K, V> val)
-        //{
+        public JsonEncoder Add(string propertyName, List<Action> val)
+        {
+            if (!String.IsNullOrEmpty(propertyName))
+            {
+                if (val == null)
+                    return this;
+                else
+                {
+                    AddProp(propertyName);
+                    if (val.Count() == 0)
+                    {
+                        sb.Append("[]");
+                        lastchar = ']';
+                        return this;
+                    }
+                }
+            }
+            else if (val == null)
+            {
+                AddNull();
+                lastchar = ']';
+                return this;
+            }
 
-        //        if (!String.IsNullOrEmpty(propertyName))
-        //    {
-        //        if (val == null)
-        //            return this;
-        //        else
-        //        {
-        //            AddProp(propertyName);
-        //            if (val.Count == 0)
-        //            {
-        //                sb.Append("{}");
-        //                lastchar = '}';
-        //                return this;
-        //            }
-        //        }
-        //    }
-        //    else if (val == null)
-        //    {
-        //        AddNull();
-        //        lastchar = '}';
-        //        return this;
-        //    }
+            sb.Append("[");
+            lastchar = '[';
 
+            foreach (var item in val)
+            {
+                if (lastchar == '}' || lastchar == ']')
+                {
+                    sb.Append(",");
+                    lastchar = ',';
+                }
 
-        //    sb.Append("{");
-        //    lastchar = '{';
+                item();
 
-        //    foreach (var item in val)
-        //    {
-        //        if (lastchar == '}' || lastchar == ']')
-        //            sb.Append(",");
-        //        AddProp((string)Convert.ChangeType(item.Key, TypeString));
-        //        Adds(val);
-        //        //f(item.Value);
-
-        //        lastchar = '}'; //to put commas after standard values
-        //    }
-        //    sb.Append("}");
-        //    lastchar = '}';
-        //    return this;
-        //}
-
-        //void Adds<T>(T val)
-        //{
-        //    //https://codereview.stackexchange.com/questions/94526/recursively-merge-dictionaries-with-generic-types-in-c
-        //    //#if NETSTANDARD
-        //    //            if(typeof(System.Collections.IDictionary).GetTypeInfo().IsAssignableFrom(typeof(T).Ge‌​tTypeInfo()))
-        //    //            {
-
-        //    //                return;
-        //    //            }
-
-        //    //#else
-        //    //            if (typeof(System.Collections.IDictionary).IsAssignableFrom(typeof(T)))
-        //    //            {
-        //    //                Add(null, (System.Collections.IDictionary)val);
-        //    //                return;
-        //    //            }
-        //    //#endif 
-        //}
-
-
-
+                lastchar = '}'; //to put commas after standard values
+            }
+            sb.Append("]");
+            lastchar = ']';
+            return this;
+        }
+        
         Type TypeString = typeof(string);
         public JsonEncoder Add<K, V>(string propertyName, IDictionary<K, V> val, Action<V> f)
         {
@@ -374,7 +885,7 @@ namespace Biser
             return this;
         }
 
-        public JsonEncoder Add<K,V>(IDictionary<K,V> val, Action<V> f)
+        public JsonEncoder Add<K, V>(IDictionary<K,V> val, Action<V> f)
         {
             return Add(null, val, f);
         }

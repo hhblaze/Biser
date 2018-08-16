@@ -165,7 +165,7 @@ namespace Biser
             }
         }
 
-        public JsonDecoder SkipProperty()
+        public JsonDecoder SkipProperty(bool array = false)
         {
             string s;
             while (true)
@@ -175,14 +175,25 @@ namespace Biser
                     return null;
                 var c = this.encoded[this.encPos];
 
-                if (c == '{' || c == ',')
+                if (
+                    (!array && (c == '{' || c == ','))
+                    ||
+                    (array && (c == '[' || c == ','))
+                    )
                 {
-                    s = GetStr(false);
-                    if (!String.IsNullOrEmpty(s))
-                        SkipDelimiter();
+                    if (!array)
+                    {
+                        s = GetStr(false);
+                        if (!String.IsNullOrEmpty(s))
+                            SkipDelimiter();
+                    }
                     return this;
                 }
-                else if (c == '}')
+                else if (
+                    (!array && c == '}')
+                    ||
+                    (array && c == ']')
+                    )
                     return null; //correct end of object
 
                 continue;
