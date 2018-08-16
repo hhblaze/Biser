@@ -173,13 +173,15 @@ namespace BiserTest_Net
             jsts1.P13.Add(new TS3 { P1 = "dsf", P2 = 45, P3 = DateTime.UtcNow });
             jsts1.P13.Add(new TS3 { P1 = "sdfsdfsdfs", P2 = null, P3 = DateTime.UtcNow });
 
-            //jsts1.P18 = new List<int>();
-            //jsts1.P18.Add(178);
-            //jsts1.P18.Add(912);
+            jsts1.P18 = new List<int>();
+            jsts1.P18.Add(178);
+            jsts1.P18.Add(912);
 
             jsts1.P15 = new List<List<TS3>>();
             jsts1.P15.Add(jsts1.P13);
             jsts1.P15.Add(jsts1.P13);
+
+            jsts1.P19 = new Tuple<int, TS3>(12, new TS3 { P1 = "dsf", P2 = 45, P3 = DateTime.UtcNow });
 
             jsts1.P16 = new Dictionary<long, List<TS3>>();
             jsts1.P16.Add(12, jsts1.P13);

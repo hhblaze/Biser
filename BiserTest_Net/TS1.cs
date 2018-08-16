@@ -32,5 +32,6 @@ namespace BiserTest_Net
         public Dictionary<long,List<TS3>> P16 { get; set; }
         public DateTime P17 { get; set; }
         public List<int> P18 { get; set; }
+        public Tuple<int,TS3> P19 { get; set; }
     }
 }

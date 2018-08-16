@@ -25,13 +25,14 @@ namespace Biser
 
         void AddProp(string str)
         {
-            if(lastchar != '{' && lastchar != '[')
+            if(lastchar != '{' && lastchar != '[' && lastchar != ',')
                 sb.Append(",");           
             sb.Append("\"");
             sb.Append(str);
             sb.Append("\":");
 
-            lastchar = ',';
+            //lastchar = ',';
+            lastchar = ':';
         }
 
         void AddStr(string str)
@@ -210,9 +211,120 @@ namespace Biser
             return Add(null, val);
         }
 
+        /// <summary>
+        /// To supply heterogen values inside of Dictionary
+        /// </summary>
+        /// <typeparam name="V"></typeparam>
+        /// <param name="propertyName"></param>
+        /// <param name="val"></param>
+        /// <returns></returns>
+        public JsonEncoder Add(string propertyName, Dictionary<string, Action> val)
+        {
+            if (!String.IsNullOrEmpty(propertyName))
+            {
+                if (val == null)
+                    return this;
+                else
+                {
+                    AddProp(propertyName);
+                    if (val.Count == 0)
+                    {
+                        sb.Append("{}");
+                        lastchar = '}';
+                        return this;
+                    }
+                }
+            }
+            else if (val == null)
+            {
+                AddNull();
+                lastchar = '}';
+                return this;
+            }
 
 
+            sb.Append("{");
+            lastchar = '{';
 
+            foreach (var item in val)
+            {
+                if (lastchar == '}' || lastchar == ']')
+                {
+                    sb.Append(",");
+                    lastchar = ',';
+                }
+                AddProp(item.Key);
+                item.Value();
+
+                lastchar = '}'; //to put commas after standard values
+            }
+            sb.Append("}");
+            lastchar = '}';
+            return this;
+        }
+
+        //public JsonEncoder Add<K, V>(string propertyName, IDictionary<K, V> val)
+        //{
+
+        //        if (!String.IsNullOrEmpty(propertyName))
+        //    {
+        //        if (val == null)
+        //            return this;
+        //        else
+        //        {
+        //            AddProp(propertyName);
+        //            if (val.Count == 0)
+        //            {
+        //                sb.Append("{}");
+        //                lastchar = '}';
+        //                return this;
+        //            }
+        //        }
+        //    }
+        //    else if (val == null)
+        //    {
+        //        AddNull();
+        //        lastchar = '}';
+        //        return this;
+        //    }
+
+
+        //    sb.Append("{");
+        //    lastchar = '{';
+
+        //    foreach (var item in val)
+        //    {
+        //        if (lastchar == '}' || lastchar == ']')
+        //            sb.Append(",");
+        //        AddProp((string)Convert.ChangeType(item.Key, TypeString));
+        //        Adds(val);
+        //        //f(item.Value);
+
+        //        lastchar = '}'; //to put commas after standard values
+        //    }
+        //    sb.Append("}");
+        //    lastchar = '}';
+        //    return this;
+        //}
+
+        //void Adds<T>(T val)
+        //{
+        //    //https://codereview.stackexchange.com/questions/94526/recursively-merge-dictionaries-with-generic-types-in-c
+        //    //#if NETSTANDARD
+        //    //            if(typeof(System.Collections.IDictionary).GetTypeInfo().IsAssignableFrom(typeof(T).Ge‌​tTypeInfo()))
+        //    //            {
+
+        //    //                return;
+        //    //            }
+
+        //    //#else
+        //    //            if (typeof(System.Collections.IDictionary).IsAssignableFrom(typeof(T)))
+        //    //            {
+        //    //                Add(null, (System.Collections.IDictionary)val);
+        //    //                return;
+        //    //            }
+        //    //#endif 
+        //}
 
 
 
@@ -248,9 +360,11 @@ namespace Biser
             foreach (var item in val)
             {
                 if (lastchar == '}' || lastchar == ']')
-                    sb.Append(",");                
-                AddProp((string)Convert.ChangeType(item.Key, TypeString));
-                //AddProp((string)(object)item.Key);
+                {
+                    sb.Append(",");
+                    lastchar = ',';
+                }
+                AddProp((string)Convert.ChangeType(item.Key, TypeString));           
                 f(item.Value);
 
                 lastchar = '}'; //to put commas after standard values
@@ -324,18 +438,6 @@ namespace Biser
                 return this;
             }
 
-
-            //if (items == null)
-            //    return this;
-            //if(!String.IsNullOrEmpty(propertyName))
-            //    AddProp(propertyName);
-
-            //if (items.Count() == 0)
-            //{
-            //    sb.Append("[]");
-            //    lastchar = ']';
-            //    return this;
-            //}
             sb.Append("[");
             lastchar = '[';
 
@@ -349,23 +451,17 @@ namespace Biser
 //                ic = typeof(System.Collections.IDictionary).IsAssignableFrom(typeof(T));
 //#endif          
 
-//            ic = false;
+
 
             foreach (var item in items)
             {
                 if (lastchar == '}' || lastchar == ']')
+                {
                     sb.Append(",");
+                    lastchar = ',';
+                }
 
-                //if (ic)
-                //{
-                //    sb.Append("{");
-                //    lastchar = '{';
-                //}
-
-                f(item);
-
-                //if (ic)
-                //    sb.Append("}");
+                f(item);               
 
                 lastchar = '}'; //to put commas after standard values
             }

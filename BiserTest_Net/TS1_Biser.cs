@@ -39,14 +39,21 @@ namespace BiserTest_Net
             encoder.Add("P1", this.P1);
             encoder.Add("P2", this.P2);
             encoder.Add("P17", this.P17);
-            //encoder.Add("P13", this.P13,(r)=> { r.BiserJsonEncode(encoder); });
-            encoder.Add("P13", this.P13, (r) => { encoder.Add(r); });
+            
+            ////encoder.Add("P13", this.P13,(r)=> { r.BiserJsonEncode(encoder); });
+           encoder.Add("P13", this.P13, (r) => { encoder.Add(r); });
             encoder.Add("P18", this.P18, (r) => { encoder.Add(r); });
 
             encoder.Add("P16", this.P16, (r) => { encoder.Add(r, (r1) => { encoder.Add(r1); }); });
+            //encoder.Add("P16", this.P16);
 
-            //encoder.Add("P15", this.P15, (r) => { encoder.Add(r,(r1)=> { r1.BiserJsonEncode(encoder); }); });
+            ////encoder.Add("P15", this.P15, (r) => { encoder.Add(r,(r1)=> { r1.BiserJsonEncode(encoder); }); });
             encoder.Add("P15", this.P15, (r) => { encoder.Add(r, (r1) => { encoder.Add(r1); }); });
+
+            encoder.Add("P19", new Dictionary<string, Action>() {
+                { "Item1", ()=>encoder.Add(this.P19.Item1)},
+                { "Item2", ()=>encoder.Add(this.P19.Item2)},
+            });
         }
 
         public static TS1 BiserJsonDecode(string enc = null,Biser.JsonDecoder extDecoder = null, Biser.JsonSettings settings = null) //!!!!!!!!!!!!!! change return type
@@ -141,6 +148,15 @@ namespace BiserTest_Net
                         if (m.P18 != null)
                             decoder.GetCollection(
                                        () => { return decoder.GetInt(); }, m.P18, true);
+                        break;
+                    case "P19":
+                        if(decoder.CheckNull())
+                        {
+                            m.P19 = null;
+                        }
+                        else
+                            m.P19 = new Tuple<int, TS3>(decoder.SkipProperty().GetInt(), TS3.BiserJsonDecode(null, decoder.SkipProperty()));
+
                         break;
                     default:
                         return m;

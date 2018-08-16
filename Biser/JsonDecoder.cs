@@ -165,6 +165,31 @@ namespace Biser
             }
         }
 
+        public JsonDecoder SkipProperty()
+        {
+            string s;
+            while (true)
+            {
+                this.encPos++;
+                if (this.encPos >= this.encoded.Length)
+                    return null;
+                var c = this.encoded[this.encPos];
+
+                if (c == '{' || c == ',')
+                {
+                    s = GetStr(false);
+                    if (!String.IsNullOrEmpty(s))
+                        SkipDelimiter();
+                    return this;
+                }
+                else if (c == '}')
+                    return null; //correct end of object
+
+                continue;
+
+            }
+        }
+
 
         /// <summary>
         /// Skips :
@@ -321,6 +346,7 @@ namespace Biser
             }
 
         }//eof 
+
 
 
         public DateTime GetDateTime()
