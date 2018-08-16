@@ -169,24 +169,24 @@ namespace BiserTest_Net
 
             jsts1.P12 = 789;
 
-            jsts1.P13 = new List<TS3>();
-            jsts1.P13.Add(new TS3 { P1 = "dsf", P2 = 45, P3 = DateTime.UtcNow });
-            jsts1.P13.Add(new TS3 { P1 = "sdfsdfsdfs", P2 = null, P3 = DateTime.UtcNow });
+            //jsts1.P13 = new List<TS3>();
+            //jsts1.P13.Add(new TS3 { P1 = "dsf", P2 = 45, P3 = DateTime.UtcNow });
+            //jsts1.P13.Add(new TS3 { P1 = "sdfsdfsdfs", P2 = null, P3 = DateTime.UtcNow });
 
-            jsts1.P18 = new List<int>();
-            jsts1.P18.Add(178);
-            jsts1.P18.Add(912);
+            //jsts1.P18 = new List<int>();
+            //jsts1.P18.Add(178);
+            //jsts1.P18.Add(912);
 
-            jsts1.P15 = new List<List<TS3>>();
-            jsts1.P15.Add(jsts1.P13);
-            jsts1.P15.Add(jsts1.P13);
+            //jsts1.P15 = new List<List<TS3>>();
+            //jsts1.P15.Add(jsts1.P13);
+            //jsts1.P15.Add(jsts1.P13);
 
-            jsts1.P19 = new Tuple<int, TS3>(12, new TS3 { P1 = "dsf", P2 = 45, P3 = DateTime.UtcNow });
+            //jsts1.P19 = new Tuple<int, TS3>(12, new TS3 { P1 = "dsf", P2 = 45, P3 = DateTime.UtcNow });
 
-            jsts1.P16 = new Dictionary<long, List<TS3>>();
-            jsts1.P16.Add(12, jsts1.P13);
-            jsts1.P16.Add(14, jsts1.P13);
-            jsts1.P16.Add(28, jsts1.P13);
+            //jsts1.P16 = new Dictionary<long, List<TS3>>();
+            //jsts1.P16.Add(12, jsts1.P13);
+            //jsts1.P16.Add(14, jsts1.P13);
+            //jsts1.P16.Add(28, jsts1.P13);
 
 
             jsts1.P17 = new DateTime(2018, 6, 5, 17,44,15,443, DateTimeKind.Utc);
@@ -194,21 +194,14 @@ namespace BiserTest_Net
             //var jsres9 = NetJSON.NetJSON.Serialize(jsts1, new NetJSON.NetJSONSettings() { Format = NetJSON.NetJSONFormat.Prettify });
             var jsres9 = NetJSON.NetJSON.Serialize(jsts1, new NetJSON.NetJSONSettings() { //Format = NetJSON.NetJSONFormat.Prettify,
                 DateFormat = NetJSON.NetJSONDateFormat.ISO });
+            var njdv1 = NetJSON.NetJSON.Deserialize<TS1>(jsres9, new NetJSON.NetJSONSettings()
+            { //Format = NetJSON.NetJSONFormat.Prettify,
+                DateFormat = NetJSON.NetJSONDateFormat.ISO
+            });
             //var jsres9 = NetJSON.NetJSON.Serialize(jsts1);
             TS1 jsts1d = null;
-
-            //var tt1f = jsts1.P17.Subtract(DateTime.MinValue).TotalSeconds;
-            //var tt2f = jsts1.P17.Subtract(DateTime.MinValue).TotalMilliseconds;
-            //var tt3f = jsts1.P17.ToUniversalTime().Subtract(new DateTime(1970,1,1,0,0,0,DateTimeKind.Utc)).TotalMilliseconds * 10000;
-            //var tt4f = jsts1.P17.Subtract(new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds;
-            //var tt5f = jsts1.P17.ToString("s", System.Globalization.CultureInfo.InvariantCulture);
-            //var tt6f = jsts1.P17.ToString("o"); //Encoder ISO "2018-06-05T17:44:15.4430000Z" or "2018-06-05T17:44:15.4430000+02:00"
-            //DateTime d23 = DateTime.Parse(tt6f, null, System.Globalization.DateTimeStyles.RoundtripKind); //Decoder ISO
-            //DateTime d2 = DateTime.Parse("2010-08-20T15:00:00Z", null, System.Globalization.DateTimeStyles.RoundtripKind);
-            //DateTime d21 = DateTime.Parse("2010-08-20T15:00:00.4430000", null, System.Globalization.DateTimeStyles.RoundtripKind);
-
-
-            jsts1d = TS1.BiserJsonDecode(jsres9, null, new JsonSettings { DateFormat = JsonSettings.DateTimeStyle.ISO });
+            
+            //jsts1d = TS1.BiserJsonDecode(jsres9, null, new JsonSettings { DateFormat = JsonSettings.DateTimeStyle.ISO });
 
             //-----------------
             //var jsres91 = NetJSON.NetJSON.Serialize(jsts1.P13, new NetJSON.NetJSONSettings()

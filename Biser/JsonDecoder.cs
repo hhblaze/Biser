@@ -521,7 +521,7 @@ namespace Biser
         }
 
         public float GetFloat()
-        {
+        {         
             return float.Parse(GetNumber(false), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture);
         }
 

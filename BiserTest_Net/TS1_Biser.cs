@@ -36,6 +36,8 @@ namespace BiserTest_Net
 
         public void BiserJsonEncode(Biser.JsonEncoder encoder) 
         {
+            encoder.Add("P20", this.P20);
+
             encoder.Add("P1", this.P1);
             encoder.Add("P2", this.P2);
             encoder.Add("P17", this.P17);
@@ -51,10 +53,11 @@ namespace BiserTest_Net
             encoder.Add("P15", this.P15, (r) => { encoder.Add(r, (r1) => { encoder.Add(r1); }); });
 
             //As object
-            encoder.Add("P19", new Dictionary<string, Action>() {
-                { "Item1", ()=>encoder.Add(this.P19.Item1)},
-                { "Item2", ()=>encoder.Add(this.P19.Item2)},
-            });
+            if(this.P19 !=null)
+                encoder.Add("P19", new Dictionary<string, Action>() {
+                    { "Item1", ()=>encoder.Add(this.P19.Item1)},
+                    { "Item2", ()=>encoder.Add(this.P19.Item2)},
+                });
 
             ////As Array
             //encoder.Add("P19", new List<Action>() {
@@ -86,6 +89,9 @@ namespace BiserTest_Net
             {
                 switch (decoder.GetProperty())
                 {
+                    case "P20":
+                        m.P20 = decoder.GetTimeSpan();
+                        break;
                     case "P1":
                         m.P1 = decoder.GetInt();
                         break;

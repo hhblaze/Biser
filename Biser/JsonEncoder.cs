@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -470,7 +471,7 @@ namespace Biser
         {
             if (!String.IsNullOrEmpty(propertyName))
                 AddProp(propertyName);
-            sb.Append(val);
+            sb.Append(val.ToString().ToLower());
             return this;
         }
 
@@ -489,7 +490,7 @@ namespace Biser
                 return this;
             }
 
-            sb.Append(val);
+            sb.Append(val.ToString().ToLower());
             return this;
         }
 
@@ -508,7 +509,7 @@ namespace Biser
         {
             if (!String.IsNullOrEmpty(propertyName))
                 AddProp(propertyName);
-            sb.Append(val);
+            AddStr(val.ToString());
             return this;
         }
 
@@ -527,7 +528,7 @@ namespace Biser
                 return this;
             }
 
-            sb.Append(val);
+            AddStr(val.ToString());
             return this;
         }
 
@@ -545,7 +546,7 @@ namespace Biser
         {
             if (!String.IsNullOrEmpty(propertyName))
                 AddProp(propertyName);
-            sb.Append(val);
+            sb.Append(val.ToString(CultureInfo.InvariantCulture));
             return this;
         }
 
@@ -564,7 +565,7 @@ namespace Biser
                 return this;
             }
 
-            sb.Append(val);
+            sb.Append(((float)val).ToString(CultureInfo.InvariantCulture));
             return this;
         }
 
@@ -582,7 +583,7 @@ namespace Biser
         {
             if (!String.IsNullOrEmpty(propertyName))
                 AddProp(propertyName);
-            sb.Append(val);
+            sb.Append(val.ToString("r",CultureInfo.InvariantCulture));
             return this;
         }
 
@@ -601,7 +602,7 @@ namespace Biser
                 return this;
             }
 
-            sb.Append(val);
+            sb.Append(((double)val).ToString("r",CultureInfo.InvariantCulture));
             return this;
         }
 
@@ -619,7 +620,7 @@ namespace Biser
         {
             if (!String.IsNullOrEmpty(propertyName))
                 AddProp(propertyName);
-            sb.Append(val);
+            sb.Append(val.ToString(CultureInfo.InvariantCulture));
             return this;
         }
 
@@ -638,7 +639,7 @@ namespace Biser
                 return this;
             }
 
-            sb.Append(val);
+            sb.Append(((decimal)val).ToString(CultureInfo.InvariantCulture));
             return this;
         }
 
@@ -657,7 +658,7 @@ namespace Biser
         {
             if (!String.IsNullOrEmpty(propertyName))
                 AddProp(propertyName);
-            sb.Append(val);
+            AddStr(val.ToString());
             return this;
         }
 
@@ -676,7 +677,8 @@ namespace Biser
                 return this;
             }
 
-            sb.Append(val);
+            AddStr(((Guid)val).ToString());
+            
             return this;
         }
 
@@ -706,7 +708,7 @@ namespace Biser
                 return this;
             }
 
-            sb.Append(Convert.ToBase64String(val));
+            AddStr(Convert.ToBase64String(val));
             return this;
         }
 
@@ -731,7 +733,7 @@ namespace Biser
                 return this;
             }
 
-            sb.Append(val);
+            AddStr(val.ToString());
             return this;
         }
 

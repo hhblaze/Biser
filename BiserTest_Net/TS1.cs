@@ -33,5 +33,7 @@ namespace BiserTest_Net
         public DateTime P17 { get; set; }
         public List<int> P18 { get; set; }
         public Tuple<int,TS3> P19 { get; set; }
+
+        public TimeSpan P20 { get; set; } = new TimeSpan(89,55,12);
     }
 }
