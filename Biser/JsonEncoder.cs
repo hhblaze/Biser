@@ -797,6 +797,11 @@ namespace Biser
             return this;
         }
 
+        public JsonEncoder Add(Dictionary<string, Action> val)
+        {
+            return Add(null, val);
+        }
+
         public JsonEncoder Add(string propertyName, List<Action> val)
         {
             if (!String.IsNullOrEmpty(propertyName))
@@ -840,7 +845,13 @@ namespace Biser
             lastchar = ']';
             return this;
         }
-        
+
+        public JsonEncoder Add(List<Action> val)
+        {
+            return Add(null, val);
+        }
+
+
         Type TypeString = typeof(string);
         public JsonEncoder Add<K, V>(string propertyName, IDictionary<K, V> val, Action<V> f)
         {

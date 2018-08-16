@@ -36,21 +36,39 @@ namespace BiserTest_Net
 
         public void BiserJsonEncode(Biser.JsonEncoder encoder) 
         {
-            encoder.Add("P20", this.P20);
-
+          
             encoder.Add("P1", this.P1);
             encoder.Add("P2", this.P2);
-            encoder.Add("P17", this.P17);
-            
+            encoder.Add("P3", this.P3);
+            encoder.Add("P4", this.P4, (r) => { encoder.Add(r); });
+            encoder.Add("P5", this.P5, (r) => { encoder.Add(r); });
+            encoder.Add("P6", this.P6, (r) => { encoder.Add(r, (r1) => { encoder.Add(r1); }); });
+            encoder.Add("P7", this.P7);
+            if (this.P8 != null)
+                encoder.Add("P8", this.P8, (r) =>
+                {
+                    encoder.Add(new Dictionary<string, Action>() {
+                    { "Item1", ()=>encoder.Add(r.Item1)},
+                    { "Item2", ()=>encoder.Add(r.Item2)},
+                    { "Item3", ()=>encoder.Add(r.Item3)},
+                });
+                });
+
+
+
             ////encoder.Add("P13", this.P13,(r)=> { r.BiserJsonEncode(encoder); });
-           encoder.Add("P13", this.P13, (r) => { encoder.Add(r); });
-            encoder.Add("P18", this.P18, (r) => { encoder.Add(r); });
+            encoder.Add("P13", this.P13, (r) => { encoder.Add(r); });
+            ////encoder.Add("P15", this.P15, (r) => { encoder.Add(r,(r1)=> { r1.BiserJsonEncode(encoder); }); });
+            encoder.Add("P15", this.P15, (r) => { encoder.Add(r, (r1) => { encoder.Add(r1); }); });
 
             encoder.Add("P16", this.P16, (r) => { encoder.Add(r, (r1) => { encoder.Add(r1); }); });
             //encoder.Add("P16", this.P16);
 
-            ////encoder.Add("P15", this.P15, (r) => { encoder.Add(r,(r1)=> { r1.BiserJsonEncode(encoder); }); });
-            encoder.Add("P15", this.P15, (r) => { encoder.Add(r, (r1) => { encoder.Add(r1); }); });
+            encoder.Add("P17", this.P17);
+
+            encoder.Add("P18", this.P18, (r) => { encoder.Add(r); });
+
+          
 
             //As object
             if(this.P19 !=null)
@@ -88,21 +106,57 @@ namespace BiserTest_Net
             while (true)
             {
                 switch (decoder.GetProperty())
-                {
-                    case "P20":
-                        m.P20 = decoder.GetTimeSpan();
-                        break;
+                {                    
                     case "P1":
                         m.P1 = decoder.GetInt();
                         break;
                     case "P2":
                         m.P2 = decoder.GetInt();
                         break;
+                    case "P3":
+                        m.P3 = decoder.GetDecimal();
+                        break;
+                    case "P4":
+                        m.P4 = decoder.CheckNull() ? null : new List<TS2>();
+                        if (m.P4 != null)
+                            decoder.GetCollection(
+                                       () => { return TS2.BiserJsonDecode(null, decoder); }, m.P4, true);
+                        break;
                     case "P5":
                         m.P5 = decoder.CheckNull() ? null : new Dictionary<long, TS3>();
                         if (m.P5 != null)
                             decoder.GetCollection(() => { return decoder.GetLong(); },
                                     () => { return TS3.BiserJsonDecode(null, decoder); }, m.P5, true);
+                        break;
+                    case "P6":
+                        m.P6 = decoder.CheckNull() ? null : new Dictionary<uint, List<TS3>>();
+                        if (m.P6 != null)
+                            decoder.GetCollection(() => { return decoder.GetUInt(); },
+                                       () =>
+                                       {
+                                           var il = decoder.CheckNull() ? null : new List<TS3>();
+                                           if (il != null)
+                                               decoder.GetCollection(
+                                                        () => { return TS3.BiserJsonDecode(null, decoder); }, il, true);
+                                           return il;
+                                       }, m.P6, true);
+                        break;
+                    case "P7":
+                        m.P7 = TS2.BiserJsonDecode(null,decoder);
+                        break;
+                    case "P8":
+                        m.P8 = decoder.CheckNull() ? null : new List<Tuple<string, byte[], TS3>>();
+                        if(m.P8 != null)
+                            decoder.GetCollection(
+                                   () => {
+                                       
+                                       var v1 = decoder.SkipProperty().GetString();
+                                       var v2 = decoder.SkipProperty().GetByteArray();
+                                       var v3 = TS3.BiserJsonDecode(null, decoder.SkipProperty());
+                                       decoder.SkipProperty();
+                                        return new Tuple<string, byte[], TS3>(v1, v2, v3);
+                                   }, m.P8, true);                       
+
                         break;
                     case "P11":
                         m.P11 = decoder.CheckNull() ? null : new Dictionary<int, int>();
@@ -171,6 +225,7 @@ namespace BiserTest_Net
                         {
                             //for Dictionary
                             m.P19 = new Tuple<int, TS3>(decoder.SkipProperty().GetInt(), TS3.BiserJsonDecode(null, decoder.SkipProperty()));
+                            decoder.SkipProperty();
                             //for List
                             //m.P19 = new Tuple<int, TS3>(decoder.SkipProperty(true).GetInt(), TS3.BiserJsonDecode(null, decoder.SkipProperty(true)));
                         }

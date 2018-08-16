@@ -42,19 +42,19 @@ namespace BiserTest_Net
             //// var jsres4 = NetJSON.NetJSON.Serialize("dsf\"sdfdsf{fdgdfgdf{dsfdsf[sdf\"\"dfdsf}"); //"dsf\"sdfdsf{fdgdfgdf{dsfdsf[sdf\"\"dfdsf}"
             //var ojsres4 = NetJSON.NetJSON.Deserialize<string>(jsres4); //"ds"fsdf"
 
-            //TS2 jts2 = new TS2()
-            //{
-            //    P1 = long.MinValue,
-            //    P2 = 4587.4564,
-            //    P3 = new List<TS3> {
-            //         new TS3 { P3 = DateTime.UtcNow.AddDays(-1) },
-            //         null,
-            //         //new TS3 { P3 = DateTime.UtcNow.AddDays(-2) },
-            //         new TS3 { P3 = DateTime.UtcNow.AddDays(-3) }
-            //    },
-            //    P4 = new TS3 { P1 = "hi" },
-            //    P5 = 111
-            //};
+            TS2 jts2 = new TS2()
+            {
+                P1 = long.MinValue,
+                P2 = 4587.4564,
+                P3 = new List<TS3> {
+                     new TS3 { P3 = DateTime.UtcNow.AddDays(-1) },
+                     null,
+                     //new TS3 { P3 = DateTime.UtcNow.AddDays(-2) },
+                     new TS3 { P3 = DateTime.UtcNow.AddDays(-3) }
+                },
+                P4 = new TS3 { P1 = "hi" },
+                P5 = 111
+            };
 
             //TS1 jts1 = new TS1()
             //{
@@ -93,7 +93,7 @@ namespace BiserTest_Net
             //Dictionary<int, byte[]> dic1d2 = new Dictionary<int, byte[]>(); //key will be transformed toString, so key can't be byte[]
             //dic1d2.Add(12, new byte[] { 1, 2, 3 });
             //dic1d2.Add(17, new byte[] { 1, 2 });
-            
+
 
             //var jsres6 = NetJSON.NetJSON.Serialize(dic1d2); //{"12":"AQID","17":"AQI="}
             //var ojsres6 = NetJSON.NetJSON.Deserialize<Dictionary<int, byte[]>>(jsres6);
@@ -150,16 +150,35 @@ namespace BiserTest_Net
             TS1 jsts1 = new TS1()
             {
                 P1 = 12,
-                P2 = 17
+                P2 = 17,
+                P3 = 478.5879m,
+                P4 = new List<TS2> { jts2, jts2 },
+                P5 = new Dictionary<long, TS3> {
+                        { 1, new TS3{ P1 = "t1" } },
+                        { 2, new TS3{ P1 = "t2" } },
+                        { 3, new TS3{ P1 = "t3" } }
+                    },
+                P6 = new Dictionary<uint, List<TS3>> {
+                        { 1, new List<TS3>{ new TS3 { P1 = "h1" }, new TS3 { P1 = "h2" }, new TS3 { P1 = "h3" } } },
+                        { 2, new List<TS3>{ new TS3 { P1 = "h2" }, new TS3 { P1 = "h2" }, new TS3 { P1 = "h4" } } },
+                        { 3, new List<TS3>{ new TS3 { P1 = "h3" }, new TS3 { P1 = "h2" }, new TS3 { P1 = "h5" } } },
+                        { 4, new List<TS3>{ new TS3 { P1 = "h4" }, new TS3 { P1 = "h2" }, new TS3 { P1 = "h6" } } }
+                    },
+                P7 = new TS2 { P1 = -789 },
+                P8 = new List<Tuple<string, byte[], TS3>> {
+                        new Tuple<string, byte[], TS3>("tt1",new byte[] { 1,2,3},new TS3 { P1 = "z1" }),
+                        new Tuple<string, byte[], TS3>("tt2",new byte[] { 3,2,3},new TS3 { P1 = "z2" }),
+                        new Tuple<string, byte[], TS3>("tt3",new byte[] { 4,2,3},new TS3 { P1 = "z3" }),
+                    },
             };
 
             jsts1.P11 = new Dictionary<int, int>();
             jsts1.P11.Add(12, 14);
             jsts1.P11.Add(17, 89);
 
-            jsts1.P14 = new Dictionary<int, int>();
-            jsts1.P14.Add(17, 14);
-            jsts1.P14.Add(19, 89);
+            //jsts1.P14 = new Dictionary<int, int>();
+            //jsts1.P14.Add(17, 14);
+            //jsts1.P14.Add(19, 89);
 
 
             //jsts1.P5 = new Dictionary<long, TS3>();
@@ -169,19 +188,21 @@ namespace BiserTest_Net
 
             jsts1.P12 = 789;
 
-            //jsts1.P13 = new List<TS3>();
-            //jsts1.P13.Add(new TS3 { P1 = "dsf", P2 = 45, P3 = DateTime.UtcNow });
-            //jsts1.P13.Add(new TS3 { P1 = "sdfsdfsdfs", P2 = null, P3 = DateTime.UtcNow });
+            jsts1.P13 = new List<TS3>();
+            jsts1.P13.Add(new TS3 { P1 = "dsf", P2 = 45, P3 = DateTime.UtcNow });
+            jsts1.P13.Add(new TS3 { P1 = "sdfsdfsdfs", P2 = null, P3 = DateTime.UtcNow });
 
-            //jsts1.P18 = new List<int>();
-            //jsts1.P18.Add(178);
-            //jsts1.P18.Add(912);
+            jsts1.P19 = new Tuple<int, TS3>(12, new TS3 { P1 = "dsf", P2 = 45, P3 = DateTime.UtcNow });
+
+            jsts1.P18 = new List<int>();
+            jsts1.P18.Add(178);
+            jsts1.P18.Add(912);
 
             //jsts1.P15 = new List<List<TS3>>();
             //jsts1.P15.Add(jsts1.P13);
             //jsts1.P15.Add(jsts1.P13);
 
-            //jsts1.P19 = new Tuple<int, TS3>(12, new TS3 { P1 = "dsf", P2 = 45, P3 = DateTime.UtcNow });
+            
 
             //jsts1.P16 = new Dictionary<long, List<TS3>>();
             //jsts1.P16.Add(12, jsts1.P13);
@@ -214,7 +235,7 @@ namespace BiserTest_Net
 
 
             string wow1 = jenc.GetJSON();
-
+            
             var jsts1d1 = TS1.BiserJsonDecode(wow1, null, new JsonSettings { DateFormat = JsonSettings.DateTimeStyle.ISO });
 
 

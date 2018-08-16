@@ -54,9 +54,10 @@ namespace BiserTest_Net
 
         public void BiserJsonEncode(Biser.JsonEncoder encoder)
         {
+            encoder.Add("P1", this.P1);
             encoder.Add("P3", this.P3);
             encoder.Add("P2", this.P2);
-            //encoder.Add("P17", this.P17);
+            
         }
 
         public static TS3 BiserJsonDecode(string enc = null, Biser.JsonDecoder extDecoder = null, Biser.JsonSettings settings = null) //!!!!!!!!!!!!!! change return type
