@@ -120,6 +120,9 @@ namespace BiserTest_Net
             }
         }//eof
 
-
+        //public T BiserJsonDecoder<T>(Biser.JsonDecoder decoder)
+        //{
+        //    return (T)(object)TS2.BiserJsonDecode(null, decoder, null);
+        //}
     }
 }

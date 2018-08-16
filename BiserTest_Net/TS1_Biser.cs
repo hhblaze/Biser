@@ -109,6 +109,165 @@ namespace BiserTest_Net
                 {                    
                     case "P1":
                         m.P1 = decoder.GetInt();
+                        //m.P1 = decoder.Get(m.P1);
+                        break;
+                    case "P2":
+                        m.P2 = decoder.GetInt();
+                        //m.P1 = decoder.Get(m.P2);
+                        break;
+                    case "P3":
+                        m.P3 = decoder.GetDecimal();
+                        break;
+                    case "P4":
+                        //decoder.Get(m.P4);
+                        m.P4 = decoder.CheckNull() ? null : new List<TS2>();
+                        if (m.P4 != null)
+                            decoder.GetCollection(
+                                       () => { return TS2.BiserJsonDecode(null, decoder); }, m.P4, true);
+                        break;
+                    case "P5":
+                        m.P5 = decoder.CheckNull() ? null : new Dictionary<long, TS3>();
+                        if (m.P5 != null)
+                            decoder.GetCollection(() => { return decoder.GetLong(); },
+                                    () => { return TS3.BiserJsonDecode(null, decoder); }, m.P5, true);
+                        break;
+                    case "P6":
+                        m.P6 = decoder.CheckNull() ? null : new Dictionary<uint, List<TS3>>();
+                        if (m.P6 != null)
+                            decoder.GetCollection(() => { return decoder.GetUInt(); },
+                                       () =>
+                                       {
+                                           var il = decoder.CheckNull() ? null : new List<TS3>();
+                                           if (il != null)
+                                               decoder.GetCollection(
+                                                        () => { return TS3.BiserJsonDecode(null, decoder); }, il, true);
+                                           return il;
+                                       }, m.P6, true);
+                        break;
+                    case "P7":
+                        m.P7 = TS2.BiserJsonDecode(null,decoder);
+                        break;
+                    case "P8":
+                        m.P8 = decoder.CheckNull() ? null : new List<Tuple<string, byte[], TS3>>();
+                        if(m.P8 != null)
+                            decoder.GetCollection(
+                                   () => {
+                                       
+                                       var v1 = decoder.SkipProperty().GetString();
+                                       var v2 = decoder.SkipProperty().GetByteArray();
+                                       var v3 = TS3.BiserJsonDecode(null, decoder.SkipProperty());
+                                       decoder.SkipProperty();
+                                        return new Tuple<string, byte[], TS3>(v1, v2, v3);
+                                   }, m.P8, true);                       
+
+                        break;
+                    case "P11":
+                        m.P11 = decoder.CheckNull() ? null : new Dictionary<int, int>();
+                        if (m.P11 != null)
+                            decoder.GetCollection(() => { return decoder.GetInt(); },
+                                    () => { return decoder.GetInt(); }, m.P11, true);
+                        break;
+                    case "P12":
+                        m.P12 = decoder.GetInt();
+                        break;
+                    case "P13":
+
+                        m.P13 = decoder.CheckNull() ? null : new List<TS3>();
+                        if (m.P13 != null)
+                            decoder.GetCollection(
+                                       () => { return TS3.BiserJsonDecode(null, decoder); }, m.P13, true);
+                        break;
+                    case "P14":
+                        m.P14 = decoder.CheckNull() ? null : new Dictionary<int, int>();
+                        if (m.P14 != null)
+                            decoder.GetCollection(() => { return decoder.GetInt(); },
+                                    () => { return decoder.GetInt(); }, m.P14, true);
+                        break;
+                    case "P15":
+                        m.P15 = decoder.CheckNull() ? null : new List<List<TS3>>();
+                        if (m.P15 != null)
+                            decoder.GetCollection(
+                                       () =>
+                                       {
+                                           var il = decoder.CheckNull() ? null : new List<TS3>();
+                                           if(il != null)
+                                               decoder.GetCollection(
+                                                        () => { return TS3.BiserJsonDecode(null, decoder); }, il, true);
+                                           return il;
+                                       },m.P15,true);
+                        break;
+                    case "P16":
+                        m.P16 = decoder.CheckNull() ? null : new Dictionary<long, List<TS3>>();
+                        if (m.P16 != null)
+                            decoder.GetCollection(() => { return decoder.GetLong(); },
+                                       () =>
+                                       {
+                                           var il = decoder.CheckNull() ? null : new List<TS3>();
+                                           if(il != null)
+                                               decoder.GetCollection(
+                                                        () => { return TS3.BiserJsonDecode(null, decoder); }, il, true);
+                                           return il;
+                                       }, m.P16, true);
+                        break;
+                    case "P17":
+                        m.P17 = decoder.GetDateTime();
+                        break;
+                    case "P18":
+
+                        m.P18 = decoder.CheckNull() ? null : new List<int>();
+                        if (m.P18 != null)
+                            decoder.GetCollection(
+                                       () => { return decoder.GetInt(); }, m.P18, true);
+                        break;
+                    case "P19":
+                        if (decoder.CheckNull())
+                        {
+                            m.P19 = null;
+                        }
+                        else
+                        {
+                            //for Dictionary
+                            m.P19 = new Tuple<int, TS3>(decoder.SkipProperty().GetInt(), TS3.BiserJsonDecode(null, decoder.SkipProperty()));
+                            decoder.SkipProperty();
+                            //for List
+                            //m.P19 = new Tuple<int, TS3>(decoder.SkipProperty(true).GetInt(), TS3.BiserJsonDecode(null, decoder.SkipProperty(true)));
+                        }
+
+                        break;
+                    default:
+                        return m;
+                }
+
+            }
+        }
+
+        /*
+          public static TS1 BiserJsonDecode(string enc = null,Biser.JsonDecoder extDecoder = null, Biser.JsonSettings settings = null) //!!!!!!!!!!!!!! change return type
+        {
+            Biser.JsonDecoder decoder = null;
+
+            if (extDecoder == null)
+            {
+                if (enc == null || String.IsNullOrEmpty(enc))
+                    return null;
+                decoder = new Biser.JsonDecoder(enc, settings);
+                if (decoder.CheckNull())
+                    return null;
+            }
+            else
+            {               
+                //JSONSettings of the existing decoder will be used
+                decoder = extDecoder;                             
+            }
+
+            TS1 m = new TS1();  //!!!!!!!!!!!!!! change return type
+            while (true)
+            {
+                switch (decoder.GetProperty())
+                {                    
+                    case "P1":
+                        //m.P1 = decoder.GetInt();
+                        m.P1 = decoder.Get(m.P1);
                         break;
                     case "P2":
                         m.P2 = decoder.GetInt();
@@ -237,6 +396,8 @@ namespace BiserTest_Net
 
             }
         }
+             
+             */
 
         public static TS1 BiserDecode(byte[] enc = null, Biser.Decoder extDecoder = null) //!!!!!!!!!!!!!! change return type
         {
@@ -303,5 +464,10 @@ namespace BiserTest_Net
 
             return m;
         }
+
+        //public T BiserJsonDecoder<T>(Biser.JsonDecoder decoder)
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 }

@@ -259,7 +259,48 @@ namespace Biser
 
             return sb.ToString();
         }
-               
+
+        //public T Get<T>(T prop)
+        //{
+        //    var typeofT = typeof(T);
+        //    (K)Convert.ChangeType(s, typeof(K))
+        //    if (typeofT == typeof(int))
+        //        return (T)(object)this.GetInt();
+        //    else if (typeof(System.Collections.IList).IsAssignableFrom(typeofT))
+        //    {
+        //        var arg1t = typeofT.GetGenericArguments()[0];
+        //        if (arg1t.IsPrimitive)
+        //        {
+
+        //        }
+        //        else if (typeof(IJsonEncoder).IsAssignableFrom(arg1t))
+        //        {
+        //            var inst = (T)Activator.CreateInstance(typeofT);
+        //            var inst1 = Activator.CreateInstance(arg1t);
+
+        //            System.Reflection.MethodInfo method = arg1t.GetMethod("BiserJsonDecoder");
+        //            System.Reflection.MethodInfo genericMethod = method.MakeGenericMethod(arg1t);
+        //            var obj1 = genericMethod.Invoke(inst1, new object[] { this });
+        //            this.GetCollection(
+        //                           () =>
+        //                           {
+        //                               return genericMethod.Invoke(inst1, new object[] { this });
+        //                           }, inst, true);
+
+        //            m.P4 = decoder.CheckNull() ? null : new List<TS2>();
+        //            if (m.P4 != null)
+        //                decoder.GetCollection(
+        //                           () => { return TS2.BiserJsonDecode(null, decoder); }, m.P4, true);
+        //            foreach (var item)
+        //                var inst = Activator.CreateInstance(arg1t);
+        //        }
+        //    }
+
+
+
+        //    return default(T);
+        //}
+
 
         /// <summary>
         /// 

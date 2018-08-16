@@ -99,7 +99,9 @@ namespace BiserTest_Net
             }
         }//eof
 
-
-
+        //public T BiserJsonDecoder<T>(Biser.JsonDecoder decoder)
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 }
