@@ -973,6 +973,16 @@ namespace Biser
 
 
         Type TypeString = typeof(string);
+
+        /// <summary>
+        /// Adds Dictionary each Key will be transformed into String
+        /// </summary>
+        /// <typeparam name="K"></typeparam>
+        /// <typeparam name="V"></typeparam>
+        /// <param name="propertyName"></param>
+        /// <param name="val"></param>
+        /// <param name="f"></param>
+        /// <returns></returns>
         public JsonEncoder Add<K, V>(string propertyName, IDictionary<K, V> val, Action<V> f)
         {
             if (!String.IsNullOrEmpty(propertyName))
@@ -1018,11 +1028,25 @@ namespace Biser
             return this;
         }
 
+        /// <summary>
+        ///  Adds Dictionary each Key will be transformed into String
+        /// </summary>
+        /// <typeparam name="K"></typeparam>
+        /// <typeparam name="V"></typeparam>
+        /// <param name="val"></param>
+        /// <param name="f"></param>
+        /// <returns></returns>
         public JsonEncoder Add<K, V>(IDictionary<K,V> val, Action<V> f)
         {
             return Add(null, val, f);
         }
-        
+
+        /// <summary>
+        /// Adds class implementing IJsonEncoder
+        /// </summary>
+        /// <param name="propertyName"></param>
+        /// <param name="val"></param>
+        /// <returns></returns>
         public JsonEncoder Add(string propertyName, IJsonEncoder val)
         {
             if (!String.IsNullOrEmpty(propertyName))
@@ -1053,13 +1077,20 @@ namespace Biser
             return Add(null,val);
         }
 
+        /// <summary>
+        ///  Supply array and transformation function, one for each array element
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="items"></param>
+        /// <param name="f"></param>
+        /// <returns></returns>
         public JsonEncoder Add<T>(IEnumerable<T> items, Action<T> f)
         {
             return Add(null, items, f);
         }
 
         /// <summary>
-        /// Supply array and transformation function function for each array element
+        /// Supply array and transformation function, one for each array element
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="propertyName"></param>

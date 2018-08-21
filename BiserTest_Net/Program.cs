@@ -171,6 +171,7 @@ namespace BiserTest_Net
                         new Tuple<string, byte[], TS3>("tt2",new byte[] { 3,2,3},new TS3 { P1 = "z2" }),
                         new Tuple<string, byte[], TS3>("tt3",new byte[] { 4,2,3},new TS3 { P1 = "z3" }),
                     },
+                P9 = new Tuple<float, TS2, TS3, decimal?>(-.8f, new TS2 { P2 = 45 }, new TS3 { P2 = 12 }, -58.8m),
             };
 
             jsts1.P11 = new Dictionary<int, int>();
@@ -182,10 +183,10 @@ namespace BiserTest_Net
             //jsts1.P14.Add(19, 89);
 
 
-            //jsts1.P5 = new Dictionary<long, TS3>();
-            //jsts1.P5.Add(189, new TS3 { P1 = "dsf", P2 = 45, P3 = DateTime.UtcNow });
-            //jsts1.P5.Add(178, new TS3 { P1 = "sdfsdfsdfs", P2 = null, P3 = DateTime.UtcNow });
-            //jsts1.P5.Add(148, new TS3 { P1 = "dfdff", P2 = null, P3 = DateTime.UtcNow });
+            jsts1.P5 = new Dictionary<long, TS3>();
+            jsts1.P5.Add(189, new TS3 { P1 = "dsf", P2 = 45, P3 = DateTime.UtcNow });
+            jsts1.P5.Add(178, new TS3 { P1 = "sdfsdfsdfs", P2 = null, P3 = DateTime.UtcNow });
+            jsts1.P5.Add(148, new TS3 { P1 = "dfdff", P2 = null, P3 = DateTime.UtcNow });
 
             jsts1.P12 = 789;
 
@@ -214,7 +215,7 @@ namespace BiserTest_Net
             jsts1.P17 = new DateTime(2018, 6, 5, 17,44,15,443, DateTimeKind.Utc);
 
             //var jsres9 = NetJSON.NetJSON.Serialize(jsts1, new NetJSON.NetJSONSettings() { Format = NetJSON.NetJSONFormat.Prettify });
-            var jsres9 = NetJSON.NetJSON.Serialize(jsts1, new NetJSON.NetJSONSettings() { //Format = NetJSON.NetJSONFormat.Prettify,
+            var jsres9 = NetJSON.NetJSON.Serialize(jsts1, new NetJSON.NetJSONSettings() { Format = NetJSON.NetJSONFormat.Prettify,
                 DateFormat = NetJSON.NetJSONDateFormat.ISO });
             var njdv1 = NetJSON.NetJSON.Deserialize<TS1>(jsres9, new NetJSON.NetJSONSettings()
             { //Format = NetJSON.NetJSONFormat.Prettify,
@@ -232,7 +233,7 @@ namespace BiserTest_Net
             //});
 
             JsonEncoder jenc = new JsonEncoder(new JsonSettings { DateFormat = JsonSettings.DateTimeStyle.ISO,
-                JsonStringFormat = JsonSettings.JsonStringStyle.Prettify });
+                JsonStringFormat = JsonSettings.JsonStringStyle.Default });
             jsts1.BiserJsonEncode(jenc);
 
 
@@ -242,7 +243,7 @@ namespace BiserTest_Net
 
             //StreamReader sr=new StreamReader("",Encoding.UTF8)
             //StreamWriter sw=new StreamWriter()
-
+            Console.WriteLine("Press to start test");
             Console.ReadLine();
 
 
@@ -250,7 +251,37 @@ namespace BiserTest_Net
             sw.Start();
             for (int i = 0; i < 10000; i++)
             {
-                jsts1d = TS1.BiserJsonDecode(jsres9);
+                jenc = new JsonEncoder(new JsonSettings
+                {
+                    DateFormat = JsonSettings.DateTimeStyle.ISO,
+                    JsonStringFormat = JsonSettings.JsonStringStyle.Default
+                });
+                jsts1.BiserJsonEncode(jenc);
+                wow1 = jenc.GetJSON();
+            }
+            sw.Stop();
+            Console.WriteLine($"Biser encode: {sw.ElapsedMilliseconds} ms");
+            sw.Reset();
+
+            sw.Start();
+            for (int i = 0; i < 10000; i++)
+            {
+                jsres9 = NetJSON.NetJSON.Serialize(jsts1, new NetJSON.NetJSONSettings()
+                {
+                    Format = NetJSON.NetJSONFormat.Prettify,
+                    DateFormat = NetJSON.NetJSONDateFormat.ISO
+                });
+            }
+            sw.Stop();
+            Console.WriteLine($"NetJSON encode: {sw.ElapsedMilliseconds} ms");
+            sw.Reset();
+
+
+
+            sw.Start();
+            for (int i = 0; i < 10000; i++)
+            {
+                jsts1d = TS1.BiserJsonDecode(wow1, null, new JsonSettings { DateFormat = JsonSettings.DateTimeStyle.ISO });
             }
             sw.Stop();
             Console.WriteLine($"Biser decode: {sw.ElapsedMilliseconds} ms");
@@ -267,7 +298,7 @@ namespace BiserTest_Net
 
 
 
-            jsts1d = TS1.BiserJsonDecode(jsres9);
+           // jsts1d = TS1.BiserJsonDecode(jsres9);
             Console.ReadLine();
             return;
             Biser.Encoder en2 = new Biser.Encoder();

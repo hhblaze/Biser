@@ -54,43 +54,35 @@ namespace BiserTest_Net
                 });
                 });
 
+            if (this.P9 != null)
+                encoder.Add("P9", new List<Action>() { //Array of heterogenous types
+                    { ()=>encoder.Add(this.P9.Item1)},
+                    { ()=>encoder.Add(this.P9.Item2)},
+                    { ()=>encoder.Add(this.P9.Item3)},
+                    { ()=>encoder.Add(this.P9.Item4)},
+                });
 
+            if (this.P11 != null)
+                encoder.Add("P11", P11, (r) => { encoder.Add(r); });
 
-            ////encoder.Add("P13", this.P13,(r)=> { r.BiserJsonEncode(encoder); });
             encoder.Add("P13", this.P13, (r) => { encoder.Add(r); });
-            ////encoder.Add("P15", this.P15, (r) => { encoder.Add(r,(r1)=> { r1.BiserJsonEncode(encoder); }); });
+
             encoder.Add("P15", this.P15, (r) => { encoder.Add(r, (r1) => { encoder.Add(r1); }); });
 
             encoder.Add("P16", this.P16, (r) => { encoder.Add(r, (r1) => { encoder.Add(r1); }); });
-            //encoder.Add("P16", this.P16);
-
+         
             encoder.Add("P17", this.P17);
 
             encoder.Add("P18", this.P18, (r) => { encoder.Add(r); });
-
-          
-
-            //As object
-            //if(this.P19 !=null)
-            //    encoder.Add("P19", new Dictionary<string, Action>() {
-            //        { "Item1", ()=>encoder.Add(this.P19.Item1)},
-            //        { "Item2", ()=>encoder.Add(this.P19.Item2)},
-            //    });
-
+            
             if (this.P19 != null)
-                encoder.Add("P19", new List<Action>() {
+                encoder.Add("P19", new List<Action>() { //Array of heterogenous types
                     { ()=>encoder.Add(this.P19.Item1)},
                     { ()=>encoder.Add(this.P19.Item2)},
                 });
 
-            if (this.P11 != null)
-                encoder.Add("P11", P11,(r)=> { encoder.Add(r); });
+          
 
-            ////As Array
-            //encoder.Add("P19", new List<Action>() {
-            //    ()=>encoder.Add(this.P19.Item1),
-            //    ()=>encoder.Add(this.P19.Item2)
-            //});
         }
 
         public static TS1 BiserJsonDecode(string enc = null,Biser.JsonDecoder extDecoder = null, Biser.JsonSettings settings = null) //!!!!!!!!!!!!!! change return type
@@ -187,6 +179,22 @@ namespace BiserTest_Net
                                 }//must come to the end, no returns in the middle of iteration
                                 m.P8.Add(tpl);
                             }
+                        }
+
+                        break;
+                    case "P9":
+                        if (decoder.CheckNull())
+                        {
+                            m.P9 = null;
+                        }
+                        else
+                        {
+                            foreach (var el in decoder.GetArray()) //heterogenous array
+                            {
+                                m.P9 = new Tuple<float, TS2, TS3, decimal?>(decoder.GetFloat(), 
+                                    TS2.BiserJsonDecode(null, decoder), TS3.BiserJsonDecode(null, decoder), decoder.GetDecimal_NULL());
+                            }
+
                         }
 
                         break;

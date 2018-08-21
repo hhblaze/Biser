@@ -32,6 +32,7 @@ namespace Biser
         public bool CheckNull()
         {
             bool ret = false;
+            bool start = false;
             while (true)
             {
                 this.encPos++;
@@ -40,6 +41,12 @@ namespace Biser
                 var c = this.encoded[this.encPos];
                 if (CheckSkip(c))
                     continue;
+
+                if (!start)
+                    if (c == ',')
+                        continue;
+                    else start = true;
+
                 if (!ret)
                 {
                     if (c == 'n'
@@ -76,6 +83,7 @@ namespace Biser
         {
             if (checkNull && CheckNull())
                 return null;
+            bool start = false;
             StringBuilder sb = new StringBuilder();
             while (true)
             {
@@ -85,6 +93,11 @@ namespace Biser
                 var c = this.encoded[this.encPos];
                 if (CheckSkip(c))
                     continue;
+
+                if (!start)
+                    if (c == ',')
+                        continue;
+                    else start = true;
                 
                 if (c == ',' || c == ']' || c == '}')
                 {
@@ -102,6 +115,7 @@ namespace Biser
         {
             if (checkNull && CheckNull())
                 return null;
+            bool start = false;
             StringBuilder sb = new StringBuilder();
             while (true)
             {
@@ -111,7 +125,12 @@ namespace Biser
                 var c = this.encoded[this.encPos];
                 if (CheckSkip(c))
                     continue;
-               
+
+                if (!start)
+                    if (c == ',')
+                        continue;
+                    else start = true;
+
                 if (c == ',' || c == ']' || c == '}')
                 {
                     this.encPos--;                   

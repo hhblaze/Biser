@@ -22,7 +22,7 @@ namespace BiserTest_Net
         public TS2 P7 { get; set; }
         public List<Tuple<string,byte[],TS3>> P8 { get; set; }
         public Tuple<float, TS2, TS3, decimal?> P9 { get; set; }
-        //public string P10 = "";
+        //--- extra for JSON testings
         public string P10;
         public Dictionary<int, int> P11 { get; set; }
         public int P12 { get; set; }
