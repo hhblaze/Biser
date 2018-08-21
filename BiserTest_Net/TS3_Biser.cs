@@ -79,9 +79,9 @@ namespace BiserTest_Net
             }
 
             TS3 m = new TS3();  //!!!!!!!!!!!!!! change return type
-            while (true)
+            foreach (var props in decoder.GetMap<string>())
             {
-                switch (decoder.GetProperty())
+                switch (props)
                 {
                     case "P1":
                         m.P1 = decoder.GetString();
@@ -93,10 +93,30 @@ namespace BiserTest_Net
                         m.P3 = decoder.GetDateTime();
                         break;
                     default:
-                        return m;
+                        decoder.SkipValue();
+                        break;
                 }
-
             }
+            return m;
+
+            //while (true)
+            //{
+            //    switch (decoder.GetProperty())
+            //    {
+            //        case "P1":
+            //            m.P1 = decoder.GetString();
+            //            break;
+            //        case "P2":
+            //            m.P2 = decoder.GetInt_NULL();
+            //            break;
+            //        case "P3":
+            //            m.P3 = decoder.GetDateTime();
+            //            break;
+            //        default:
+            //            return m;
+            //    }
+
+            //}
         }//eof
 
         //public T BiserJsonDecoder<T>(Biser.JsonDecoder decoder)

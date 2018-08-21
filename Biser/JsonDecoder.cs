@@ -135,68 +135,147 @@ namespace Biser
         }
 
 
-        /// <summary>
-        /// In case if object is deserialized, first we deserialize property and its name 
-        /// will be returned back, then due to the property name can be choosen deserializer
-        /// </summary>
-        /// <returns></returns>
-        public string GetProperty()
+        ///// <summary>
+        ///// In case if object is deserialized, first we deserialize property and its name 
+        ///// will be returned back, then due to the property name can be choosen deserializer
+        ///// </summary>
+        ///// <returns></returns>
+        //public string GetProperty()
+        //{
+        //    string s;
+        //    while (true)
+        //    {
+        //        this.encPos++;
+        //        if (this.encPos >= this.encoded.Length)
+        //            return String.Empty;
+        //        var c = this.encoded[this.encPos];
+
+        //        if (c == '{' || c == ',')
+        //        {
+        //            s = GetStr(false);
+        //            if (!String.IsNullOrEmpty(s))
+        //                SkipDelimiter();
+        //            return s;
+        //        }
+        //        else if (c == '}')
+        //            return String.Empty; //correct end of object
+
+        //        continue;
+
+        //    }
+        //}
+
+        //public JsonDecoder SkipProperty(bool array = false)
+        //{
+        //    string s;
+        //    while (true)
+        //    {
+        //        this.encPos++;
+        //        if (this.encPos >= this.encoded.Length)
+        //            return null;
+        //        var c = this.encoded[this.encPos];
+
+        //        if (
+        //            (!array && (c == '{' || c == ','))
+        //            ||
+        //            (array && (c == '[' || c == ','))
+        //            )
+        //        {
+        //            if (!array)
+        //            {
+        //                s = GetStr(false);
+        //                if (!String.IsNullOrEmpty(s))
+        //                    SkipDelimiter();
+        //            }
+        //            return this;
+        //        }
+        //        else if (
+        //            (!array && c == '}')
+        //            ||
+        //            (array && c == ']')
+        //            )
+        //            return null; //correct end of object
+
+        //        continue;
+
+        //    }
+        //}
+
+
+        //must be used as a default call
+        public void SkipValue()
         {
-            string s;
+            bool start = true;
+            char d = ' '; //default for number
+            char o = ' ';
+            int cnt = 0;
             while (true)
             {
                 this.encPos++;
                 if (this.encPos >= this.encoded.Length)
-                    return String.Empty;
+                    break;
                 var c = this.encoded[this.encPos];
 
-                if (c == '{' || c == ',')
+                if (CheckSkip(c))
+                    continue;
+
+                if(start)
                 {
-                    s = GetStr(false);
-                    if (!String.IsNullOrEmpty(s))
-                        SkipDelimiter();
-                    return s;
-                }
-                else if (c == '}')
-                    return String.Empty; //correct end of object
-
-                continue;
-
-            }
-        }
-
-        public JsonDecoder SkipProperty(bool array = false)
-        {
-            string s;
-            while (true)
-            {
-                this.encPos++;
-                if (this.encPos >= this.encoded.Length)
-                    return null;
-                var c = this.encoded[this.encPos];
-
-                if (
-                    (!array && (c == '{' || c == ','))
-                    ||
-                    (array && (c == '[' || c == ','))
-                    )
-                {
-                    if (!array)
+                    if (c == '\"')
                     {
-                        s = GetStr(false);
-                        if (!String.IsNullOrEmpty(s))
-                            SkipDelimiter();
+                        d = '\"';
+                        o = '\"';
                     }
-                    return this;
-                }
-                else if (
-                    (!array && c == '}')
-                    ||
-                    (array && c == ']')
-                    )
-                    return null; //correct end of object
+                    else if (c == '[')
+                    {
+                        d = '[';
+                        o = ']';
+                    }
+                    else if (c == '{')
+                    {
+                        d = '{';
+                        o = '}';
+                    }
+                    else if(c == 'n') //null
+                    {
+                        this.encPos+=3;
+                        return;
+                    }
 
-                continue;
+                    start = false;
+                }
+                else
+                {
+                    if(d == ' ' && (c == ',' || c=='}' || c==']'))
+                    {
+                        this.encPos--;
+                        return;
+                    }
+                    else if(d == '\"')
+                    {
+                        if(c == '\\')
+                        {
+                            this.encPos++;
+                            continue;
+                        }
+                        else if(c == o)
+                            return;
+                    }
+                    else if (d == '[' || d == '{')
+                    {
+                        if(c == d)
+                        {
+                            cnt++;
+                        }
+                        else if(c == o)
+                        {
+                            if (cnt == 0)
+                                return;
+                            else
+                                cnt--;
+                        }
+                    }
+                }
 
             }
         }
@@ -302,102 +381,225 @@ namespace Biser
         //}
 
 
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <typeparam name="K"></typeparam>
+        ///// <typeparam name="V"></typeparam>
+        ///// <param name="fk"></param>
+        ///// <param name="fv"></param>
+        ///// <param name="dict"></param>
+        ///// <param name="isNullChecked"></param>
+        //public void GetCollection<K, V>(Func<K> fk, Func<V> fv, IDictionary<K, V> dict, bool isNullChecked = false)
+        //{
+        //    GetCollection(fk, fv, dict, null, null, isNullChecked);
+        //}
+        //public void GetCollection<K>(Func<K> fk, IList<K> lst, bool isNullChecked = false)
+        //{
+        //    GetCollection(fk, fk, null, lst, null, isNullChecked);
+        //}
+
+        //public void GetCollection<K>(Func<K> fk, ISet<K> set, bool isNullChecked = false)
+        //{
+        //    GetCollection(fk, fk, null, null, set, isNullChecked);
+        //}
+
+
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <typeparam name="K"></typeparam>
+        ///// <typeparam name="V"></typeparam>
+        ///// <param name="fk"></param>
+        ///// <param name="fv"></param>
+        ///// <param name="dict"></param>
+        ///// <param name="lst"></param>
+        ///// <param name="set"></param>
+        ///// <param name="isNullChecked"></param>
+        //void GetCollection<K, V>(Func<K> fk, Func<V> fv, IDictionary<K, V> dict, IList<K> lst, ISet<K> set, bool isNullChecked = false)
+        //{
+        //    if (!isNullChecked)
+        //    {
+        //        if (this.CheckNull())
+        //        {
+        //            dict = null;
+        //            lst = null;
+        //            set = null;
+        //            return;
+        //        }
+        //    }
+
+        //    char eoc = (dict != null) ? '}' : ']'; //end of collection
+        //    char soc = (dict != null) ? '{' : '['; //start of collection
+
+        //    int state = 0; //collection start
+        //    string s;
+        //    while (true)
+        //    {
+        //        this.encPos++;
+        //        if (this.encPos >= this.encoded.Length)
+        //            return;
+        //        var c = this.encoded[this.encPos];
+
+        //        if (CheckSkip(c))
+        //            continue;
+        //        if (c == ',')
+        //            continue;
+        //        if (c == eoc)
+        //            return;
+        //        if (state == 0)
+        //        {
+        //            if (c == soc)
+        //                state = 1; //In collection
+        //        }
+        //        else
+        //        {
+        //            this.encPos--;
+        //        }
+
+        //        if (state == 1)
+        //        {
+        //            if (lst != null)
+        //            {
+        //                lst.Add(fk());
+        //            }
+        //            else if (set != null)
+        //            {
+        //                set.Add(fk());
+        //            }
+        //            else if (dict != null)
+        //            {
+        //                s = GetStr(false);
+        //                SkipDelimiter();                        
+        //                dict.Add((K)Convert.ChangeType(s, typeof(K)), fv());
+        //            }
+        //        }
+        //    }
+
+        //}//eof 
+
+
         /// <summary>
-        /// 
+        /// Returns Key, Value must be retrieved extra
         /// </summary>
         /// <typeparam name="K"></typeparam>
-        /// <typeparam name="V"></typeparam>
-        /// <param name="fk"></param>
-        /// <param name="fv"></param>
-        /// <param name="dict"></param>
-        /// <param name="isNullChecked"></param>
-        public void GetCollection<K, V>(Func<K> fk, Func<V> fv, IDictionary<K, V> dict, bool isNullChecked = false)
+        /// <returns></returns>
+        public IEnumerable<K> GetMap<K>()
         {
-            GetCollection(fk, fv, dict, null, null, isNullChecked);
-        }
-        public void GetCollection<K>(Func<K> fk, IList<K> lst, bool isNullChecked = false)
-        {
-            GetCollection(fk, fk, null, lst, null, isNullChecked);
-        }
-
-        public void GetCollection<K>(Func<K> fk, ISet<K> set, bool isNullChecked = false)
-        {
-            GetCollection(fk, fk, null, null, set, isNullChecked);
-        }
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="K"></typeparam>
-        /// <typeparam name="V"></typeparam>
-        /// <param name="fk"></param>
-        /// <param name="fv"></param>
-        /// <param name="dict"></param>
-        /// <param name="lst"></param>
-        /// <param name="set"></param>
-        /// <param name="isNullChecked"></param>
-        void GetCollection<K, V>(Func<K> fk, Func<V> fv, IDictionary<K, V> dict, IList<K> lst, ISet<K> set, bool isNullChecked = false)
-        {
-            if (!isNullChecked)
+            bool array = false;
+            if (this.CheckNull())
             {
-                if (this.CheckNull())
-                {
-                    dict = null;
-                    lst = null;
-                    set = null;
-                    return;
-                }
             }
-
-            char eoc = (dict != null) ? '}' : ']'; //end of collection
-            char soc = (dict != null) ? '{' : '['; //start of collection
-
-            int state = 0; //collection start
-            string s;
-            while (true)
+            else
             {
-                this.encPos++;
-                if (this.encPos >= this.encoded.Length)
-                    return;
-                var c = this.encoded[this.encPos];
 
-                if (CheckSkip(c))
-                    continue;
-                if (c == ',')
-                    continue;
-                if (c == eoc)
-                    return;
-                if (state == 0)
-                {
-                    if (c == soc)
-                        state = 1; //In collection
-                }
-                else
-                {
-                    this.encPos--;
-                }
+                char eoc = (!array) ? '}' : ']'; //end of collection
+                char soc = (!array) ? '{' : '['; //start of collection
 
-                if (state == 1)
+                int state = 0; //collection start                
+                string s;
+                while (true)
                 {
-                    if (lst != null)
+                    this.encPos++;
+                    if (this.encPos >= this.encoded.Length)
+                        break;
+                    var c = this.encoded[this.encPos];
+
+                    if (CheckSkip(c))
+                        continue;
+                    if (c == ',')
+                        continue;
+                    if (c == eoc)
+                        break;
+                    if (state == 0)
                     {
-                        lst.Add(fk());
+                        if (c == soc)
+                            state = 1; //In collection
                     }
-                    else if (set != null)
+                    else
                     {
-                        set.Add(fk());
+                        this.encPos--;
                     }
-                    else if (dict != null)
+
+                    if (state == 1)
                     {
-                        s = GetStr(false);
-                        SkipDelimiter();                        
-                        dict.Add((K)Convert.ChangeType(s, typeof(K)), fv());
+                        if (array)
+                        {
+                            yield return default(K);
+                        }
+                        else
+                        {
+                            s = GetStr(false);
+                            SkipDelimiter();
+                            //dict.Add((K)Convert.ChangeType(s, typeof(K)), fv());
+                            yield return (K)Convert.ChangeType(s, typeof(K));
+                        }
                     }
                 }
             }
 
         }//eof 
+
+
+        public IEnumerable<int> GetArray()
+        {
+            bool array = true;
+            if (this.CheckNull())
+            {
+            }
+            else
+            {
+
+                char eoc = (!array) ? '}' : ']'; //end of collection
+                char soc = (!array) ? '{' : '['; //start of collection
+
+                int state = 0; //collection start                
+                string s;
+                while (true)
+                {
+                    this.encPos++;
+                    if (this.encPos >= this.encoded.Length)
+                        break;
+                    var c = this.encoded[this.encPos];
+
+                    if (CheckSkip(c))
+                        continue;
+                    if (c == ',')
+                        continue;
+                    if (c == eoc)
+                        break;
+                    if (state == 0)
+                    {
+                        if (c == soc)
+                            state = 1; //In collection
+                    }
+                    else
+                    {
+                        this.encPos--;
+                    }
+
+                    if (state == 1)
+                    {
+                        if (array)
+                        {
+                            yield return 1;
+                        }
+                        //else
+                        //{
+                        //    s = GetStr(false);
+                        //    SkipDelimiter();
+                        //    //dict.Add((K)Convert.ChangeType(s, typeof(K)), fv());
+                        //    yield return (K)Convert.ChangeType(s, typeof(K));
+                        //}
+                    }
+                }
+            }
+
+        }//eof 
+
+
+
+
 
 
 

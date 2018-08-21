@@ -91,9 +91,9 @@ namespace BiserTest_Net
             }
 
             TS2 m = new TS2();  //!!!!!!!!!!!!!! change return type
-            while (true)
+            foreach (var props in decoder.GetMap<string>())
             {
-                switch (decoder.GetProperty())
+                switch (props)
                 {
                     case "P1":
                         m.P1 = decoder.GetLong();
@@ -104,8 +104,12 @@ namespace BiserTest_Net
                     case "P3":
                         m.P3 = decoder.CheckNull() ? null : new List<TS3>();
                         if (m.P3 != null)
-                            decoder.GetCollection(
-                                       () => { return TS3.BiserJsonDecode(null, decoder); }, m.P3, true);                       
+                        {
+                            foreach (var el in decoder.GetArray())
+                                m.P3.Add(TS3.BiserJsonDecode(null, decoder));
+                        }
+                            //decoder.GetCollection(
+                            //           () => { return TS3.BiserJsonDecode(null, decoder); }, m.P3, true);
                         break;
                     case "P4":
                         m.P4 = TS3.BiserJsonDecode(null, decoder);
@@ -114,10 +118,39 @@ namespace BiserTest_Net
                         m.P5 = decoder.GetUInt_NULL();
                         break;
                     default:
-                        return m;
+                        decoder.SkipValue();
+                        break;
                 }
-
             }
+            return m;
+
+            //while (true)
+            //{
+            //    switch (decoder.GetProperty())
+            //    {
+            //        case "P1":
+            //            m.P1 = decoder.GetLong();
+            //            break;
+            //        case "P2":
+            //            m.P2 = decoder.GetDouble();
+            //            break;
+            //        case "P3":
+            //            m.P3 = decoder.CheckNull() ? null : new List<TS3>();
+            //            if (m.P3 != null)
+            //                decoder.GetCollection(
+            //                           () => { return TS3.BiserJsonDecode(null, decoder); }, m.P3, true);                       
+            //            break;
+            //        case "P4":
+            //            m.P4 = TS3.BiserJsonDecode(null, decoder);
+            //            break;
+            //        case "P5":
+            //            m.P5 = decoder.GetUInt_NULL();
+            //            break;
+            //        default:
+            //            return m;
+            //    }
+
+            //}
         }//eof
 
         //public T BiserJsonDecoder<T>(Biser.JsonDecoder decoder)
