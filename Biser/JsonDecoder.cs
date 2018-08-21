@@ -8,10 +8,7 @@ namespace Biser
 {
     public class JsonDecoder
     {
-        internal string encoded = null;
-        //internal char lastChar;
-        //JsonDecoder rootDecoder = null;
-        //bool externalDecoderExists = false;
+        internal string encoded = null;       
 
         internal int encPos = -1;
 
@@ -26,11 +23,6 @@ namespace Biser
                 return;
 
         }
-
-        //public JsonDecoder(JsonDecoder decoder)//, bool isCollection = false)
-        //{
-        //    this = decoder.rootDecoder;         
-        //}
 
         bool CheckSkip(char c)
         {
@@ -93,11 +85,10 @@ namespace Biser
                 var c = this.encoded[this.encPos];
                 if (CheckSkip(c))
                     continue;
-                // if (c == ',' || c == ':' || c == ']' || c == '}')
+                
                 if (c == ',' || c == ']' || c == '}')
                 {
-                    this.encPos--;
-                    //lastChar = c;
+                    this.encPos--;                   
                     break;
                 }
                 sb.Append(c);
@@ -120,11 +111,10 @@ namespace Biser
                 var c = this.encoded[this.encPos];
                 if (CheckSkip(c))
                     continue;
-                // if (c == ',' || c == ':' || c == ']' || c == '}')
+               
                 if (c == ',' || c == ']' || c == '}')
                 {
-                    this.encPos--;
-                    //lastChar = c;
+                    this.encPos--;                   
                     break;
                 }
                 sb.Append(c);

@@ -59,8 +59,122 @@ namespace Biser
                 sb.Append("}");
                 finished = sb.ToString();
             }
-            return finished;
+
+            if(this.jsonSettings.JsonStringFormat == JsonSettings.JsonStringStyle.Prettify)
+            {
+                return Prettify();
+            }
+            else
+                return finished;
                 
+        }
+
+        string prettified = null;
+        string Prettify()
+        {
+            if (prettified != null)
+                return prettified;
+
+            StringBuilder sbp = new StringBuilder();
+            int tabs = 0;           
+            bool instr = false;
+            char prevchar = ',';
+            bool toDrawTabs = false;
+            bool toDrawCL = false;
+            foreach (var el in finished)
+            {                
+                if(!instr && el == '\"')
+                    instr = true;
+                else if (instr && el == '\"' && prevchar != '\\')
+                    instr = false;
+
+                if (!instr && (el == ' ' || el == '\t' || el == '\r' || el == '\n'))
+                    continue;
+
+               
+                if (!instr && el == ',')
+                {
+                    sbp.Append(el);                    
+                    toDrawCL = true;
+                    toDrawTabs = true;                   
+                }
+                else if (!instr && (el == '[' || el == '{'))
+                {
+                    if (toDrawCL)
+                    {
+                        sbp.Append('\n');
+                        toDrawCL = false;
+                    }
+
+                    if (toDrawTabs)
+                    {
+                        DrawTabs(tabs, sbp);
+                        toDrawTabs = false;
+                    }
+
+                    if (prevchar != ',')
+                    {
+                        sbp.Append('\n');
+                        DrawTabs(tabs, sbp);
+                    }
+                 
+                    sbp.Append(el);
+                    tabs++;
+                    
+                    toDrawCL = true;
+                    toDrawTabs = true;
+                }
+                else if (!instr && (el == ']' || el == '}'))
+                {
+                    if (toDrawCL)
+                    {
+                        sbp.Append('\n');
+                        toDrawCL = false;
+                    }
+                    if (toDrawTabs)
+                    {
+                        DrawTabs(tabs, sbp);
+                        toDrawTabs = false;
+                    }
+                    if (prevchar != ',')                    
+                        sbp.Append('\n');
+                   
+                    tabs--;
+                    DrawTabs(tabs, sbp);
+                    sbp.Append(el);
+                    
+                    toDrawCL = true;
+                    toDrawTabs = true;
+                    
+                }
+                else
+                {
+                    if (toDrawCL)
+                    {
+                        sbp.Append('\n');
+                        toDrawCL = false;
+                    }
+                    if (toDrawTabs)
+                    {
+                        DrawTabs(tabs, sbp);
+                        toDrawTabs = false;
+                    }
+                    sbp.Append(el);
+                }
+
+                prevchar = el;
+            }
+            prettified = sbp.ToString();
+            return prettified;
+        }
+
+        void DrawTabs(int cnt, StringBuilder sbp)
+        {
+            if (cnt == 0)
+                return;
+            //sbp.Append('\n');
+            for (int i = 0; i < cnt; i++)
+                sbp.Append('\t');
         }
 
         public JsonEncoder Add(string propertyName, DateTime val)
@@ -802,6 +916,12 @@ namespace Biser
             return Add(null, val);
         }
 
+        /// <summary>
+        /// Supplies heterogonenous array elements
+        /// </summary>
+        /// <param name="propertyName"></param>
+        /// <param name="val"></param>
+        /// <returns></returns>
         public JsonEncoder Add(string propertyName, List<Action> val)
         {
             if (!String.IsNullOrEmpty(propertyName))
@@ -938,6 +1058,14 @@ namespace Biser
             return Add(null, items, f);
         }
 
+        /// <summary>
+        /// Supply array and transformation function function for each array element
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="propertyName"></param>
+        /// <param name="items"></param>
+        /// <param name="f"></param>
+        /// <returns></returns>
         public JsonEncoder Add<T>(string propertyName, IEnumerable<T> items, Action<T> f)
         {
             if (!String.IsNullOrEmpty(propertyName))

@@ -99,29 +99,7 @@ namespace BiserTest_Net
             }
             return m;
 
-            //while (true)
-            //{
-            //    switch (decoder.GetProperty())
-            //    {
-            //        case "P1":
-            //            m.P1 = decoder.GetString();
-            //            break;
-            //        case "P2":
-            //            m.P2 = decoder.GetInt_NULL();
-            //            break;
-            //        case "P3":
-            //            m.P3 = decoder.GetDateTime();
-            //            break;
-            //        default:
-            //            return m;
-            //    }
-
-            //}
         }//eof
 
-        //public T BiserJsonDecoder<T>(Biser.JsonDecoder decoder)
-        //{
-        //    throw new NotImplementedException();
-        //}
     }
 }

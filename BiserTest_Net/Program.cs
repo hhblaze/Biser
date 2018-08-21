@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -230,7 +231,8 @@ namespace BiserTest_Net
             //    DateFormat = NetJSON.NetJSONDateFormat.ISO
             //});
 
-            JsonEncoder jenc = new JsonEncoder(new JsonSettings { DateFormat = JsonSettings.DateTimeStyle.ISO, JsonStringFormat = JsonSettings.JsonStringStyle.Default });
+            JsonEncoder jenc = new JsonEncoder(new JsonSettings { DateFormat = JsonSettings.DateTimeStyle.ISO,
+                JsonStringFormat = JsonSettings.JsonStringStyle.Prettify });
             jsts1.BiserJsonEncode(jenc);
 
 
@@ -238,6 +240,8 @@ namespace BiserTest_Net
             
             var jsts1d1 = TS1.BiserJsonDecode(wow1, null, new JsonSettings { DateFormat = JsonSettings.DateTimeStyle.ISO });
 
+            //StreamReader sr=new StreamReader("",Encoding.UTF8)
+            //StreamWriter sw=new StreamWriter()
 
             Console.ReadLine();
 
