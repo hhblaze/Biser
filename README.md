@@ -5,8 +5,7 @@
 [![Image of Build](https://img.shields.io/badge/Powered%20by-tiesky.com-1883F5.svg)](http://tiesky.com)
 
 Cross-platform binary serializer for .NET dotnet and [javascript ](https://github.com/hhblaze/Biser#biser-as-a-cross-platform-serializer) 
-Also contains JSON encoders and decoders. 
-Main principle is absence of reflection and completely managed code.
+Also contains [JSON](https://docs.google.com/document/d/e/2PACX-1vQa3C506Esw3Fkroj4OA5erGOHEZpAtnXcQQ90R0w1wnFqO_16CH0dUfBJZt_ppB15ykoZWI9eR8KcG/pub#id.yqadcf2f2moz) encoders and decoders starting from v1.6. 
 
 - Can be an alternative to [protobuf-net](https://github.com/mgravell/protobuf-net) in some circumstances (works in [MONO WASM](https://github.com/aspnet/Blazor) and CoreRT).
 - Can be an alternative to [NetJSON](https://github.com/rpgmaker/NetJSON) in some circumstances (works in [MONO WASM](https://github.com/aspnet/Blazor) and CoreRT).
@@ -16,7 +15,7 @@ or +8KB to the final compiled length, when embedded as a source code.
 - Has custom encoding possibilities of any complexity.
 - Different encoding/decoding scenarios for one object are supported.
 - Thread safe. No need to "warm up" serializing/encoding entities.
-- Managed code without external references.
+- Managed code without external references and absence of reflection.
 - Contains cross-platform serializing functions for dotnet - javascript serialized binary data exchange ([documentation](https://github.com/hhblaze/Biser#biser-as-a-cross-platform-serializer)).
 
 Integrated part of [DBreeze database](https://github.com/hhblaze/DBreeze), used in [Raft.NET](https://github.com/hhblaze/Raft.Net)
