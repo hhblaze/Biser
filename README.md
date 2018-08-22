@@ -4,11 +4,15 @@
 [![NuGet Badge](https://buildstats.info/nuget/Biser)](https://www.nuget.org/packages/Biser/)
 [![Image of Build](https://img.shields.io/badge/Powered%20by-tiesky.com-1883F5.svg)](http://tiesky.com)
 
-Cross-platform binary serializer for .NET dotnet and [javascript ](https://github.com/hhblaze/Biser#biser-as-a-cross-platform-serializer) ("biser" in Russian means "beads")
+Cross-platform binary serializer for .NET dotnet and [javascript ](https://github.com/hhblaze/Biser#biser-as-a-cross-platform-serializer) 
+Also contains JSON encoders and decoders. 
+Main principle is absence of reflection and completely managed code.
 
-- Can be an alternative to [protobuf-net](https://github.com/mgravell/protobuf-net) in some circumstances (works in [MONO WASM](https://github.com/aspnet/Blazor) ).
+- Can be an alternative to [protobuf-net](https://github.com/mgravell/protobuf-net) in some circumstances (works in [MONO WASM](https://github.com/aspnet/Blazor) and CoreRT).
+- Can be an alternative to [NetJSON](https://github.com/rpgmaker/NetJSON) in some circumstances (works in [MONO WASM](https://github.com/aspnet/Blazor) and CoreRT).
 - Has the same [operational speed (Benchmark)](https://github.com/hhblaze/Biser/blob/master/Benchmark/Program.cs) as protobuf-net, smaller payload and 15KB DLL size 
 or +8KB to the final compiled length, when embedded as a source code.
+- Has the same operational speed as NetJSON in the area of JSON serialization.
 - Has custom encoding possibilities of any complexity.
 - Different encoding/decoding scenarios for one object are supported.
 - Thread safe. No need to "warm up" serializing/encoding entities.
@@ -168,7 +172,7 @@ IEnumerables can have null values inside:
 -------------
 ### Beads on a string. N-dimensional arrays and custom serialization language
 
-![beads](https://github.com/hhblaze/Biser/blob/master/Docu/beads.png?raw=true)
+![beads](https://github.com/hhblaze/Biser/blob/master/Docu/beads.png?raw=true) ("biser" in Russian means "beads")
 
 Putting all values that we are interested just one after another like beads on a string, later in the same sequence we will get them back:
 

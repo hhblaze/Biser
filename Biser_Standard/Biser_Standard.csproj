@@ -4,17 +4,17 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>Biser</RootNamespace>
     <AssemblyName>Biser</AssemblyName>
-    <AssemblyVersion>1.4.2018.0530</AssemblyVersion>
-    <FileVersion>1.4.2018.0222</FileVersion>
-    <Version>1.4.0</Version>
+    <AssemblyVersion>1.6.2018.0822</AssemblyVersion>
+    <FileVersion>1.6.2018.0822</FileVersion>
+    <Version>1.6.0</Version>
     <Authors>tiesky.com / Alex Solovyov</Authors>
     <Company>tiesky.com</Company>
-    <Description>Biser.NET dotnet binary serializer</Description>
+    <Description>Biser.NET dotnet binary serializer, JSON serializer</Description>
     <Copyright>tiesky.com / Alex Solovyov</Copyright>
     <PackageLicenseUrl>https://github.com/hhblaze/Biser/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/hhblaze/Biser</PackageProjectUrl>
     <PackageReleaseNotes />
-    <Product>Biser.NET dotnet binary serializer</Product>    
+    <Product>Biser.NET dotnet binary serializer, JSON serializer</Product>    
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -22,11 +22,23 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Json\gitfake.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Include="..\Biser\BiserExtensions.cs" Link="BiserExtensions.cs" />
     <Compile Include="..\Biser\Decoder.cs" Link="Decoder.cs" />
     <Compile Include="..\Biser\Encoder.cs" Link="Encoder.cs" />
     <Compile Include="..\Biser\IEncoder.cs" Link="IEncoder.cs" />
+    <Compile Include="..\Biser\Json\IJsonEncoder.cs" Link="Json\IJsonEncoder.cs" />
+    <Compile Include="..\Biser\Json\JsonDecoder.cs" Link="Json\JsonDecoder.cs" />
+    <Compile Include="..\Biser\Json\JsonEncoder.cs" Link="Json\JsonEncoder.cs" />
+    <Compile Include="..\Biser\Json\JsonSettings.cs" Link="Json\JsonSettings.cs" />
     <Compile Include="..\Biser\Utils.cs" Link="Utils.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Json\" />
   </ItemGroup>
 
 </Project>
