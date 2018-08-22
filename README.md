@@ -4,7 +4,8 @@
 [![NuGet Badge](https://buildstats.info/nuget/Biser)](https://www.nuget.org/packages/Biser/)
 [![Image of Build](https://img.shields.io/badge/Powered%20by-tiesky.com-1883F5.svg)](http://tiesky.com)
 
-Cross-platform binary serializer for .NET dotnet and [javascript ](https://github.com/hhblaze/Biser#biser-as-a-cross-platform-serializer) 
+Cross-platform binary serializer for .NET dotnet and [javascript ](https://github.com/hhblaze/Biser#biser-as-a-cross-platform-serializer). 
+ 
 Also contains [JSON](https://docs.google.com/document/d/e/2PACX-1vQa3C506Esw3Fkroj4OA5erGOHEZpAtnXcQQ90R0w1wnFqO_16CH0dUfBJZt_ppB15ykoZWI9eR8KcG/pub#id.yqadcf2f2moz) encoders and decoders starting from v1.6. 
 
 - Can be an alternative to [protobuf-net](https://github.com/mgravell/protobuf-net) in some circumstances (works in [MONO WASM](https://github.com/aspnet/Blazor) and CoreRT).
