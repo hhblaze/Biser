@@ -79,7 +79,7 @@ namespace BiserTest_Net
             }
 
             TS3 m = new TS3();  //!!!!!!!!!!!!!! change return type
-            foreach (var props in decoder.GetMap<string>())
+            foreach (var props in decoder.GetDictionary<string>())
             {
                 switch (props)
                 {

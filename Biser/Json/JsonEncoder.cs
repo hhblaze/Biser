@@ -79,88 +79,55 @@ namespace Biser
             int tabs = 0;           
             bool instr = false;
             char prevchar = ',';
-            bool toDrawTabs = false;
-            bool toDrawCL = false;
+          
             foreach (var el in finished)
             {                
-                if(!instr && el == '\"')
+               
+                if (!instr && (el == ' ' || el == '\t' || el == '\r' || el == '\n'))
+                    continue;
+               
+                if (!instr && el == ',')
+                {
+                    sbp.Append(el);              
+                }
+                else if (!instr && (el == '[' || el == '{'))
+                {
+                    if(tabs != 0)
+                    {
+                        sbp.Append('\n');                        
+                        DrawTabs(tabs, sbp);
+                    }
+                    tabs++;
+
+                    sbp.Append(el);
+                }
+                else if (!instr && (el == ']' || el == '}'))
+                {
+                    sbp.Append('\n');
+                    tabs--;
+                    DrawTabs(tabs, sbp);
+                    sbp.Append(el);
+                }
+                else if (!instr)
+                {
+                    if (prevchar == ',' || prevchar == '[' || prevchar == ']' || prevchar == '{' || prevchar == '}')
+                    {
+                        sbp.Append('\n');
+                        DrawTabs(tabs, sbp);
+                    }
+                    sbp.Append(el);
+                }
+                else
+                {
+                    sbp.Append(el);
+                }
+
+
+                if (!instr && el == '\"')
                     instr = true;
                 else if (instr && el == '\"' && prevchar != '\\')
                     instr = false;
 
-                if (!instr && (el == ' ' || el == '\t' || el == '\r' || el == '\n'))
-                    continue;
-
-               
-                if (!instr && el == ',')
-                {
-                    sbp.Append(el);                    
-                    toDrawCL = true;
-                    toDrawTabs = true;                   
-                }
-                else if (!instr && (el == '[' || el == '{'))
-                {
-                    if (toDrawCL)
-                    {
-                        sbp.Append('\n');
-                        toDrawCL = false;
-                    }
-
-                    if (toDrawTabs)
-                    {
-                        DrawTabs(tabs, sbp);
-                        toDrawTabs = false;
-                    }
-
-                    if (prevchar != ',')
-                    {
-                        sbp.Append('\n');
-                        DrawTabs(tabs, sbp);
-                    }
-                 
-                    sbp.Append(el);
-                    tabs++;
-                    
-                    toDrawCL = true;
-                    toDrawTabs = true;
-                }
-                else if (!instr && (el == ']' || el == '}'))
-                {
-                    if (toDrawCL)
-                    {
-                        sbp.Append('\n');
-                        toDrawCL = false;
-                    }
-                    if (toDrawTabs)
-                    {
-                        DrawTabs(tabs, sbp);
-                        toDrawTabs = false;
-                    }
-                    if (prevchar != ',')                    
-                        sbp.Append('\n');
-                   
-                    tabs--;
-                    DrawTabs(tabs, sbp);
-                    sbp.Append(el);
-                    
-                    toDrawCL = true;
-                    toDrawTabs = true;
-                    
-                }
-                else
-                {
-                    if (toDrawCL)
-                    {
-                        sbp.Append('\n');
-                        toDrawCL = false;
-                    }
-                    if (toDrawTabs)
-                    {
-                        DrawTabs(tabs, sbp);
-                        toDrawTabs = false;
-                    }
-                    sbp.Append(el);
-                }
 
                 prevchar = el;
             }

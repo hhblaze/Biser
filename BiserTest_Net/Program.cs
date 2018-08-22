@@ -233,7 +233,7 @@ namespace BiserTest_Net
             //});
 
             JsonEncoder jenc = new JsonEncoder(new JsonSettings { DateFormat = JsonSettings.DateTimeStyle.ISO,
-                JsonStringFormat = JsonSettings.JsonStringStyle.Default });
+                JsonStringFormat = JsonSettings.JsonStringStyle.Prettify });
             jsts1.BiserJsonEncode(jenc);
 
 
@@ -268,7 +268,7 @@ namespace BiserTest_Net
             {
                 jsres9 = NetJSON.NetJSON.Serialize(jsts1, new NetJSON.NetJSONSettings()
                 {
-                    Format = NetJSON.NetJSONFormat.Prettify,
+                    Format = NetJSON.NetJSONFormat.Default,
                     DateFormat = NetJSON.NetJSONDateFormat.ISO
                 });
             }

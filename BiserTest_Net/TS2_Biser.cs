@@ -91,7 +91,7 @@ namespace BiserTest_Net
             }
 
             TS2 m = new TS2();  //!!!!!!!!!!!!!! change return type
-            foreach (var props in decoder.GetMap<string>())
+            foreach (var props in decoder.GetDictionary<string>())
             {
                 switch (props)
                 {
@@ -105,7 +105,7 @@ namespace BiserTest_Net
                         m.P3 = decoder.CheckNull() ? null : new List<TS3>();
                         if (m.P3 != null)
                         {
-                            foreach (var el in decoder.GetArray())
+                            foreach (var el in decoder.GetList())
                                 m.P3.Add(TS3.BiserJsonDecode(null, decoder));
                         }
                             //decoder.GetCollection(

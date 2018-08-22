@@ -135,7 +135,7 @@
             Skips :
             </summary>
         </member>
-        <member name="M:Biser.JsonDecoder.GetMap``1">
+        <member name="M:Biser.JsonDecoder.GetDictionary``1">
             <summary>
             Returns Key, Value must be retrieved extra
             </summary>

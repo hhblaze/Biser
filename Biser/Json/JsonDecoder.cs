@@ -493,7 +493,7 @@ namespace Biser
         /// </summary>
         /// <typeparam name="K"></typeparam>
         /// <returns></returns>
-        public IEnumerable<K> GetMap<K>()
+        public IEnumerable<K> GetDictionary<K>()
         {
             bool array = false;
             if (this.CheckNull())
@@ -550,7 +550,7 @@ namespace Biser
         }//eof 
 
 
-        public IEnumerable<int> GetArray()
+        public IEnumerable<int> GetList()
         {
             bool array = true;
             if (this.CheckNull())

@@ -105,7 +105,7 @@ namespace BiserTest_Net
 
             TS1 m = new TS1();  //!!!!!!!!!!!!!! change return type
 
-            foreach (var props in decoder.GetMap<string>())
+            foreach (var props in decoder.GetDictionary<string>())
             {
                 switch(props)
                 {
@@ -125,7 +125,7 @@ namespace BiserTest_Net
                         m.P4 = decoder.CheckNull() ? null : new List<TS2>();
                         if (m.P4 != null)
                         {
-                            foreach (var el in decoder.GetArray())
+                            foreach (var el in decoder.GetList())
                                 m.P4.Add(TS2.BiserJsonDecode(null, decoder));
                         }
 
@@ -134,7 +134,7 @@ namespace BiserTest_Net
                         m.P5 = decoder.CheckNull() ? null : new Dictionary<long, TS3>();
                         if (m.P5 != null)
                         {
-                            foreach (var el in decoder.GetMap<long>())
+                            foreach (var el in decoder.GetDictionary<long>())
                                 m.P5.Add(el, TS3.BiserJsonDecode(null, decoder));
                         }
 
@@ -143,12 +143,12 @@ namespace BiserTest_Net
                         m.P6 = decoder.CheckNull() ? null : new Dictionary<uint, List<TS3>>();
                         if (m.P6 != null)
                         {
-                            foreach (var el in decoder.GetMap<uint>())
+                            foreach (var el in decoder.GetDictionary<uint>())
                             {
                                 var lst = decoder.CheckNull() ? null : new List<TS3>();
                                 if (lst != null)
                                 {
-                                    foreach (var el1 in decoder.GetArray())
+                                    foreach (var el1 in decoder.GetList())
                                     {
                                         lst.Add(TS3.BiserJsonDecode(null, decoder));
                                     }
@@ -168,9 +168,9 @@ namespace BiserTest_Net
                         if (m.P8 != null)
                         {
                             Tuple<string, byte[], TS3> tpl = null;
-                            foreach (var el in decoder.GetArray())
+                            foreach (var el in decoder.GetList())
                             {
-                                foreach (var el1 in decoder.GetArray()) //Tuple was also represented as an array
+                                foreach (var el1 in decoder.GetList()) //Tuple was also represented as an array
                                 {
                                     tpl = new Tuple<string, byte[], TS3>(
                                         decoder.GetString(),
@@ -189,7 +189,7 @@ namespace BiserTest_Net
                         }
                         else
                         {
-                            foreach (var el in decoder.GetArray()) //heterogenous array
+                            foreach (var el in decoder.GetList()) //heterogenous array
                             {
                                 m.P9 = new Tuple<float, TS2, TS3, decimal?>(decoder.GetFloat(), 
                                     TS2.BiserJsonDecode(null, decoder), TS3.BiserJsonDecode(null, decoder), decoder.GetDecimal_NULL());
@@ -202,7 +202,7 @@ namespace BiserTest_Net
                         m.P11 = decoder.CheckNull() ? null : new Dictionary<int, int>();
                         if (m.P11 != null)
                         {
-                            foreach (var el in decoder.GetMap<int>())
+                            foreach (var el in decoder.GetDictionary<int>())
                                 m.P11.Add(el, decoder.GetInt());
                         }
                           
@@ -215,7 +215,7 @@ namespace BiserTest_Net
                         m.P13 = decoder.CheckNull() ? null : new List<TS3>();
                         if (m.P13 != null)
                         {
-                            foreach (var el in decoder.GetArray())
+                            foreach (var el in decoder.GetList())
                                 m.P13.Add(TS3.BiserJsonDecode(null, decoder));
                         }
 
@@ -224,7 +224,7 @@ namespace BiserTest_Net
                         m.P14 = decoder.CheckNull() ? null : new Dictionary<int, int>();
                         if (m.P14 != null)
                         {
-                            foreach (var el in decoder.GetMap<int>())
+                            foreach (var el in decoder.GetDictionary<int>())
                                 m.P14.Add(el, decoder.GetInt());
                         }
                           
@@ -233,12 +233,12 @@ namespace BiserTest_Net
                         m.P15 = decoder.CheckNull() ? null : new List<List<TS3>>();
                         if (m.P15 != null)
                         {
-                            foreach (var el in decoder.GetArray())
+                            foreach (var el in decoder.GetList())
                             {
                                 var lst = decoder.CheckNull() ? null : new List<TS3>();
                                 if (lst != null)
                                 {
-                                    foreach (var el1 in decoder.GetArray())
+                                    foreach (var el1 in decoder.GetList())
                                         lst.Add(TS3.BiserJsonDecode(null, decoder));
                                 }
                                 m.P15.Add(lst);
@@ -250,12 +250,12 @@ namespace BiserTest_Net
                         m.P16 = decoder.CheckNull() ? null : new Dictionary<long, List<TS3>>();
                         if (m.P16 != null)
                         {
-                            foreach (var el in decoder.GetMap<long>())
+                            foreach (var el in decoder.GetDictionary<long>())
                             {
                                 var lst = decoder.CheckNull() ? null : new List<TS3>();
                                 if (lst != null)
                                 {
-                                    foreach (var el1 in decoder.GetArray())
+                                    foreach (var el1 in decoder.GetList())
                                         lst.Add(TS3.BiserJsonDecode(null, decoder));
                                 }
                                 m.P16.Add(el, lst);
@@ -271,7 +271,7 @@ namespace BiserTest_Net
                         m.P18 = decoder.CheckNull() ? null : new List<int>();
                         if (m.P18 != null)
                         {
-                            foreach (var el in decoder.GetArray())
+                            foreach (var el in decoder.GetList())
                                 m.P18.Add(decoder.GetInt());
                         }
                            
@@ -283,7 +283,7 @@ namespace BiserTest_Net
                         }
                         else
                         {
-                            foreach (var el in decoder.GetArray()) //heterogenous array
+                            foreach (var el in decoder.GetList()) //heterogenous array
                             {
                                 m.P19 = new Tuple<int, TS3>(decoder.GetInt(), TS3.BiserJsonDecode(null, decoder));
                             }

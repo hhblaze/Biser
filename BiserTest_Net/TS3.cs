@@ -15,6 +15,6 @@ namespace BiserTest_Net
     {
         public string P1 { get; set; }
         public int? P2 { get; set; }
-        public DateTime P3 { get; set; }
+        public DateTime P3 { get; set; } = DateTime.UtcNow;
     }
 }
