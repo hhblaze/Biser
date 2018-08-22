@@ -8,8 +8,8 @@ Cross-platform binary serializer for .NET dotnet and [javascript ](https://githu
  
 Also contains [JSON](https://docs.google.com/document/d/e/2PACX-1vQa3C506Esw3Fkroj4OA5erGOHEZpAtnXcQQ90R0w1wnFqO_16CH0dUfBJZt_ppB15ykoZWI9eR8KcG/pub#id.yqadcf2f2moz) encoders and decoders starting from v1.6. 
 
-- Can be an alternative to [protobuf-net](https://github.com/mgravell/protobuf-net) in some circumstances (works in [MONO WASM](https://github.com/aspnet/Blazor) and CoreRT).
-- Can be an alternative to [NetJSON](https://github.com/rpgmaker/NetJSON) in some circumstances (works in [MONO WASM](https://github.com/aspnet/Blazor) and CoreRT).
+- Can be an alternative to [protobuf-net](https://github.com/mgravell/protobuf-net) in some circumstances (works in [MONO WASM](https://github.com/aspnet/Blazor) and [CoreRT](https://github.com/dotnet/corert)).
+- Can be an alternative to [NetJSON](https://github.com/rpgmaker/NetJSON) in some circumstances (works in [MONO WASM](https://github.com/aspnet/Blazor) and [CoreRT](https://github.com/dotnet/corert)).
 - Has the same [operational speed (Benchmark)](https://github.com/hhblaze/Biser/blob/master/Benchmark/Program.cs) as protobuf-net, smaller payload and 15KB DLL size 
 or +8KB to the final compiled length, when embedded as a source code.
 - Has the same operational speed as NetJSON in the area of JSON serialization.
