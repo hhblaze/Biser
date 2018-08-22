@@ -244,7 +244,8 @@ namespace BiserTest_Net
             string wow1 = jenc.GetJSON();
             
             var jsts1d1 = TS1.BiserJsonDecode(wow1, null, new JsonSettings { DateFormat = JsonSettings.DateTimeStyle.Default });
-                       
+
+            //TestJSONv1();
             //StreamReader sr=new StreamReader("",Encoding.UTF8)
             //StreamWriter sw=new StreamWriter()
             Console.WriteLine("Press to start test");
@@ -517,18 +518,19 @@ namespace BiserTest_Net
         }
 
         #region "test JSONv1"
-        public class t1 : Biser.IJsonEncoder
+        public partial class t1 : Biser.IJsonEncoder
         {
             public int p1 { get; set; }
             public string p2 { get; set; }
             public t2 p3 { get; set; }
+            public List<t2> p4 { get; set; }
 
             public void BiserJsonEncode(Biser.JsonEncoder encoder)
             {
                 encoder.Add("p1", this.p1);
                 encoder.Add("p2", this.p2);
                 encoder.Add("p3", this.p3);
-
+                encoder.Add("p4", this.p4, (r)=> { encoder.Add(r); });
             }
 
             public static t1 BiserJsonDecode(string enc = null, Biser.JsonDecoder extDecoder = null, Biser.JsonSettings settings = null) //!!!!!!!!!!!!!! change return type
@@ -563,8 +565,16 @@ namespace BiserTest_Net
                         case "p3":
                             m.p3 = t2.BiserJsonDecode(null, decoder);
                             break;
+                        case "p4":
+                            m.p4 = decoder.CheckNull() ? null : new List<t2>();
+                            if (m.p4 != null)
+                            {
+                                foreach (var el in decoder.GetList())
+                                    m.p4.Add(t2.BiserJsonDecode(null, decoder));
+                            }
+                            break;
                         default:
-                            decoder.SkipValue();
+                            decoder.SkipValue();//MUST BE HERE
                             break;
                     }
                 }
@@ -572,7 +582,7 @@ namespace BiserTest_Net
             }
         }
 
-        public class t2 : Biser.IJsonEncoder
+        public partial class t2 : Biser.IJsonEncoder
         {
             public DateTime p1 { get; set; }
             public string p2 { get; set; }
@@ -613,7 +623,7 @@ namespace BiserTest_Net
                             m.p2 = decoder.GetString();
                             break;
                         default:
-                            decoder.SkipValue();
+                            decoder.SkipValue();//MUST BE HERE
                             break;
                     }
                 }
@@ -629,7 +639,11 @@ namespace BiserTest_Net
             {
                 p1 = 12,
                 p2 = "dsfg",
-                p3 = new t2 { p1 = DateTime.UtcNow, p2 = "uioziuz" }
+                p3 = new t2 { p1 = DateTime.UtcNow, p2 = "uioziuz" },
+                p4=new List<t2> {
+                    new t2 { p1 = DateTime.UtcNow.AddDays(12), p2 ="k1" },
+                    new t2 { p1 = DateTime.UtcNow.AddDays(7), p2 ="k2" }
+                }
             };
 
             var jsonSet = new Biser.JsonSettings { DateFormat = Biser.JsonSettings.DateTimeStyle.ISO };
