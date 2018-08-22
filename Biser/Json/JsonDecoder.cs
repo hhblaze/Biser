@@ -8,25 +8,27 @@ namespace Biser
 {
     public class JsonDecoder
     {
-        internal string encoded = null;       
-
+        internal string encoded = null;
+        long len = 0;
+        StringBuilder sb = null;
         internal int encPos = -1;
-
         JsonSettings jsonSettings = null;
 
         public JsonDecoder(string encoded, JsonSettings settings=null)
         {
             jsonSettings = (settings == null) ? new JsonSettings() : settings;
            
-            this.encoded = encoded;
+            this.encoded = encoded;            
             if (encoded == null || encoded.Length == 0)
                 return;
+            sb = new StringBuilder();
+            len = encoded.Length;
 
         }
 
         bool CheckSkip(char c)
         {
-            return (c == ' ' || c == '\t' || c == '\r' || c == '\n');
+            return (c == ' ' || c == '\t' || c == '\n' || c == '\r');
         }
 
         public bool CheckNull()
@@ -36,7 +38,7 @@ namespace Biser
             while (true)
             {
                 this.encPos++;
-                if (this.encPos >= this.encoded.Length)
+                if (this.encPos >= len)
                     break;
                 var c = this.encoded[this.encPos];
                 if (CheckSkip(c))
@@ -84,11 +86,13 @@ namespace Biser
             if (checkNull && CheckNull())
                 return null;
             bool start = false;
-            StringBuilder sb = new StringBuilder();
+            
+            sb.Clear();
+
             while (true)
             {
                 this.encPos++;
-                if (this.encPos >= this.encoded.Length)
+                if (this.encPos >= len)
                     break;
                 var c = this.encoded[this.encPos];
                 if (CheckSkip(c))
@@ -115,12 +119,14 @@ namespace Biser
         {
             if (checkNull && CheckNull())
                 return null;
-            bool start = false;
-            StringBuilder sb = new StringBuilder();
+            bool start = false;  
+            
+            sb.Clear();
+
             while (true)
             {
                 this.encPos++;
-                if (this.encPos >= this.encoded.Length)
+                if (this.encPos >= len)
                     break;
                 var c = this.encoded[this.encPos];
                 if (CheckSkip(c))
@@ -142,76 +148,10 @@ namespace Biser
             return sb.ToString();
 
         }
-
-
-        ///// <summary>
-        ///// In case if object is deserialized, first we deserialize property and its name 
-        ///// will be returned back, then due to the property name can be choosen deserializer
-        ///// </summary>
-        ///// <returns></returns>
-        //public string GetProperty()
-        //{
-        //    string s;
-        //    while (true)
-        //    {
-        //        this.encPos++;
-        //        if (this.encPos >= this.encoded.Length)
-        //            return String.Empty;
-        //        var c = this.encoded[this.encPos];
-
-        //        if (c == '{' || c == ',')
-        //        {
-        //            s = GetStr(false);
-        //            if (!String.IsNullOrEmpty(s))
-        //                SkipDelimiter();
-        //            return s;
-        //        }
-        //        else if (c == '}')
-        //            return String.Empty; //correct end of object
-
-        //        continue;
-
-        //    }
-        //}
-
-        //public JsonDecoder SkipProperty(bool array = false)
-        //{
-        //    string s;
-        //    while (true)
-        //    {
-        //        this.encPos++;
-        //        if (this.encPos >= this.encoded.Length)
-        //            return null;
-        //        var c = this.encoded[this.encPos];
-
-        //        if (
-        //            (!array && (c == '{' || c == ','))
-        //            ||
-        //            (array && (c == '[' || c == ','))
-        //            )
-        //        {
-        //            if (!array)
-        //            {
-        //                s = GetStr(false);
-        //                if (!String.IsNullOrEmpty(s))
-        //                    SkipDelimiter();
-        //            }
-        //            return this;
-        //        }
-        //        else if (
-        //            (!array && c == '}')
-        //            ||
-        //            (array && c == ']')
-        //            )
-        //            return null; //correct end of object
-
-        //        continue;
-
-        //    }
-        //}
-
-
-        //must be used as a default call
+        
+        /// <summary>
+        /// Must be used as a default call, while analyzing Dictionary key or the Class property
+        /// </summary>
         public void SkipValue()
         {
             bool start = true;
@@ -221,7 +161,7 @@ namespace Biser
             while (true)
             {
                 this.encPos++;
-                if (this.encPos >= this.encoded.Length)
+                if (this.encPos >= len)
                     break;
                 var c = this.encoded[this.encPos];
 
@@ -298,7 +238,7 @@ namespace Biser
             while (true)
             {
                 this.encPos++;
-                if (this.encPos >= this.encoded.Length)
+                if (this.encPos >= len)
                     break;
                 var c = this.encoded[this.encPos];
                
@@ -308,30 +248,23 @@ namespace Biser
                     continue;
             }
         }
+               
+
         string GetStr(bool checkNull = true)
         {
             if (checkNull && CheckNull())
                 return null;
+            sb.Clear();
 
-            StringBuilder sb = new StringBuilder();
-            int state = 0; //0 - before strting, 1 - inSTring
+            bool state = false; //0 - before strting, 1 - inSTring
             while (true)
             {
                 this.encPos++;
-                if (this.encPos >= this.encoded.Length)
+                if (this.encPos >= len)
                     break;
                 var c = this.encoded[this.encPos];
 
-                if (state != 1)
-                {
-                    if (c == '}')//probably end of object, that even didn't start
-                        return String.Empty;
-                    else if (c == '\"')
-                        state = 1;
-
-                    continue;
-                }
-                else
+                if (state)
                 {
                     if (c == '\\')
                     {
@@ -343,174 +276,45 @@ namespace Biser
 
                     sb.Append(c);
                 }
+                else
+                {
+                    if (c == '}')//probably end of object, that even didn't start
+                        return String.Empty;
+                    else if (c == '\"')
+                        state = true;
+
+                    continue;
+                }
+
             }
 
             return sb.ToString();
         }
 
-        //public T Get<T>(T prop)
-        //{
-        //    var typeofT = typeof(T);
-        //    (K)Convert.ChangeType(s, typeof(K))
-        //    if (typeofT == typeof(int))
-        //        return (T)(object)this.GetInt();
-        //    else if (typeof(System.Collections.IList).IsAssignableFrom(typeofT))
-        //    {
-        //        var arg1t = typeofT.GetGenericArguments()[0];
-        //        if (arg1t.IsPrimitive)
-        //        {
-
-        //        }
-        //        else if (typeof(IJsonEncoder).IsAssignableFrom(arg1t))
-        //        {
-        //            var inst = (T)Activator.CreateInstance(typeofT);
-        //            var inst1 = Activator.CreateInstance(arg1t);
-
-        //            System.Reflection.MethodInfo method = arg1t.GetMethod("BiserJsonDecoder");
-        //            System.Reflection.MethodInfo genericMethod = method.MakeGenericMethod(arg1t);
-        //            var obj1 = genericMethod.Invoke(inst1, new object[] { this });
-        //            this.GetCollection(
-        //                           () =>
-        //                           {
-        //                               return genericMethod.Invoke(inst1, new object[] { this });
-        //                           }, inst, true);
-
-        //            m.P4 = decoder.CheckNull() ? null : new List<TS2>();
-        //            if (m.P4 != null)
-        //                decoder.GetCollection(
-        //                           () => { return TS2.BiserJsonDecode(null, decoder); }, m.P4, true);
-        //            foreach (var item)
-        //                var inst = Activator.CreateInstance(arg1t);
-        //        }
-        //    }
-
-
-
-        //    return default(T);
-        //}
-
-
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <typeparam name="K"></typeparam>
-        ///// <typeparam name="V"></typeparam>
-        ///// <param name="fk"></param>
-        ///// <param name="fv"></param>
-        ///// <param name="dict"></param>
-        ///// <param name="isNullChecked"></param>
-        //public void GetCollection<K, V>(Func<K> fk, Func<V> fv, IDictionary<K, V> dict, bool isNullChecked = false)
-        //{
-        //    GetCollection(fk, fv, dict, null, null, isNullChecked);
-        //}
-        //public void GetCollection<K>(Func<K> fk, IList<K> lst, bool isNullChecked = false)
-        //{
-        //    GetCollection(fk, fk, null, lst, null, isNullChecked);
-        //}
-
-        //public void GetCollection<K>(Func<K> fk, ISet<K> set, bool isNullChecked = false)
-        //{
-        //    GetCollection(fk, fk, null, null, set, isNullChecked);
-        //}
-
-
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <typeparam name="K"></typeparam>
-        ///// <typeparam name="V"></typeparam>
-        ///// <param name="fk"></param>
-        ///// <param name="fv"></param>
-        ///// <param name="dict"></param>
-        ///// <param name="lst"></param>
-        ///// <param name="set"></param>
-        ///// <param name="isNullChecked"></param>
-        //void GetCollection<K, V>(Func<K> fk, Func<V> fv, IDictionary<K, V> dict, IList<K> lst, ISet<K> set, bool isNullChecked = false)
-        //{
-        //    if (!isNullChecked)
-        //    {
-        //        if (this.CheckNull())
-        //        {
-        //            dict = null;
-        //            lst = null;
-        //            set = null;
-        //            return;
-        //        }
-        //    }
-
-        //    char eoc = (dict != null) ? '}' : ']'; //end of collection
-        //    char soc = (dict != null) ? '{' : '['; //start of collection
-
-        //    int state = 0; //collection start
-        //    string s;
-        //    while (true)
-        //    {
-        //        this.encPos++;
-        //        if (this.encPos >= this.encoded.Length)
-        //            return;
-        //        var c = this.encoded[this.encPos];
-
-        //        if (CheckSkip(c))
-        //            continue;
-        //        if (c == ',')
-        //            continue;
-        //        if (c == eoc)
-        //            return;
-        //        if (state == 0)
-        //        {
-        //            if (c == soc)
-        //                state = 1; //In collection
-        //        }
-        //        else
-        //        {
-        //            this.encPos--;
-        //        }
-
-        //        if (state == 1)
-        //        {
-        //            if (lst != null)
-        //            {
-        //                lst.Add(fk());
-        //            }
-        //            else if (set != null)
-        //            {
-        //                set.Add(fk());
-        //            }
-        //            else if (dict != null)
-        //            {
-        //                s = GetStr(false);
-        //                SkipDelimiter();                        
-        //                dict.Add((K)Convert.ChangeType(s, typeof(K)), fv());
-        //            }
-        //        }
-        //    }
-
-        //}//eof 
-
+       
 
         /// <summary>
         /// Returns Key, Value must be retrieved extra
         /// </summary>
-        /// <typeparam name="K"></typeparam>
+        /// <typeparam name="K">Dictionary Key type</typeparam>
         /// <returns></returns>
-        public IEnumerable<K> GetDictionary<K>()
+        public IEnumerable<K> GetDictionary<K>(bool checkNull = false)
         {
-            bool array = false;
-            if (this.CheckNull())
+            if (checkNull && this.CheckNull())
             {
             }
             else
             {
 
-                char eoc = (!array) ? '}' : ']'; //end of collection
-                char soc = (!array) ? '{' : '['; //start of collection
+                char eoc = '}'; //end of collection
+                char soc = '{'; //start of collection
 
                 int state = 0; //collection start                
                 string s;
                 while (true)
                 {
                     this.encPos++;
-                    if (this.encPos >= this.encoded.Length)
+                    if (this.encPos >= len)
                         break;
                     var c = this.encoded[this.encPos];
 
@@ -532,17 +336,9 @@ namespace Biser
 
                     if (state == 1)
                     {
-                        if (array)
-                        {
-                            yield return default(K);
-                        }
-                        else
-                        {
-                            s = GetStr(false);
-                            SkipDelimiter();
-                            //dict.Add((K)Convert.ChangeType(s, typeof(K)), fv());
-                            yield return (K)Convert.ChangeType(s, typeof(K));
-                        }
+                        s = GetStr(false);
+                        SkipDelimiter();                        
+                        yield return (K)Convert.ChangeType(s, typeof(K));
                     }
                 }
             }
@@ -550,24 +346,23 @@ namespace Biser
         }//eof 
 
 
-        public IEnumerable<int> GetList()
-        {
-            bool array = true;
-            if (this.CheckNull())
+        public IEnumerable<int> GetList(bool checkNull = false)
+        {            
+            if (checkNull && this.CheckNull())
             {
             }
             else
             {
 
-                char eoc = (!array) ? '}' : ']'; //end of collection
-                char soc = (!array) ? '{' : '['; //start of collection
+                char eoc = ']'; //end of collection
+                char soc = '['; //start of collection
 
                 int state = 0; //collection start                
-                string s;
+               
                 while (true)
                 {
                     this.encPos++;
-                    if (this.encPos >= this.encoded.Length)
+                    if (this.encPos >= len)
                         break;
                     var c = this.encoded[this.encPos];
 
@@ -589,17 +384,7 @@ namespace Biser
 
                     if (state == 1)
                     {
-                        if (array)
-                        {
-                            yield return 1;
-                        }
-                        //else
-                        //{
-                        //    s = GetStr(false);
-                        //    SkipDelimiter();
-                        //    //dict.Add((K)Convert.ChangeType(s, typeof(K)), fv());
-                        //    yield return (K)Convert.ChangeType(s, typeof(K));
-                        //}
+                        yield return 1;
                     }
                 }
             }
@@ -636,8 +421,13 @@ namespace Biser
                 case JsonSettings.DateTimeStyle.Default:
                     //var tt3f = jsts1.P17.ToUniversalTime().Subtract(new DateTime(1970,1,1,0,0,0,DateTimeKind.Utc)).TotalMilliseconds * 10000;   
                     /*"\/Date(13257180000000000)\/"*/
-                    s = GetStr(false);                    
-                    v = Convert.ToUInt64(s.Substring(0, s.Length - 2).Replace("/Date(", "")) / 10000;
+                    s = GetStr(false);
+                    // StringBuilder dsb = new StringBuilder();
+                    sb.Clear();
+                    for (int i = 6; i < s.Length - 2;i++)
+                        sb.Append(s[i]);
+                    //v = Convert.ToUInt64(s.Substring(0, s.Length - 2).Replace("/Date(", "")) / 10000;
+                    v = Convert.ToUInt64(sb.ToString()) / 10000;
                     //time if not UTC must be brought to UTC, stored in UTC and restored in UTC
                     rdt = epoch.AddMilliseconds(v);
                     return DateTime.SpecifyKind(rdt, DateTimeKind.Utc);

@@ -44,26 +44,49 @@ namespace BiserTest_Net
             encoder.Add("P5", this.P5, (r) => { encoder.Add(r); });
             encoder.Add("P6", this.P6, (r) => { encoder.Add(r, (r1) => { encoder.Add(r1); }); });
             encoder.Add("P7", this.P7);
-            if (this.P8 != null)
-                encoder.Add("P8", this.P8, (r) =>
-                {
-                    encoder.Add(new List<Action>() {
-                    { ()=>encoder.Add(r.Item1)},
-                    { ()=>encoder.Add(r.Item2)},
-                    { ()=>encoder.Add(r.Item3)},
-                });
-                });
 
+            ////Storing as List
+            //if (this.P8 != null)
+            //    encoder.Add("P8", this.P8, (r) =>
+            //    {
+            //        encoder.Add(new List<Action>() {
+            //        { ()=>encoder.Add(r.Item1)},
+            //        { ()=>encoder.Add(r.Item2)},
+            //        { ()=>encoder.Add(r.Item3)},
+            //    });
+            //    });
+            ////Storing as Dictionary
+            /// if (this.P8 != null)
+            encoder.Add("P8", this.P8, (r) =>
+            {
+                encoder.Add(new Dictionary<string, Action>() {
+                    { "Item1",()=>encoder.Add(r.Item1)},
+                    { "Item2",()=>encoder.Add(r.Item2)},
+                    { "Item3",()=>encoder.Add(r.Item3)},
+                });
+            });
+
+            ////Storing as List
+            //if (this.P9 != null)
+            //    encoder.Add("P9", new List<Action>() { //Array of heterogenous types
+            //        { ()=>encoder.Add(this.P9.Item1)},
+            //        { ()=>encoder.Add(this.P9.Item2)},
+            //        { ()=>encoder.Add(this.P9.Item3)},
+            //        { ()=>encoder.Add(this.P9.Item4)},
+            //    });
+            ////Storing as Dictionary
             if (this.P9 != null)
-                encoder.Add("P9", new List<Action>() { //Array of heterogenous types
-                    { ()=>encoder.Add(this.P9.Item1)},
-                    { ()=>encoder.Add(this.P9.Item2)},
-                    { ()=>encoder.Add(this.P9.Item3)},
-                    { ()=>encoder.Add(this.P9.Item4)},
+                encoder.Add("P9", new Dictionary<string,Action>() { //Array of heterogenous types
+                    { "Item1",()=>encoder.Add(this.P9.Item1)},
+                    { "Item2",()=>encoder.Add(this.P9.Item2)},
+                    { "Item3",()=>encoder.Add(this.P9.Item3)},
+                    { "Item4",()=>encoder.Add(this.P9.Item4)},
                 });
 
             if (this.P11 != null)
                 encoder.Add("P11", P11, (r) => { encoder.Add(r); });
+
+            encoder.Add("P12", this.P12);
 
             encoder.Add("P13", this.P13, (r) => { encoder.Add(r); });
 
@@ -75,13 +98,20 @@ namespace BiserTest_Net
 
             encoder.Add("P18", this.P18, (r) => { encoder.Add(r); });
             
-            if (this.P19 != null)
-                encoder.Add("P19", new List<Action>() { //Array of heterogenous types
-                    { ()=>encoder.Add(this.P19.Item1)},
-                    { ()=>encoder.Add(this.P19.Item2)},
-                });
 
-          
+            ////Storing as List
+            //if (this.P19 != null)
+            //    encoder.Add("P19", new List<Action>() { //Array of heterogenous types
+            //        { ()=>encoder.Add(this.P19.Item1)},
+            //        { ()=>encoder.Add(this.P19.Item2)},
+            //    });
+
+            ////Storing as Dictionary with Item1, item2 etc
+            if (this.P19 != null)
+                encoder.Add("P19", new Dictionary<string, Action>() { //Array of heterogenous types
+                    { "Item1", ()=>encoder.Add(this.P19.Item1)},
+                    { "Item2", ()=>encoder.Add(this.P19.Item2)},
+                });
 
         }
 
@@ -170,13 +200,39 @@ namespace BiserTest_Net
                             Tuple<string, byte[], TS3> tpl = null;
                             foreach (var el in decoder.GetList())
                             {
-                                foreach (var el1 in decoder.GetList()) //Tuple was also represented as an array
+                                //foreach (var el1 in decoder.GetList()) //Tuple was also represented as an array
+                                //{
+                                //    tpl = new Tuple<string, byte[], TS3>(
+                                //        decoder.GetString(),
+                                //        decoder.GetByteArray(),
+                                //        TS3.BiserJsonDecode(null, decoder));
+                                //}//must come to the end, no returns in the middle of iteration
+
+                                //Or Dictionary that is represented with Item1, item2, Item3 for compatibility with other systems
+                                string i1 = "";
+                                byte[] i2 = null;
+                                TS3 i3 = null;
+                                foreach (var tupleProps in decoder.GetDictionary<string>())
                                 {
-                                    tpl = new Tuple<string, byte[], TS3>(
-                                        decoder.GetString(),
-                                        decoder.GetByteArray(),
-                                        TS3.BiserJsonDecode(null, decoder));
-                                }//must come to the end, no returns in the middle of iteration
+                                    switch(tupleProps)
+                                    {
+                                        case "Item1":
+                                            i1 = decoder.GetString();
+                                            break;
+                                        case "Item2":
+                                            i2 = decoder.GetByteArray();
+                                            break;
+                                        case "Item3":
+                                            i3 = TS3.BiserJsonDecode(null, decoder);
+                                            break;
+                                        default:
+                                            decoder.SkipValue();
+                                            break;
+                                    }
+                                }
+
+                                tpl = new Tuple<string, byte[], TS3>(i1, i2, i3);
+
                                 m.P8.Add(tpl);
                             }
                         }
@@ -189,11 +245,40 @@ namespace BiserTest_Net
                         }
                         else
                         {
-                            foreach (var el in decoder.GetList()) //heterogenous array
+                            //foreach (var el in decoder.GetList()) //heterogenous array
+                            //{
+                            //    m.P9 = new Tuple<float, TS2, TS3, decimal?>(decoder.GetFloat(), 
+                            //        TS2.BiserJsonDecode(null, decoder), TS3.BiserJsonDecode(null, decoder), decoder.GetDecimal_NULL());
+                            //}
+
+                            //Or Dictionary that is represented with Item1, item2, Item3, Item4 for compatibility with other systems
+                            float i1 = 0;
+                            TS2 i2 = null;
+                            TS3 i3 = null;
+                            decimal? i4 = null;
+                            foreach (var tupleProps in decoder.GetDictionary<string>())
                             {
-                                m.P9 = new Tuple<float, TS2, TS3, decimal?>(decoder.GetFloat(), 
-                                    TS2.BiserJsonDecode(null, decoder), TS3.BiserJsonDecode(null, decoder), decoder.GetDecimal_NULL());
+                                switch (tupleProps)
+                                {
+                                    case "Item1":
+                                        i1 = decoder.GetFloat();
+                                        break;
+                                    case "Item2":
+                                        i2 = TS2.BiserJsonDecode(null, decoder);
+                                        break;
+                                    case "Item3":
+                                        i3 = TS3.BiserJsonDecode(null, decoder);
+                                        break;
+                                    case "Item4":
+                                        i4 = decoder.GetDecimal_NULL();
+                                        break;
+                                    default:
+                                        decoder.SkipValue(); //must be here
+                                        break;
+                                }
                             }
+
+                            m.P9 = new Tuple<float, TS2, TS3, decimal?>(i1, i2, i3, i4);
 
                         }
 
@@ -283,10 +368,32 @@ namespace BiserTest_Net
                         }
                         else
                         {
-                            foreach (var el in decoder.GetList()) //heterogenous array
+                            //When stored as List
+                            //foreach (var el in decoder.GetList()) //heterogenous array
+                            //{
+                            //    m.P19 = new Tuple<int, TS3>(decoder.GetInt(), TS3.BiserJsonDecode(null, decoder));
+                            //}
+
+                            //Or Dictionary that is represented with Item1, item2, Item3 for compatibility with other systems
+                            int i1 = 0;                            
+                            TS3 i2 = null;
+                            foreach (var tupleProps in decoder.GetDictionary<string>())
                             {
-                                m.P19 = new Tuple<int, TS3>(decoder.GetInt(), TS3.BiserJsonDecode(null, decoder));
+                                switch (tupleProps)
+                                {
+                                    case "Item1":
+                                        i1 = decoder.GetInt();
+                                        break;
+                                    case "Item2":
+                                        i2 = TS3.BiserJsonDecode(null, decoder);
+                                        break;                                   
+                                    default:
+                                        decoder.SkipValue();
+                                        break;
+                                }
                             }
+
+                            m.P19 = new Tuple<int, TS3>(i1, i2);
 
                         }
 

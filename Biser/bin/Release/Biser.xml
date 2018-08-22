@@ -130,16 +130,21 @@
             Starting from JSGet
             </summary>
         </member>
+        <member name="M:Biser.JsonDecoder.SkipValue">
+            <summary>
+            Must be used as a default call, while analyzing Dictionary key or the Class property
+            </summary>
+        </member>
         <member name="M:Biser.JsonDecoder.SkipDelimiter">
             <summary>
             Skips :
             </summary>
         </member>
-        <member name="M:Biser.JsonDecoder.GetDictionary``1">
+        <member name="M:Biser.JsonDecoder.GetDictionary``1(System.Boolean)">
             <summary>
             Returns Key, Value must be retrieved extra
             </summary>
-            <typeparam name="K"></typeparam>
+            <typeparam name="K">Dictionary Key type</typeparam>
             <returns></returns>
         </member>
         <member name="M:Biser.JsonEncoder.Add(System.String,System.Collections.Generic.Dictionary{System.String,System.Action})">
@@ -151,11 +156,25 @@
             <param name="val"></param>
             <returns></returns>
         </member>
+        <member name="M:Biser.JsonEncoder.Add(System.Collections.Generic.Dictionary{System.String,System.Action})">
+            <summary>
+            To supply heterogen values inside of Dictionary
+            </summary>
+            <param name="val"></param>
+            <returns></returns>
+        </member>
         <member name="M:Biser.JsonEncoder.Add(System.String,System.Collections.Generic.List{System.Action})">
             <summary>
             Supplies heterogonenous array elements
             </summary>
             <param name="propertyName"></param>
+            <param name="val"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Biser.JsonEncoder.Add(System.Collections.Generic.List{System.Action})">
+            <summary>
+             Supplies heterogonenous array elements
+            </summary>
             <param name="val"></param>
             <returns></returns>
         </member>
@@ -188,22 +207,22 @@
             <param name="val"></param>
             <returns></returns>
         </member>
-        <member name="M:Biser.JsonEncoder.Add``1(System.Collections.Generic.IEnumerable{``0},System.Action{``0})">
-            <summary>
-             Supply array and transformation function, one for each array element
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="items"></param>
-            <param name="f"></param>
-            <returns></returns>
-        </member>
         <member name="M:Biser.JsonEncoder.Add``1(System.String,System.Collections.Generic.IEnumerable{``0},System.Action{``0})">
             <summary>
             Supply array and transformation function, one for each array element
             </summary>
             <typeparam name="T"></typeparam>
             <param name="propertyName"></param>
-            <param name="items"></param>
+            <param name="val"></param>
+            <param name="f"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Biser.JsonEncoder.Add``1(System.Collections.Generic.IEnumerable{``0},System.Action{``0})">
+            <summary>
+             Supply array and transformation function, one for each array element
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="val"></param>
             <param name="f"></param>
             <returns></returns>
         </member>
@@ -214,12 +233,12 @@
         </member>
         <member name="F:Biser.JsonSettings.DateTimeStyle.ISO">
             <summary>
-            ISO Format
+            ISO Format: "2018-06-05T17:44:15.4430000Z" or "2018-06-05T17:44:15.4430000+02:00"
             </summary>
         </member>
         <member name="F:Biser.JsonSettings.DateTimeStyle.EpochTime">
             <summary>
-            Unix Epoch Milliseconds
+            Unix Epoch Milliseconds. Fastest for both operations
             </summary>
         </member>
         <member name="F:Biser.JsonSettings.DateTimeStyle.Javascript">

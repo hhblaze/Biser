@@ -139,18 +139,43 @@ namespace Biser
         {
             if (cnt == 0)
                 return;
-            //sbp.Append('\n');
+            
             for (int i = 0; i < cnt; i++)
                 sbp.Append('\t');
+        }
+
+        public JsonEncoder Add(DateTime val)
+        {
+            AppendDateTime(val);
+            return this;
+
+            //return Add(null, val);
         }
 
         public JsonEncoder Add(string propertyName, DateTime val)
         {
             if (!String.IsNullOrEmpty(propertyName))
+            {
+                if (val == DateTime.MinValue)
+                    return this;
                 AddProp(propertyName);
+            }
             
             AppendDateTime(val);
             return this;
+        }
+
+        public JsonEncoder Add(DateTime? val)
+        {
+            if (val == null)
+            {
+                AddNull();
+                return this;
+            }
+
+            AppendDateTime((DateTime)val);
+            return this;
+            //return Add(null, val);
         }
 
         public JsonEncoder Add(string propertyName, DateTime? val)
@@ -160,7 +185,11 @@ namespace Biser
                 if (val == null)
                     return this;
                 else
+                {
+                    if (val == DateTime.MinValue)
+                        return this;
                     AddProp(propertyName);
+                }
             }
             else if (val == null)
             {
@@ -172,15 +201,9 @@ namespace Biser
             return this;
         }
 
-        public JsonEncoder Add(DateTime val)
-        {
-            return Add(null, val);
-        }
+      
 
-        public JsonEncoder Add(DateTime? val)
-        {
-            return Add(null, val);
-        }
+      
 
         DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
@@ -189,14 +212,17 @@ namespace Biser
             switch (this.jsonSettings.DateFormat)
             {
                 case JsonSettings.DateTimeStyle.Default:
-                    sb.Append("\"");
-                    sb.Append("\\/Date(");
+                    ////sb.Append("\"");
+                   sb.Append("\"\\/Date(");
+
+                    // sb.Append($"\"\\/Date({((dt.Kind == DateTimeKind.Utc) ? ((ulong)(dt.Subtract(epoch).TotalMilliseconds) * 10000) : ((ulong)(dt.ToUniversalTime().Subtract(epoch).TotalMilliseconds) * 10000)) })\\/\"");
+
                     if (dt.Kind == DateTimeKind.Utc)
                         sb.Append(((ulong)(dt.Subtract(epoch).TotalMilliseconds) * 10000).ToString());
                     else
                         sb.Append(((ulong)(dt.ToUniversalTime().Subtract(epoch).TotalMilliseconds) * 10000).ToString());
-                    sb.Append(")\\/");
-                    sb.Append("\"");
+                    sb.Append(")\\/\"");
+                    ////sb.Append("\"");
                     break;
                 case JsonSettings.DateTimeStyle.EpochTime:
                     if (dt.Kind == DateTimeKind.Utc)
@@ -205,9 +231,14 @@ namespace Biser
                         sb.Append(((ulong)(dt.ToUniversalTime().Subtract(epoch).TotalMilliseconds) * 10000).ToString());
                     break;
                 case JsonSettings.DateTimeStyle.ISO:
-                    sb.Append("\"");
-                    sb.Append(dt.ToString("o"));
-                    sb.Append("\"");
+                    sb.Append($"\"{dt.ToString("o")}\"");
+                    //sb.Append("\"");
+                    //sb.Append(dt.ToString("o"));
+                    //sb.Append("\"");
+                    //sb.Append($"\"{dt.Year}-{String.Format("{0:00}", dt.Month)}-{String.Format("{0:00}", dt.Day)}T{String.Format("{0:00}", dt.Hour)}:{String.Format("{0:00}", dt.Minute)}:{String.Format("{0:00}", dt.Second)}.{dt.Millisecond}Z\"");
+                    //sb.Append("\"2018-08-21T09:42:21.9770676Z\"");
+                    //		dt.ToString("o")	"2018-08-21T09:42:21.9770676Z"	string
+
                     break;
                 case JsonSettings.DateTimeStyle.Javascript:
                     sb.Append("\"");
@@ -221,6 +252,12 @@ namespace Biser
             }
         }
 
+        public JsonEncoder Add(int val)
+        {
+            sb.Append(val);
+            return this;
+           // return Add(null, val);
+        }
 
         public JsonEncoder Add(string propertyName, int val)
         {
@@ -228,6 +265,19 @@ namespace Biser
                 AddProp(propertyName);
             sb.Append(val);
             return this;
+        }
+
+        public JsonEncoder Add(int? val)
+        {
+            if (val == null)
+            {
+                AddNull();
+                return this;
+            }
+
+            sb.Append(val);
+            return this;
+          //  return Add(null, val);
         }
 
         public JsonEncoder Add(string propertyName, int? val)
@@ -249,18 +299,23 @@ namespace Biser
             return this;
         }
 
-        public JsonEncoder Add(int val)
+
+
+
+
+        public JsonEncoder Add(string val)
         {
-            return Add(null, val);
+            if (val == null)
+            {
+                AddNull();
+                return this;
+            }
+            AddStr(val);
+            return this;
+
+            //return Add(null, val);
         }
 
-        public JsonEncoder Add(int? val)
-        {
-            return Add(null, val);
-        }
-
-
-     
         public JsonEncoder Add(string propertyName, string val)
         {
             if (!String.IsNullOrEmpty(propertyName))
@@ -280,12 +335,14 @@ namespace Biser
             return this;
         }
 
-        public JsonEncoder Add(string val)
-        {
-            return Add(null, val);
-        }
-        
 
+
+        public JsonEncoder Add(long val)
+        {
+            sb.Append(val);
+            return this;
+            //return Add(null, val);
+        }
 
         public JsonEncoder Add(string propertyName, long val)
         {
@@ -293,6 +350,18 @@ namespace Biser
                 AddProp(propertyName);
             sb.Append(val);
             return this;
+        }
+
+        public JsonEncoder Add(long? val)
+        {
+            if (val == null)
+            {
+                AddNull();
+                return this;
+            }
+            sb.Append(val);
+            return this;
+            //return Add(null, val);
         }
 
         public JsonEncoder Add(string propertyName, long? val)
@@ -314,16 +383,15 @@ namespace Biser
             return this;
         }
 
-        public JsonEncoder Add(long val)
-        {
-            return Add(null, val);
-        }
 
-        public JsonEncoder Add(long? val)
-        {
-            return Add(null, val);
-        }
 
+
+        public JsonEncoder Add(ulong val)
+        {
+            //return Add(null, val);
+            sb.Append(val);
+            return this;
+        }
 
         public JsonEncoder Add(string propertyName, ulong val)
         {
@@ -331,6 +399,19 @@ namespace Biser
                 AddProp(propertyName);
             sb.Append(val);
             return this;
+        }
+
+        public JsonEncoder Add(ulong? val)
+        {
+            if (val == null)
+            {
+                AddNull();
+                return this;
+            }
+
+            sb.Append(val);
+            return this;
+            //return Add(null, val);
         }
 
         public JsonEncoder Add(string propertyName, ulong? val)
@@ -352,16 +433,15 @@ namespace Biser
             return this;
         }
 
-        public JsonEncoder Add(ulong val)
-        {
-            return Add(null, val);
-        }
 
-        public JsonEncoder Add(ulong? val)
-        {
-            return Add(null, val);
-        }
 
+
+        public JsonEncoder Add(uint val)
+        {
+            sb.Append(val);
+            return this;
+            //return Add(null, val);
+        }
 
         public JsonEncoder Add(string propertyName, uint val)
         {
@@ -369,6 +449,19 @@ namespace Biser
                 AddProp(propertyName);
             sb.Append(val);
             return this;
+        }
+
+        public JsonEncoder Add(uint? val)
+        {
+            if (val == null)
+            {
+                AddNull();
+                return this;
+            }
+
+            sb.Append(val);
+            return this;
+            //return Add(null, val);
         }
 
         public JsonEncoder Add(string propertyName, uint? val)
@@ -390,14 +483,14 @@ namespace Biser
             return this;
         }
 
-        public JsonEncoder Add(uint val)
-        {
-            return Add(null, val);
-        }
 
-        public JsonEncoder Add(uint? val)
+
+
+        public JsonEncoder Add(short val)
         {
-            return Add(null, val);
+            sb.Append(val);
+            return this;
+            //return Add(null, val);
         }
 
         public JsonEncoder Add(string propertyName, short val)
@@ -406,6 +499,19 @@ namespace Biser
                 AddProp(propertyName);
             sb.Append(val);
             return this;
+        }
+
+        public JsonEncoder Add(short? val)
+        {
+            if (val == null)
+            {
+                AddNull();
+                return this;
+            }
+
+            sb.Append(val);
+            return this;
+            //return Add(null, val);
         }
 
         public JsonEncoder Add(string propertyName, short? val)
@@ -427,14 +533,15 @@ namespace Biser
             return this;
         }
 
-        public JsonEncoder Add(short val)
-        {
-            return Add(null, val);
-        }
 
-        public JsonEncoder Add(short? val)
+
+
+        public JsonEncoder Add(ushort val)
         {
-            return Add(null, val);
+            sb.Append(val);
+            return this;
+
+            //return Add(null, val);
         }
 
         public JsonEncoder Add(string propertyName, ushort val)
@@ -443,6 +550,19 @@ namespace Biser
                 AddProp(propertyName);
             sb.Append(val);
             return this;
+        }
+
+        public JsonEncoder Add(ushort? val)
+        {
+            if (val == null)
+            {
+                AddNull();
+                return this;
+            }
+
+            sb.Append(val);
+            return this;
+            //return Add(null, val);
         }
 
         public JsonEncoder Add(string propertyName, ushort? val)
@@ -464,14 +584,14 @@ namespace Biser
             return this;
         }
 
-        public JsonEncoder Add(ushort val)
-        {
-            return Add(null, val);
-        }
 
-        public JsonEncoder Add(ushort? val)
+
+
+        public JsonEncoder Add(sbyte val)
         {
-            return Add(null, val);
+            sb.Append(val);
+            return this;
+            //return Add(null, val);
         }
 
         public JsonEncoder Add(string propertyName, sbyte val)
@@ -480,6 +600,20 @@ namespace Biser
                 AddProp(propertyName);
             sb.Append(val);
             return this;
+        }
+
+        public JsonEncoder Add(sbyte? val)
+        {
+            if (val == null)
+            {
+                AddNull();
+                return this;
+            }
+
+            sb.Append(val);
+            return this;
+
+            //return Add(null, val);
         }
 
         public JsonEncoder Add(string propertyName, sbyte? val)
@@ -501,14 +635,13 @@ namespace Biser
             return this;
         }
 
-        public JsonEncoder Add(sbyte val)
-        {
-            return Add(null, val);
-        }
 
-        public JsonEncoder Add(sbyte? val)
+
+        public JsonEncoder Add(byte val)
         {
-            return Add(null, val);
+            sb.Append(val);
+            return this;
+            //return Add(null, val);
         }
 
         public JsonEncoder Add(string propertyName, byte val)
@@ -517,6 +650,19 @@ namespace Biser
                 AddProp(propertyName);
             sb.Append(val);
             return this;
+        }
+
+        public JsonEncoder Add(byte? val)
+        {
+            if (val == null)
+            {
+                AddNull();
+                return this;
+            }
+
+            sb.Append(val);
+            return this;
+            //return Add(null, val);
         }
 
         public JsonEncoder Add(string propertyName, byte? val)
@@ -538,14 +684,14 @@ namespace Biser
             return this;
         }
 
-        public JsonEncoder Add(byte val)
-        {
-            return Add(null, val);
-        }
 
-        public JsonEncoder Add(byte? val)
+
+
+        public JsonEncoder Add(bool val)
         {
-            return Add(null, val);
+            sb.Append(val.ToString().ToLower());
+            return this;
+            //return Add(null, val);
         }
 
         public JsonEncoder Add(string propertyName, bool val)
@@ -555,6 +701,20 @@ namespace Biser
             sb.Append(val.ToString().ToLower());
             return this;
         }
+
+        public JsonEncoder Add(bool? val)
+        {
+            if (val == null)
+            {
+                AddNull();
+                return this;
+            }
+
+            sb.Append(val.ToString().ToLower());
+            return this;
+            //return Add(null, val);
+        }
+
 
         public JsonEncoder Add(string propertyName, bool? val)
         {
@@ -575,16 +735,15 @@ namespace Biser
             return this;
         }
 
-        public JsonEncoder Add(bool val)
-        {
-            return Add(null, val);
-        }
 
-        public JsonEncoder Add(bool? val)
-        {
-            return Add(null, val);
-        }
 
+        public JsonEncoder Add(char val)
+        {
+            AddStr(val.ToString());
+            return this;
+
+            //return Add(null, val);
+        }
 
         public JsonEncoder Add(string propertyName, char val)
         {
@@ -592,6 +751,19 @@ namespace Biser
                 AddProp(propertyName);
             AddStr(val.ToString());
             return this;
+        }
+
+        public JsonEncoder Add(char? val)
+        {
+            if (val == null)
+            {
+                AddNull();
+                return this;
+            }
+
+            AddStr(val.ToString());
+            return this;
+            //return Add(null, val);
         }
 
         public JsonEncoder Add(string propertyName, char? val)
@@ -613,14 +785,13 @@ namespace Biser
             return this;
         }
 
-        public JsonEncoder Add(char val)
-        {
-            return Add(null, val);
-        }
 
-        public JsonEncoder Add(char? val)
+
+        public JsonEncoder Add(float val)
         {
-            return Add(null, val);
+            sb.Append(val.ToString(CultureInfo.InvariantCulture));
+            return this;
+            //return Add(null, val);
         }
 
         public JsonEncoder Add(string propertyName, float val)
@@ -629,6 +800,20 @@ namespace Biser
                 AddProp(propertyName);
             sb.Append(val.ToString(CultureInfo.InvariantCulture));
             return this;
+        }
+
+        public JsonEncoder Add(float? val)
+        {
+            if (val == null)
+            {
+                AddNull();
+                return this;
+            }
+
+            sb.Append(((float)val).ToString(CultureInfo.InvariantCulture));
+            return this;
+
+            //return Add(null, val);
         }
 
         public JsonEncoder Add(string propertyName, float? val)
@@ -650,14 +835,14 @@ namespace Biser
             return this;
         }
 
-        public JsonEncoder Add(float val)
-        {
-            return Add(null, val);
-        }
 
-        public JsonEncoder Add(float? val)
+
+
+        public JsonEncoder Add(double val)
         {
-            return Add(null, val);
+            sb.Append(val.ToString("r", CultureInfo.InvariantCulture));
+            return this;
+            //return Add(null, val);
         }
 
         public JsonEncoder Add(string propertyName, double val)
@@ -666,6 +851,20 @@ namespace Biser
                 AddProp(propertyName);
             sb.Append(val.ToString("r",CultureInfo.InvariantCulture));
             return this;
+        }
+
+        public JsonEncoder Add(double? val)
+        {
+            if (val == null)
+            {
+                AddNull();
+                return this;
+            }
+
+            sb.Append(((double)val).ToString("r", CultureInfo.InvariantCulture));
+            return this;
+
+            //return Add(null, val);
         }
 
         public JsonEncoder Add(string propertyName, double? val)
@@ -687,14 +886,13 @@ namespace Biser
             return this;
         }
 
-        public JsonEncoder Add(double val)
-        {
-            return Add(null, val);
-        }
 
-        public JsonEncoder Add(double? val)
+
+        public JsonEncoder Add(decimal val)
         {
-            return Add(null, val);
+            sb.Append(val.ToString(CultureInfo.InvariantCulture));
+            return this;
+            //return Add(null, val);
         }
 
         public JsonEncoder Add(string propertyName, decimal val)
@@ -703,6 +901,19 @@ namespace Biser
                 AddProp(propertyName);
             sb.Append(val.ToString(CultureInfo.InvariantCulture));
             return this;
+        }
+
+        public JsonEncoder Add(decimal? val)
+        {
+            if (val == null)
+            {
+                AddNull();
+                return this;
+            }
+
+            sb.Append(((decimal)val).ToString(CultureInfo.InvariantCulture));
+            return this;
+            //return Add(null, val);
         }
 
         public JsonEncoder Add(string propertyName, decimal? val)
@@ -724,16 +935,15 @@ namespace Biser
             return this;
         }
 
-        public JsonEncoder Add(decimal val)
-        {
-            return Add(null, val);
-        }
 
-        public JsonEncoder Add(decimal? val)
-        {
-            return Add(null, val);
-        }
 
+
+        public JsonEncoder Add(Guid val)
+        {
+            AddStr(val.ToString());
+            return this;
+            //return Add(null, val);
+        }
 
         public JsonEncoder Add(string propertyName, Guid val)
         {
@@ -741,6 +951,21 @@ namespace Biser
                 AddProp(propertyName);
             AddStr(val.ToString());
             return this;
+        }
+
+        public JsonEncoder Add(Guid? val)
+        {
+            if (val == null)
+            {
+                AddNull();
+                return this;
+            }
+
+            AddStr(((Guid)val).ToString());
+
+            return this;
+
+            //return Add(null, val);
         }
 
         public JsonEncoder Add(string propertyName, Guid? val)
@@ -763,16 +988,22 @@ namespace Biser
             return this;
         }
 
-        public JsonEncoder Add(Guid val)
-        {
-            return Add(null, val);
-        }
 
-        public JsonEncoder Add(Guid? val)
-        {
-            return Add(null, val);
-        }
 
+
+        public JsonEncoder Add(byte[] val)
+        {
+            if (val == null)
+            {
+                AddNull();
+                return this;
+            }
+
+            AddStr(Convert.ToBase64String(val));
+            return this;
+
+            //return Add(null, val);
+        }
 
         public JsonEncoder Add(string propertyName, byte[] val)
         {
@@ -794,9 +1025,19 @@ namespace Biser
         }
 
 
-        public JsonEncoder Add(byte[] val)
+
+        public JsonEncoder Add(TimeSpan val)
         {
-            return Add(null, val);
+            if (val == null)
+            {
+                AddNull();
+                return this;
+            }
+
+            AddStr(val.ToString());
+            return this;
+
+            //return Add(null, val);
         }
 
         public JsonEncoder Add(string propertyName, TimeSpan val)
@@ -819,10 +1060,7 @@ namespace Biser
         }
 
 
-        public JsonEncoder Add(TimeSpan val)
-        {
-            return Add(null, val);
-        }
+     
 
 
 
@@ -850,7 +1088,18 @@ namespace Biser
                     }
                 }
             }
-            else if (val == null)
+
+            return Add(val);
+        }
+
+        /// <summary>
+        /// To supply heterogen values inside of Dictionary
+        /// </summary>
+        /// <param name="val"></param>
+        /// <returns></returns>
+        public JsonEncoder Add(Dictionary<string, Action> val)
+        {
+            if (val == null)
             {
                 AddNull();
                 lastchar = '}';
@@ -876,11 +1125,8 @@ namespace Biser
             sb.Append("}");
             lastchar = '}';
             return this;
-        }
 
-        public JsonEncoder Add(Dictionary<string, Action> val)
-        {
-            return Add(null, val);
+            //return Add(null, val);
         }
 
         /// <summary>
@@ -906,7 +1152,18 @@ namespace Biser
                     }
                 }
             }
-            else if (val == null)
+
+            return Add(val);
+        }
+
+        /// <summary>
+        ///  Supplies heterogonenous array elements
+        /// </summary>
+        /// <param name="val"></param>
+        /// <returns></returns>
+        public JsonEncoder Add(List<Action> val)
+        {
+            if (val == null)
             {
                 AddNull();
                 lastchar = ']';
@@ -931,11 +1188,8 @@ namespace Biser
             sb.Append("]");
             lastchar = ']';
             return this;
-        }
 
-        public JsonEncoder Add(List<Action> val)
-        {
-            return Add(null, val);
+            //return Add(null, val);
         }
 
 
@@ -967,7 +1221,21 @@ namespace Biser
                     }
                 }
             }
-            else if (val == null)
+
+            return Add(val, f);
+        }
+
+        /// <summary>
+        ///  Adds Dictionary each Key will be transformed into String
+        /// </summary>
+        /// <typeparam name="K"></typeparam>
+        /// <typeparam name="V"></typeparam>
+        /// <param name="val"></param>
+        /// <param name="f"></param>
+        /// <returns></returns>
+        public JsonEncoder Add<K, V>(IDictionary<K,V> val, Action<V> f)
+        {
+            if (val == null)
             {
                 AddNull();
                 lastchar = '}';
@@ -985,7 +1253,7 @@ namespace Biser
                     sb.Append(",");
                     lastchar = ',';
                 }
-                AddProp((string)Convert.ChangeType(item.Key, TypeString));           
+                AddProp((string)Convert.ChangeType(item.Key, TypeString));
                 f(item.Value);
 
                 lastchar = '}'; //to put commas after standard values
@@ -993,19 +1261,8 @@ namespace Biser
             sb.Append("}");
             lastchar = '}';
             return this;
-        }
 
-        /// <summary>
-        ///  Adds Dictionary each Key will be transformed into String
-        /// </summary>
-        /// <typeparam name="K"></typeparam>
-        /// <typeparam name="V"></typeparam>
-        /// <param name="val"></param>
-        /// <param name="f"></param>
-        /// <returns></returns>
-        public JsonEncoder Add<K, V>(IDictionary<K,V> val, Action<V> f)
-        {
-            return Add(null, val, f);
+            // return Add(null, val, f);
         }
 
         /// <summary>
@@ -1023,7 +1280,13 @@ namespace Biser
                 else
                     AddProp(propertyName);
             }
-            else if (val == null)
+            //else 
+            return Add(val);
+        }
+
+        public JsonEncoder Add(IJsonEncoder val)
+        {
+            if (val == null)
             {
                 AddNull();
                 return this;
@@ -1037,23 +1300,8 @@ namespace Biser
             lastchar = '}';
 
             return this;
-        }
 
-        public JsonEncoder Add(IJsonEncoder val)
-        {
-            return Add(null,val);
-        }
-
-        /// <summary>
-        ///  Supply array and transformation function, one for each array element
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="items"></param>
-        /// <param name="f"></param>
-        /// <returns></returns>
-        public JsonEncoder Add<T>(IEnumerable<T> items, Action<T> f)
-        {
-            return Add(null, items, f);
+            //return Add(null,val);
         }
 
         /// <summary>
@@ -1061,19 +1309,19 @@ namespace Biser
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="propertyName"></param>
-        /// <param name="items"></param>
+        /// <param name="val"></param>
         /// <param name="f"></param>
         /// <returns></returns>
-        public JsonEncoder Add<T>(string propertyName, IEnumerable<T> items, Action<T> f)
+        public JsonEncoder Add<T>(string propertyName, IEnumerable<T> val, Action<T> f)
         {
             if (!String.IsNullOrEmpty(propertyName))
             {
-                if (items == null)
+                if (val == null)
                     return this;
                 else
                 {
                     AddProp(propertyName);
-                    if (items.Count() == 0)
+                    if (val.Count() == 0)
                     {
                         sb.Append("[]");
                         lastchar = ']';
@@ -1081,7 +1329,20 @@ namespace Biser
                     }
                 }
             }
-            else if (items == null)
+
+            return Add(val, f);
+        }
+
+        /// <summary>
+        ///  Supply array and transformation function, one for each array element
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="val"></param>
+        /// <param name="f"></param>
+        /// <returns></returns>
+        public JsonEncoder Add<T>(IEnumerable<T> val, Action<T> f)
+        {
+            if (val == null)
             {
                 AddNull();
                 lastchar = ']';
@@ -1091,19 +1352,19 @@ namespace Biser
             sb.Append("[");
             lastchar = '[';
 
-//#if NETSTANDARD
-//            bool ic = typeof(IJsonEncoder).GetTypeInfo().IsAssignableFrom(typeof(T).Ge‌​tTypeInfo());
-//            if(!ic)
-//                 ic = typeof(System.Collections.IDictionary).GetTypeInfo().IsAssignableFrom(typeof(T).Ge‌​tTypeInfo());
-//#else
-//            bool ic = typeof(IJsonEncoder).IsAssignableFrom(typeof(T));
-//            if(!ic)
-//                ic = typeof(System.Collections.IDictionary).IsAssignableFrom(typeof(T));
-//#endif          
+            //#if NETSTANDARD
+            //            bool ic = typeof(IJsonEncoder).GetTypeInfo().IsAssignableFrom(typeof(T).Ge‌​tTypeInfo());
+            //            if(!ic)
+            //                 ic = typeof(System.Collections.IDictionary).GetTypeInfo().IsAssignableFrom(typeof(T).Ge‌​tTypeInfo());
+            //#else
+            //            bool ic = typeof(IJsonEncoder).IsAssignableFrom(typeof(T));
+            //            if(!ic)
+            //                ic = typeof(System.Collections.IDictionary).IsAssignableFrom(typeof(T));
+            //#endif          
 
 
 
-            foreach (var item in items)
+            foreach (var item in val)
             {
                 if (lastchar == '}' || lastchar == ']')
                 {
@@ -1111,14 +1372,17 @@ namespace Biser
                     lastchar = ',';
                 }
 
-                f(item);               
+                f(item);
 
                 lastchar = '}'; //to put commas after standard values
             }
             sb.Append("]");
-            lastchar = ']';            
+            lastchar = ']';
             return this;
+            //return Add(null, items, f);
         }
+
+       
 
     }
 }

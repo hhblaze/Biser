@@ -16,11 +16,11 @@ namespace Biser
             /// </summary>
             Default,
             /// <summary>
-            /// ISO Format
+            /// ISO Format: "2018-06-05T17:44:15.4430000Z" or "2018-06-05T17:44:15.4430000+02:00"
             /// </summary>
             ISO,
             /// <summary>
-            /// Unix Epoch Milliseconds
+            /// Unix Epoch Milliseconds. Fastest for both operations
             /// </summary>
             EpochTime,
             /// <summary>

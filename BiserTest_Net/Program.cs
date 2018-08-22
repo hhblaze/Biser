@@ -154,11 +154,11 @@ namespace BiserTest_Net
                 P2 = 17,
                 P3 = 478.5879m,
                 P4 = new List<TS2> { jts2, jts2 },
-                P5 = new Dictionary<long, TS3> {
-                        { 1, new TS3{ P1 = "t1" } },
-                        { 2, new TS3{ P1 = "t2" } },
-                        { 3, new TS3{ P1 = "t3" } }
-                    },
+                //P5 = new Dictionary<long, TS3> {
+                //        { 1, new TS3{ P1 = "t1" } },
+                //        { 2, new TS3{ P1 = "t2" } },
+                //        { 3, new TS3{ P1 = "t3" } }
+                //    },
                 P6 = new Dictionary<uint, List<TS3>> {
                         { 1, new List<TS3>{ new TS3 { P1 = "h1" }, new TS3 { P1 = "h2" }, new TS3 { P1 = "h3" } } },
                         { 2, new List<TS3>{ new TS3 { P1 = "h2" }, new TS3 { P1 = "h2" }, new TS3 { P1 = "h4" } } },
@@ -194,66 +194,70 @@ namespace BiserTest_Net
             jsts1.P13.Add(new TS3 { P1 = "dsf", P2 = 45, P3 = DateTime.UtcNow });
             jsts1.P13.Add(new TS3 { P1 = "sdfsdfsdfs", P2 = null, P3 = DateTime.UtcNow });
 
-            jsts1.P19 = new Tuple<int, TS3>(12, new TS3 { P1 = "dsf", P2 = 45, P3 = DateTime.UtcNow });
+            jsts1.P15 = new List<List<TS3>>();
+            jsts1.P15.Add(jsts1.P13);
+            jsts1.P15.Add(jsts1.P13);
+
+            jsts1.P16 = new Dictionary<long, List<TS3>>();
+            jsts1.P16.Add(12, jsts1.P13);
+            jsts1.P16.Add(14, jsts1.P13);
+            jsts1.P16.Add(28, jsts1.P13);
+
 
             jsts1.P18 = new List<int>();
             jsts1.P18.Add(178);
             jsts1.P18.Add(912);
 
-            jsts1.P15 = new List<List<TS3>>();
-            jsts1.P15.Add(jsts1.P13);
-            jsts1.P15.Add(jsts1.P13);
+            jsts1.P19 = new Tuple<int, TS3>(12, new TS3 { P1 = "dsf", P2 = 45, P3 = DateTime.UtcNow });
 
 
 
-            //jsts1.P16 = new Dictionary<long, List<TS3>>();
-            //jsts1.P16.Add(12, jsts1.P13);
-            //jsts1.P16.Add(14, jsts1.P13);
-            //jsts1.P16.Add(28, jsts1.P13);
-
+           
 
             jsts1.P17 = new DateTime(2018, 6, 5, 17,44,15,443, DateTimeKind.Utc);
 
             //var jsres9 = NetJSON.NetJSON.Serialize(jsts1, new NetJSON.NetJSONSettings() { Format = NetJSON.NetJSONFormat.Prettify });
-            var jsres9 = NetJSON.NetJSON.Serialize(jsts1, new NetJSON.NetJSONSettings() { Format = NetJSON.NetJSONFormat.Prettify,
-                DateFormat = NetJSON.NetJSONDateFormat.ISO });
+            var jsres9 = NetJSON.NetJSON.Serialize(jsts1, new NetJSON.NetJSONSettings() {
+                Format = NetJSON.NetJSONFormat.Prettify,
+                DateFormat = NetJSON.NetJSONDateFormat.Default
+            });
             var njdv1 = NetJSON.NetJSON.Deserialize<TS1>(jsres9, new NetJSON.NetJSONSettings()
             { //Format = NetJSON.NetJSONFormat.Prettify,
-                DateFormat = NetJSON.NetJSONDateFormat.ISO
+                DateFormat = NetJSON.NetJSONDateFormat.Default
             });
             //var jsres9 = NetJSON.NetJSON.Serialize(jsts1);
             TS1 jsts1d = null;
             
             //jsts1d = TS1.BiserJsonDecode(jsres9, null, new JsonSettings { DateFormat = JsonSettings.DateTimeStyle.ISO });
-
+               
             //-----------------
             //var jsres91 = NetJSON.NetJSON.Serialize(jsts1.P13, new NetJSON.NetJSONSettings()
             //{ //Format = NetJSON.NetJSONFormat.Prettify,
             //    DateFormat = NetJSON.NetJSONDateFormat.ISO
-            //});
+            //}); 
 
-            JsonEncoder jenc = new JsonEncoder(new JsonSettings { DateFormat = JsonSettings.DateTimeStyle.ISO,
+            JsonEncoder jenc = new JsonEncoder(new JsonSettings { DateFormat = JsonSettings.DateTimeStyle.Default,
                 JsonStringFormat = JsonSettings.JsonStringStyle.Prettify });
             jsts1.BiserJsonEncode(jenc);
 
-
+              
             string wow1 = jenc.GetJSON();
             
-            var jsts1d1 = TS1.BiserJsonDecode(wow1, null, new JsonSettings { DateFormat = JsonSettings.DateTimeStyle.ISO });
-
+            var jsts1d1 = TS1.BiserJsonDecode(wow1, null, new JsonSettings { DateFormat = JsonSettings.DateTimeStyle.Default });
+             
             //StreamReader sr=new StreamReader("",Encoding.UTF8)
             //StreamWriter sw=new StreamWriter()
             Console.WriteLine("Press to start test");
             Console.ReadLine();
 
-
+             
             System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
             sw.Start();
             for (int i = 0; i < 10000; i++)
             {
                 jenc = new JsonEncoder(new JsonSettings
                 {
-                    DateFormat = JsonSettings.DateTimeStyle.ISO,
+                    DateFormat = JsonSettings.DateTimeStyle.Default,
                     JsonStringFormat = JsonSettings.JsonStringStyle.Default
                 });
                 jsts1.BiserJsonEncode(jenc);
@@ -269,7 +273,7 @@ namespace BiserTest_Net
                 jsres9 = NetJSON.NetJSON.Serialize(jsts1, new NetJSON.NetJSONSettings()
                 {
                     Format = NetJSON.NetJSONFormat.Default,
-                    DateFormat = NetJSON.NetJSONDateFormat.ISO
+                    DateFormat = NetJSON.NetJSONDateFormat.Default
                 });
             }
             sw.Stop();
@@ -281,7 +285,7 @@ namespace BiserTest_Net
             sw.Start();
             for (int i = 0; i < 10000; i++)
             {
-                jsts1d = TS1.BiserJsonDecode(wow1, null, new JsonSettings { DateFormat = JsonSettings.DateTimeStyle.ISO });
+                jsts1d = TS1.BiserJsonDecode(wow1, null, new JsonSettings { DateFormat = JsonSettings.DateTimeStyle.Default });
             }
             sw.Stop();
             Console.WriteLine($"Biser decode: {sw.ElapsedMilliseconds} ms");
