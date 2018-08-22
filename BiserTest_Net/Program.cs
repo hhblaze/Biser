@@ -239,8 +239,8 @@ namespace BiserTest_Net
             JsonEncoder jenc = new JsonEncoder(new JsonSettings { DateFormat = JsonSettings.DateTimeStyle.Default,
                 JsonStringFormat = JsonSettings.JsonStringStyle.Prettify });
             jsts1.BiserJsonEncode(jenc);
-
-              
+            
+            
             string wow1 = jenc.GetJSON();
             
             var jsts1d1 = TS1.BiserJsonDecode(wow1, null, new JsonSettings { DateFormat = JsonSettings.DateTimeStyle.Default });

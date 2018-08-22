@@ -1088,8 +1088,33 @@ namespace Biser
                     }
                 }
             }
+            else if (val == null)
+            {
+                AddNull();
+                lastchar = '}';
+                return this;
+            }
 
-            return Add(val);
+
+            sb.Append("{");
+            lastchar = '{';
+
+            foreach (var item in val)
+            {
+                if (lastchar == '}' || lastchar == ']')
+                {
+                    sb.Append(",");
+                    lastchar = ',';
+                }
+                AddProp(item.Key);
+                item.Value();
+
+                lastchar = '}'; //to put commas after standard values
+            }
+            sb.Append("}");
+            lastchar = '}';
+            return this;
+
         }
 
         /// <summary>
@@ -1152,8 +1177,32 @@ namespace Biser
                     }
                 }
             }
+            else if (val == null)
+            {
+                AddNull();
+                lastchar = ']';
+                return this;
+            }
 
-            return Add(val);
+            sb.Append("[");
+            lastchar = '[';
+
+            foreach (var item in val)
+            {
+                if (lastchar == '}' || lastchar == ']')
+                {
+                    sb.Append(",");
+                    lastchar = ',';
+                }
+
+                item();
+
+                lastchar = '}'; //to put commas after standard values
+            }
+            sb.Append("]");
+            lastchar = ']';
+            return this;
+
         }
 
         /// <summary>
@@ -1221,8 +1270,33 @@ namespace Biser
                     }
                 }
             }
+            else if (val == null)
+            {
+                AddNull();
+                lastchar = '}';
+                return this;
+            }
 
-            return Add(val, f);
+
+            sb.Append("{");
+            lastchar = '{';
+
+            foreach (var item in val)
+            {
+                if (lastchar == '}' || lastchar == ']')
+                {
+                    sb.Append(",");
+                    lastchar = ',';
+                }
+                AddProp((string)Convert.ChangeType(item.Key, TypeString));
+                f(item.Value);
+
+                lastchar = '}'; //to put commas after standard values
+            }
+            sb.Append("}");
+            lastchar = '}';
+            return this;
+
         }
 
         /// <summary>
@@ -1280,8 +1354,20 @@ namespace Biser
                 else
                     AddProp(propertyName);
             }
-            //else 
-            return Add(val);
+            else if (val == null)
+            {
+                AddNull();
+                return this;
+            }
+
+
+            sb.Append("{");
+            lastchar = '{';
+            val.BiserJsonEncode(this);
+            sb.Append("}");
+            lastchar = '}';
+
+            return this;
         }
 
         public JsonEncoder Add(IJsonEncoder val)
@@ -1329,8 +1415,32 @@ namespace Biser
                     }
                 }
             }
+            else if (val == null)
+            {
+                AddNull();
+                lastchar = ']';
+                return this;
+            }
 
-            return Add(val, f);
+            sb.Append("[");
+            lastchar = '[';
+
+
+            foreach (var item in val)
+            {
+                if (lastchar == '}' || lastchar == ']')
+                {
+                    sb.Append(",");
+                    lastchar = ',';
+                }
+
+                f(item);
+
+                lastchar = '}'; //to put commas after standard values
+            }
+            sb.Append("]");
+            lastchar = ']';
+            return this;
         }
 
         /// <summary>
