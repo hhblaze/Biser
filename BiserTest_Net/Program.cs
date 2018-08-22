@@ -236,15 +236,15 @@ namespace BiserTest_Net
             //    DateFormat = NetJSON.NetJSONDateFormat.ISO
             //}); 
 
-            JsonEncoder jenc = new JsonEncoder(new JsonSettings { DateFormat = JsonSettings.DateTimeStyle.Default,
+            JsonEncoder jenc = new JsonEncoder(null, new JsonSettings { DateFormat = JsonSettings.DateTimeStyle.Default,
                 JsonStringFormat = JsonSettings.JsonStringStyle.Prettify });
-            jsts1.BiserJsonEncode(jenc);
+           // jsts1.BiserJsonEncode(jenc);
             
             
             string wow1 = jenc.GetJSON();
             
             var jsts1d1 = TS1.BiserJsonDecode(wow1, null, new JsonSettings { DateFormat = JsonSettings.DateTimeStyle.Default });
-             
+                       
             //StreamReader sr=new StreamReader("",Encoding.UTF8)
             //StreamWriter sw=new StreamWriter()
             Console.WriteLine("Press to start test");
@@ -515,6 +515,129 @@ namespace BiserTest_Net
             //var d3 = decoder.GetFloat();
             //var d4 = decoder.GetFloat();
         }
+
+        #region "test JSONv1"
+        public class t1 : Biser.IJsonEncoder
+        {
+            public int p1 { get; set; }
+            public string p2 { get; set; }
+            public t2 p3 { get; set; }
+
+            public void BiserJsonEncode(Biser.JsonEncoder encoder)
+            {
+                encoder.Add("p1", this.p1);
+                encoder.Add("p2", this.p2);
+                encoder.Add("p3", this.p3);
+
+            }
+
+            public static t1 BiserJsonDecode(string enc = null, Biser.JsonDecoder extDecoder = null, Biser.JsonSettings settings = null) //!!!!!!!!!!!!!! change return type
+            {
+                Biser.JsonDecoder decoder = null;
+
+                if (extDecoder == null)
+                {
+                    if (enc == null || String.IsNullOrEmpty(enc))
+                        return null;
+                    decoder = new Biser.JsonDecoder(enc, settings);
+                    if (decoder.CheckNull())
+                        return null;
+                }
+                else
+                {
+                    //JSONSettings of the existing decoder will be used
+                    decoder = extDecoder;
+                }
+
+                t1 m = new t1();  //!!!!!!!!!!!!!! change return type
+                foreach (var props in decoder.GetDictionary<string>())
+                {
+                    switch (props)
+                    {
+                        case "p1":
+                            m.p1 = decoder.GetInt();
+                            break;
+                        case "p2":
+                            m.p2 = decoder.GetString();
+                            break;
+                        case "p3":
+                            m.p3 = t2.BiserJsonDecode(null, decoder);
+                            break;
+                        default:
+                            decoder.SkipValue();
+                            break;
+                    }
+                }
+                return m;
+            }
+        }
+
+        public class t2 : Biser.IJsonEncoder
+        {
+            public DateTime p1 { get; set; }
+            public string p2 { get; set; }
+
+            public void BiserJsonEncode(Biser.JsonEncoder encoder)
+            {
+                encoder.Add("p1", this.p1);
+                encoder.Add("p2", this.p2);
+            }
+
+            public static t2 BiserJsonDecode(string enc = null, Biser.JsonDecoder extDecoder = null, Biser.JsonSettings settings = null) //!!!!!!!!!!!!!! change return type
+            {
+                Biser.JsonDecoder decoder = null;
+
+                if (extDecoder == null)
+                {
+                    if (enc == null || String.IsNullOrEmpty(enc))
+                        return null;
+                    decoder = new Biser.JsonDecoder(enc, settings);
+                    if (decoder.CheckNull())
+                        return null;
+                }
+                else
+                {
+                    //JSONSettings of the existing decoder will be used
+                    decoder = extDecoder;
+                }
+
+                t2 m = new t2();  //!!!!!!!!!!!!!! change return type
+                foreach (var props in decoder.GetDictionary<string>())
+                {
+                    switch (props)
+                    {
+                        case "p1":
+                            m.p1 = decoder.GetDateTime();
+                            break;
+                        case "p2":
+                            m.p2 = decoder.GetString();
+                            break;
+                        default:
+                            decoder.SkipValue();
+                            break;
+                    }
+                }
+                return m;
+            }
+
+
+        }
+
+        static void TestJSONv1()
+        {
+            t1 ot1 = new t1()
+            {
+                p1 = 12,
+                p2 = "dsfg",
+                p3 = new t2 { p1 = DateTime.UtcNow, p2 = "uioziuz" }
+            };
+
+            var jsonSet = new Biser.JsonSettings { DateFormat = Biser.JsonSettings.DateTimeStyle.ISO };
+            Biser.JsonEncoder enc = new Biser.JsonEncoder(ot1, jsonSet);
+            string es = enc.GetJSON(Biser.JsonSettings.JsonStringStyle.Prettify);
+            var ot2 = t1.BiserJsonDecode(es, settings: jsonSet);
+        }
+        #endregion
 
         static void TestBE1()
         {            

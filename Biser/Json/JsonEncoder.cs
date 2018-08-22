@@ -23,6 +23,12 @@ namespace Biser
             sb.Append("{"); //Always start as an object
         }
 
+        public JsonEncoder(IJsonEncoder obj, JsonSettings settings = null)
+             : this(settings)
+        {
+            if(obj != null)
+                obj.BiserJsonEncode(this);
+        }
 
         void AddProp(string str)
         {
@@ -50,6 +56,12 @@ namespace Biser
         void AddNull()
         {            
             sb.Append("null");
+        }
+
+        public string GetJSON(JsonSettings.JsonStringStyle style)
+        {
+            this.jsonSettings.JsonStringFormat = style;
+            return GetJSON();
         }
 
         public string GetJSON()
