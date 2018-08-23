@@ -22,14 +22,14 @@ namespace Biser
         //MemoryStream ms = null;
         internal int encPos = -1;
 
-        Decoder rootDecoder = null;
+        //Decoder rootDecoder = null;
         //bool externalDecoderExists = false;
         //DecoderV1 activeDecoder = null; //the one who fills up collection
 
-        /// <summary>
-        /// true in case if object is null
-        /// </summary>
-        public bool IsNull = false;
+        ///// <summary>
+        ///// true in case if object is null
+        ///// </summary>
+        //public bool IsNull = false;
 
         /// <summary>
         /// 
@@ -43,7 +43,7 @@ namespace Biser
                 return;
             
 
-            this.rootDecoder = this;
+            //this.rootDecoder = this;
             //this.activeDecoder = this;
                       
         }
@@ -59,7 +59,7 @@ namespace Biser
 
         //    if (!isCollection)
         //    {
-        //        var prot = this.rootDecoder.GetDigit();
+        //        var prot = this.GetDigit();
         //        if (prot == 1)
         //            IsNull = true;
         //    }
@@ -100,10 +100,10 @@ namespace Biser
 
         byte[] Read(int length)
         {
-            this.rootDecoder.encPos++;
+            this.encPos++;
             byte[] bt = new byte[length];
-            Buffer.BlockCopy(this.rootDecoder.encoded, this.rootDecoder.encPos, bt, 0, length);
-            this.rootDecoder.encPos += length - 1;
+            Buffer.BlockCopy(this.encoded, this.encPos, bt, 0, length);
+            this.encPos += length - 1;
             return bt;
         }
 
@@ -121,7 +121,7 @@ namespace Biser
         /// <returns>true if null</returns>
         public bool CheckNull()
         {
-            return !(this.rootDecoder.GetDigit() == 0);
+            return !(this.GetDigit() == 0);
         }
 
         /// <summary>
@@ -134,18 +134,18 @@ namespace Biser
 
             ulong prot = 0;
             if (!isNullChecked)
-                prot = this.rootDecoder.GetDigit();
+                prot = this.GetDigit();
 
             if (prot == 0)
             {
 
-                int collectionLength = (int)this.rootDecoder.GetDigit();
+                int collectionLength = (int)this.GetDigit();
 
                 if (collectionLength != 0) //JS not noted change
                 {
                     coldeepcnt++;
                   
-                    int cp = this.rootDecoder.encPos;
+                    int cp = this.encPos;
 
                     ch cdi = null;
                     if (coldeep.Count < coldeepcnt)
@@ -156,13 +156,13 @@ namespace Biser
                     else
                         cdi = coldeep[coldeepcnt - 1];
 
-                    if (this.rootDecoder.qb > 1)
+                    if (this.qb > 1)
                     {
                         cdi.collectionShiftToPass = 0;
-                        cdi.collectionShift = this.rootDecoder.qb - 1;
-                        this.rootDecoder.encPos = cp + collectionLength - cdi.collectionShift; //JS not noted change
+                        cdi.collectionShift = this.qb - 1;
+                        this.encPos = cp + collectionLength - cdi.collectionShift; //JS not noted change
                         cdi.collectionBuffer = Read(cdi.collectionShift);
-                        this.rootDecoder.encPos = cp;                        
+                        this.encPos = cp;                        
                     }
                     else
                     {
@@ -177,11 +177,11 @@ namespace Biser
                     {
                         yield return this;
 
-                        if ((this.rootDecoder.encPos - (cp - cdi.collectionShift)) == collectionLength)
+                        if ((this.encPos - (cp - cdi.collectionShift)) == collectionLength)
                         {
                             cdi.collectionIsFinished = true;
                             if (cdi.collectionShift > 0)
-                                this.rootDecoder.encPos += cdi.collectionShift;
+                                this.encPos += cdi.collectionShift;
 
                             coldeepcnt--;
                             break;
@@ -242,7 +242,7 @@ namespace Biser
             
             ulong prot = 0;
             if (!isNullChecked)
-                prot = this.rootDecoder.GetDigit();
+                prot = this.GetDigit();
             
             if (prot == 0)
             {
@@ -255,7 +255,7 @@ namespace Biser
                 //    return;
                 //}
 
-                int collectionLength = (int)this.rootDecoder.GetDigit();
+                int collectionLength = (int)this.GetDigit();
                 if (collectionLength == 0) //JS not noted change
                 {
                     //collectionIsFinished = true;                    
@@ -267,7 +267,7 @@ namespace Biser
                 //collectionShift = 0;
                 //collectionShiftToPass = 0;
 
-                int cp = this.rootDecoder.encPos;
+                int cp = this.encPos;
 
                 ch cdi = null;
                 if (coldeep.Count < coldeepcnt)
@@ -278,13 +278,13 @@ namespace Biser
                 else
                     cdi = coldeep[coldeepcnt-1];
 
-                if (this.rootDecoder.qb > 1)
+                if (this.qb > 1)
                 {
                     cdi.collectionShiftToPass = 0;
-                    cdi.collectionShift = this.rootDecoder.qb - 1;              
-                    this.rootDecoder.encPos = cp + collectionLength - cdi.collectionShift; //JS not noted change
+                    cdi.collectionShift = this.qb - 1;              
+                    this.encPos = cp + collectionLength - cdi.collectionShift; //JS not noted change
                     cdi.collectionBuffer = Read(cdi.collectionShift);
-                    this.rootDecoder.encPos = cp;
+                    this.encPos = cp;
                                       //collectionPos += collectionShift;
                 }
                 else
@@ -299,8 +299,8 @@ namespace Biser
                 //DecoderV1 oldDecoder = null;
                 //if (externalDecoderExists)
                 //{
-                //    oldDecoder = this.rootDecoder.activeDecoder;
-                //    this.rootDecoder.activeDecoder = this;
+                //    oldDecoder = this.activeDecoder;
+                //    this.activeDecoder = this;
                 //}
 
                 while (true)
@@ -316,16 +316,16 @@ namespace Biser
                         dict.Add(fk(), fv());
 
 
-                    if ((this.rootDecoder.encPos - (cp - cdi.collectionShift)) == collectionLength)
+                    if ((this.encPos - (cp - cdi.collectionShift)) == collectionLength)
                     {
                         cdi.collectionIsFinished = true;
                         if (cdi.collectionShift > 0)
-                            this.rootDecoder.encPos += cdi.collectionShift;
+                            this.encPos += cdi.collectionShift;
 
                         coldeepcnt--;
 
                         //if (externalDecoderExists)
-                        //    this.rootDecoder.activeDecoder = oldDecoder;
+                        //    this.activeDecoder = oldDecoder;
                         break;
                     }
                 }
@@ -337,12 +337,12 @@ namespace Biser
 
         public DateTime GetDateTime()
         {
-            return new DateTime(Biser.DecodeZigZag(this.rootDecoder.GetDigit()));
+            return new DateTime(Biser.DecodeZigZag(this.GetDigit()));
         }
 
         public DateTime? GetDateTime_NULL()
         {
-            if (this.rootDecoder.GetDigit() == 1)
+            if (this.GetDigit() == 1)
                 return null;
             return GetDateTime();
         }
@@ -350,12 +350,12 @@ namespace Biser
 
         public long GetLong()
         {
-            return Biser.DecodeZigZag(this.rootDecoder.GetDigit());
+            return Biser.DecodeZigZag(this.GetDigit());
         }
 
         public long? GetLong_NULL()
         {
-            if (this.rootDecoder.GetDigit() == 1)
+            if (this.GetDigit() == 1)
                 return null;
             return GetLong();
 
@@ -363,60 +363,60 @@ namespace Biser
 
         public ulong GetULong()
         {
-            return this.rootDecoder.GetDigit();
+            return this.GetDigit();
         }
 
         public ulong? GetULong_NULL()
         {
-            if (this.rootDecoder.GetDigit() == 1)
+            if (this.GetDigit() == 1)
                 return null;
             return GetULong();
         }
 
         public int GetInt()
         {
-            return (int)Biser.DecodeZigZag(this.rootDecoder.GetDigit());
+            return (int)Biser.DecodeZigZag(this.GetDigit());
         }
 
         public int? GetInt_NULL()
         {
-            if (this.rootDecoder.GetDigit() == 1)
+            if (this.GetDigit() == 1)
                 return null;
             return GetInt();
         }
 
         public uint GetUInt()
         {
-            return (uint)this.rootDecoder.GetDigit();
+            return (uint)this.GetDigit();
         }
 
         public uint? GetUInt_NULL()
         {
-            if (this.rootDecoder.GetDigit() == 1)
+            if (this.GetDigit() == 1)
                 return null;
             return GetUInt();
         }
 
         public short GetShort()
         {
-            return (short)Biser.DecodeZigZag(this.rootDecoder.GetDigit());
+            return (short)Biser.DecodeZigZag(this.GetDigit());
         }
 
         public short? GetShort_NULL()
         {
-            if (this.rootDecoder.GetDigit() == 1)
+            if (this.GetDigit() == 1)
                 return null;
             return GetShort();
         }
 
         public ushort GetUShort()
         {
-            return (ushort)Biser.DecodeZigZag(this.rootDecoder.GetDigit());
+            return (ushort)Biser.DecodeZigZag(this.GetDigit());
         }
 
         public ushort? GetUShort_NULL()
         {
-            if (this.rootDecoder.GetDigit() == 1)
+            if (this.GetDigit() == 1)
                 return null;
             return GetUShort();
         }
@@ -428,7 +428,7 @@ namespace Biser
 
         public bool? GetBool_NULL()
         {
-            if (this.rootDecoder.GetDigit() == 1)
+            if (this.GetDigit() == 1)
                 return null;
 
             return GetBool();
@@ -441,7 +441,7 @@ namespace Biser
 
         public sbyte? GetSByte_NULL()
         {
-            if (this.rootDecoder.GetDigit() == 1)
+            if (this.GetDigit() == 1)
                 return null;
             return GetSByte();
         }
@@ -453,35 +453,35 @@ namespace Biser
 
         public byte? GetByte_NULL()
         {
-            if (this.rootDecoder.GetDigit() == 1)
+            if (this.GetDigit() == 1)
                 return null;
             return GetByte();
         }
 
         public float GetFloat()
         {
-            var subRet = this.rootDecoder.GetDigit();
+            var subRet = this.GetDigit();
             var ret = BitConverter.ToSingle(BitConverter.GetBytes(subRet), 0);
             return ret;
         }
 
         public float? GetFloat_NULL()
         {
-            if (this.rootDecoder.GetDigit() == 1)
+            if (this.GetDigit() == 1)
                 return null;
             return GetFloat();
         }
 
         public double GetDouble()
         {
-            var subRet = this.rootDecoder.GetDigit();
+            var subRet = this.GetDigit();
             var ret = BitConverter.ToDouble(BitConverter.GetBytes(subRet), 0);
             return ret;           
         }
 
         public double? GetDouble_NULL()
         {
-            if (this.rootDecoder.GetDigit() == 1)
+            if (this.GetDigit() == 1)
                 return null;
             return GetDouble();
 
@@ -490,16 +490,16 @@ namespace Biser
         public decimal GetDecimal()
         {
             int[] bits = new int[4];
-            bits[0] = (int)Biser.DecodeZigZag(this.rootDecoder.GetDigit());
-            bits[1] = (int)Biser.DecodeZigZag(this.rootDecoder.GetDigit());
-            bits[2] = (int)Biser.DecodeZigZag(this.rootDecoder.GetDigit());
-            bits[3] = (int)Biser.DecodeZigZag(this.rootDecoder.GetDigit());
+            bits[0] = (int)Biser.DecodeZigZag(this.GetDigit());
+            bits[1] = (int)Biser.DecodeZigZag(this.GetDigit());
+            bits[2] = (int)Biser.DecodeZigZag(this.GetDigit());
+            bits[3] = (int)Biser.DecodeZigZag(this.GetDigit());
             return new decimal(bits);
         }
 
         public decimal? GetDecimal_NULL()
         {
-            if (this.rootDecoder.GetDigit() == 1)
+            if (this.GetDigit() == 1)
                 return null;
             return GetDecimal();
         }
@@ -511,7 +511,7 @@ namespace Biser
 
         public char? GetChar_NULL()
         {
-            if (this.rootDecoder.GetDigit() == 1)
+            if (this.GetDigit() == 1)
                 return null;
             return GetChar();
 
@@ -534,7 +534,7 @@ namespace Biser
         /// <returns></returns>
         public long JSGetLong()
         {
-            return Biser.DecodeZigZag(this.rootDecoder.GetDigit());
+            return Biser.DecodeZigZag(this.GetDigit());
         }
 
         /// <summary>
@@ -603,14 +603,14 @@ namespace Biser
             //0 - with length, 1 - null, 2 - zero length
             byte[] ret = null;
 
-            var prot = this.rootDecoder.GetDigit();
+            var prot = this.GetDigit();
             switch (prot)
             {
                 case 2:
                     ret = new byte[0];
                     break;
                 case 0:
-                    ret = Read((int)((uint)this.rootDecoder.GetDigit()));
+                    ret = Read((int)((uint)this.GetDigit()));
                     break;
             }
 

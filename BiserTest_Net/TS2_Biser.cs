@@ -66,43 +66,10 @@ namespace BiserTest_Net
             return m;
         }
 
-        //public static TS2 BiserDecodeV1(byte[] enc = null, Biser.DecoderV1 extDecoder = null) //!!! change return type
-        //{
-        //    Biser.DecoderV1 decoder = null;
-        //    if (extDecoder == null)
-        //    {
-        //        if (enc == null || enc.Length == 0)
-        //            return null;
-        //        decoder = new Biser.DecoderV1(enc);
-        //        if (decoder.CheckNull())
-        //            return null;
-        //    }
-        //    else
-        //    {
-        //        if (extDecoder.CheckNull())
-        //            return null;
-        //        else
-        //            decoder = extDecoder;
-        //        //decoder = new Biser.DecoderV1(extDecoder);
-        //        //if (decoder.IsNull)
-        //        //    return null;
-        //    }
+       
 
-        //    TS2 m = new TS2();      //!!!!!!!!!!!!!! change return type
 
-        //    m.P1 = decoder.GetLong();
-        //    m.P2 = decoder.GetDouble();
 
-        //    m.P3 = decoder.CheckNull() ? null : new List<TS3>();
-        //    if (m.P3 != null)
-        //        decoder.GetCollection(() => { return TS3.BiserDecodeV1(null, decoder); }, m.P3, true);
-            
-        //    m.P4 = TS3.BiserDecodeV1(null, decoder);
-
-        //    m.P5 = decoder.GetUInt_NULL();
-
-        //    return m;
-        //}
 
         public void BiserJsonEncode(Biser.JsonEncoder encoder)
         {

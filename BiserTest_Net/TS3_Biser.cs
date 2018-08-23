@@ -57,37 +57,9 @@ namespace BiserTest_Net
             return m;
         }//eof
 
-        //public static TS3 BiserDecodeV1(byte[] enc = null, Biser.DecoderV1 extDecoder = null) //!!! change return type
-        //{
-        //    Biser.DecoderV1 decoder = null;
-        //    if (extDecoder == null)
-        //    {
-        //        if (enc == null || enc.Length == 0)
-        //            return null;
-        //        decoder = new Biser.DecoderV1(enc);
-        //        if (decoder.CheckNull())
-        //            return null;
-        //    }
-        //    else
-        //    {
-        //        if (extDecoder.CheckNull())
-        //            return null;
-        //        else
-        //            decoder = extDecoder;
-                
-        //        //decoder = new Biser.DecoderV1(extDecoder);
-        //        //if (decoder.IsNull)
-        //        //    return null;
-        //    }
+       
 
-        //    TS3 m = new TS3();      //!!!!!!!!!!!!!! change return type
 
-        //    m.P1 = decoder.GetString();
-        //    m.P2 = decoder.GetInt_NULL();
-        //    m.P3 = decoder.GetDateTime();
-
-        //    return m;
-        //}//eof
 
         public void BiserJsonEncode(Biser.JsonEncoder encoder)
         {

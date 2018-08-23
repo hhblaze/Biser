@@ -231,6 +231,9 @@
         <member name="M:ProtoBuf.DiscriminatedUnionObject.Reset(ProtoBuf.DiscriminatedUnionObject@,System.Int32)">
             <summary>Reset a value if the specified discriminator is assigned</summary>
         </member>
+        <member name="P:ProtoBuf.DiscriminatedUnionObject.Discriminator">
+            <summary>The discriminator value</summary>
+        </member>
         <member name="T:ProtoBuf.DiscriminatedUnion64">
             <summary>Represent multiple types as a union; this is used as part of OneOf -
             note that it is the caller's responsbility to only read/write the value as the same type</summary>
@@ -294,6 +297,9 @@
         </member>
         <member name="M:ProtoBuf.DiscriminatedUnion64.Reset(ProtoBuf.DiscriminatedUnion64@,System.Int32)">
             <summary>Reset a value if the specified discriminator is assigned</summary>
+        </member>
+        <member name="P:ProtoBuf.DiscriminatedUnion64.Discriminator">
+            <summary>The discriminator value</summary>
         </member>
         <member name="T:ProtoBuf.DiscriminatedUnion128Object">
             <summary>Represent multiple types as a union; this is used as part of OneOf -
@@ -371,6 +377,9 @@
         <member name="M:ProtoBuf.DiscriminatedUnion128Object.Reset(ProtoBuf.DiscriminatedUnion128Object@,System.Int32)">
             <summary>Reset a value if the specified discriminator is assigned</summary>
         </member>
+        <member name="P:ProtoBuf.DiscriminatedUnion128Object.Discriminator">
+            <summary>The discriminator value</summary>
+        </member>
         <member name="T:ProtoBuf.DiscriminatedUnion128">
             <summary>Represent multiple types as a union; this is used as part of OneOf -
             note that it is the caller's responsbility to only read/write the value as the same type</summary>
@@ -440,6 +449,9 @@
         </member>
         <member name="M:ProtoBuf.DiscriminatedUnion128.Reset(ProtoBuf.DiscriminatedUnion128@,System.Int32)">
             <summary>Reset a value if the specified discriminator is assigned</summary>
+        </member>
+        <member name="P:ProtoBuf.DiscriminatedUnion128.Discriminator">
+            <summary>The discriminator value</summary>
         </member>
         <member name="T:ProtoBuf.DiscriminatedUnion64Object">
             <summary>Represent multiple types as a union; this is used as part of OneOf -
@@ -511,6 +523,9 @@
         <member name="M:ProtoBuf.DiscriminatedUnion64Object.Reset(ProtoBuf.DiscriminatedUnion64Object@,System.Int32)">
             <summary>Reset a value if the specified discriminator is assigned</summary>
         </member>
+        <member name="P:ProtoBuf.DiscriminatedUnion64Object.Discriminator">
+            <summary>The discriminator value</summary>
+        </member>
         <member name="T:ProtoBuf.DiscriminatedUnion32">
             <summary>Represent multiple types as a union; this is used as part of OneOf -
             note that it is the caller's responsbility to only read/write the value as the same type</summary>
@@ -544,6 +559,9 @@
         </member>
         <member name="M:ProtoBuf.DiscriminatedUnion32.Reset(ProtoBuf.DiscriminatedUnion32@,System.Int32)">
             <summary>Reset a value if the specified discriminator is assigned</summary>
+        </member>
+        <member name="P:ProtoBuf.DiscriminatedUnion32.Discriminator">
+            <summary>The discriminator value</summary>
         </member>
         <member name="T:ProtoBuf.DiscriminatedUnion32Object">
             <summary>Represent multiple types as a union; this is used as part of OneOf -
@@ -584,6 +602,9 @@
         </member>
         <member name="M:ProtoBuf.DiscriminatedUnion32Object.Reset(ProtoBuf.DiscriminatedUnion32Object@,System.Int32)">
             <summary>Reset a value if the specified discriminator is assigned</summary>
+        </member>
+        <member name="P:ProtoBuf.DiscriminatedUnion32Object.Discriminator">
+            <summary>The discriminator value</summary>
         </member>
         <member name="T:ProtoBuf.Extensible">
             <summary>
@@ -788,7 +809,7 @@
             This class acts as an internal wrapper allowing us to do a dynamic
             methodinfo invoke; an't put into Serializer as don't want on public
             API; can't put into Serializer&lt;T&gt; since we need to invoke
-            accross classes, which isn't allowed in Silverlight)
+            across classes
             </summary>
         </member>
         <member name="M:ProtoBuf.ExtensibleUtil.GetExtendedValues``1(ProtoBuf.IExtensible,System.Int32,ProtoBuf.DataFormat,System.Boolean,System.Boolean)">
@@ -1805,6 +1826,11 @@
             The type is also normalized for proxies at the same time.
             </summary>
         </member>
+        <member name="M:ProtoBuf.Meta.TypeModel.ResetKeyCache">
+            <summary>
+            Advertise that a type's key can have changed
+            </summary>
+        </member>
         <member name="M:ProtoBuf.Meta.TypeModel.GetKeyImpl(System.Type)">
             <summary>
             Provides the key that represents a given type in the current model.
@@ -2161,6 +2187,11 @@
             <summary>
             Applies only to enums (not to DTO classes themselves); gets or sets a value indicating that an enum should be treated directly as an int/short/etc, rather
             than enforcing .proto enum rules. This is useful *in particul* for [Flags] enums.
+            </summary>
+        </member>
+        <member name="P:ProtoBuf.ProtoContractAttribute.Surrogate">
+            <summary>
+            Allows to define a surrogate type used for serialization/deserialization purpose.
             </summary>
         </member>
         <member name="P:ProtoBuf.ProtoContractAttribute.EnumPassthruHasValue">
@@ -2722,6 +2753,15 @@
             of objects when an inheritance relationship is discovered later than usual during deserilazation.
             </summary>
         </member>
+        <member name="M:ProtoBuf.ProtoReader.Create(System.IO.Stream,ProtoBuf.Meta.TypeModel,ProtoBuf.SerializationContext,System.Int64)">
+            <summary>
+            Creates a new reader against a stream
+            </summary>
+            <param name="source">The source stream</param>
+            <param name="model">The model to use for serialization; this can be null, but this will impair the ability to deserialize sub-objects</param>
+            <param name="context">Additional context about this serialization operation</param>
+            <param name="length">The number of bytes to read, or -1 to read until the end of the stream</param>
+        </member>
         <member name="T:ProtoBuf.ProtoWriter">
             <summary>
             Represents an output stream for writing protobuf data.
@@ -2777,6 +2817,14 @@
             </summary>
             <param name="token">The token obtained from StartubItem.</param>
             <param name="writer">The destination.</param>
+        </member>
+        <member name="M:ProtoBuf.ProtoWriter.Create(System.IO.Stream,ProtoBuf.Meta.TypeModel,ProtoBuf.SerializationContext)">
+            <summary>
+            Creates a new writer against a stream
+            </summary>
+            <param name="dest">The destination stream</param>
+            <param name="model">The model to use for serialization; this can be null, but this will impair the ability to serialize sub-objects</param>
+            <param name="context">Additional context about this serialization operation</param>
         </member>
         <member name="M:ProtoBuf.ProtoWriter.#ctor(System.IO.Stream,ProtoBuf.Meta.TypeModel,ProtoBuf.SerializationContext)">
             <summary>
@@ -3244,6 +3292,11 @@
             Indicates whether the supplied type is explicitly modelled by the model
             </summary>
         </member>
+        <member name="M:ProtoBuf.Serializer.NonGeneric.PrepareSerializer(System.Type)">
+            <summary>
+            Precompiles the serializer for a given type.
+            </summary>
+        </member>
         <member name="T:ProtoBuf.Serializer.GlobalOptions">
             <summary>
             Global switches that change the behavior of protobuf-net
@@ -3384,14 +3437,14 @@
             Describes a WCF operation behaviour that can perform protobuf serialization
             </summary>
         </member>
-        <member name="P:ProtoBuf.ServiceModel.ProtoOperationBehavior.Model">
-            <summary>
-            The type-model that should be used with this behaviour
-            </summary>
-        </member>
         <member name="M:ProtoBuf.ServiceModel.ProtoOperationBehavior.#ctor(System.ServiceModel.Description.OperationDescription)">
             <summary>
             Create a new ProtoOperationBehavior instance
+            </summary>
+        </member>
+        <member name="P:ProtoBuf.ServiceModel.ProtoOperationBehavior.Model">
+            <summary>
+            The type-model that should be used with this behaviour
             </summary>
         </member>
         <member name="M:ProtoBuf.ServiceModel.ProtoOperationBehavior.CreateSerializer(System.Type,System.Xml.XmlDictionaryString,System.Xml.XmlDictionaryString,System.Collections.Generic.IList{System.Type})">

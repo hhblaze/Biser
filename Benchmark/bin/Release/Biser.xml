@@ -42,87 +42,9 @@
             <param name="type"></param>
             <returns></returns>
         </member>
-        <member name="F:Biser.DecoderV1.qb">
-            <summary>
-            Quantity of bytes needed to form latest varint
-            </summary>
-        </member>
-        <member name="F:Biser.DecoderV1.IsNull">
-            <summary>
-            true in case if object is null
-            </summary>
-        </member>
-        <member name="M:Biser.DecoderV1.#ctor(System.Byte[])">
-            <summary>
-            
-            </summary>
-            <param name="encoded"></param>
-        </member>
-        <member name="M:Biser.DecoderV1.#ctor(Biser.DecoderV1,System.Boolean)">
-            <summary>
-            
-            </summary>
-            <param name="decoder"></param>
-        </member>
-        <member name="M:Biser.DecoderV1.CheckNull">
-            <summary>
-            Is used for checking next collection on null, before getting one of the itterators.
-            </summary>
-            <returns>true if null</returns>
-        </member>
-        <member name="M:Biser.DecoderV1.GetCollection(System.Boolean)">
-            <summary>
-            Universal, but a bit slower (because of the yield returns) than those ones with IDictionary or IList
-            </summary>
-            <param name="isNullChecked"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Biser.DecoderV1.GetCollection``1(System.Func{``0},System.Collections.Generic.IList{``0},System.Boolean)">
-            <summary>
-            
-            </summary>
-            <typeparam name="K"></typeparam>
-            <param name="fk"></param>
-            <param name="lst"></param>
-            <param name="isNullChecked"></param>
-        </member>
-        <member name="M:Biser.DecoderV1.GetCollection``2(System.Func{``0},System.Func{``1},System.Collections.Generic.IDictionary{``0,``1},System.Boolean)">
-            <summary>
-            
-            </summary>
-            <typeparam name="K"></typeparam>
-            <typeparam name="V"></typeparam>
-            <param name="fk"></param>
-            <param name="fv"></param>
-            <param name="dict"></param>
-            <param name="isNullChecked"></param>
-        </member>
-        <member name="M:Biser.DecoderV1.JSGetLong">
-            <summary>
-             Javascript Biser decoder
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Biser.DecoderV1.JSGetString">
-            <summary>
-            Javascript Biser decoder
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Biser.DecoderV1.JSGetDouble">
-            <summary>
-             Javascript Biser decoder
-            </summary>
-            <returns></returns>
-        </member>
         <member name="F:Biser.Decoder.qb">
             <summary>
             Quantity of bytes needed to form latest varint
-            </summary>
-        </member>
-        <member name="F:Biser.Decoder.IsNull">
-            <summary>
-            true in case if object is null
             </summary>
         </member>
         <member name="M:Biser.Decoder.#ctor(System.Byte[])">
@@ -130,12 +52,6 @@
             
             </summary>
             <param name="encoded"></param>
-        </member>
-        <member name="M:Biser.Decoder.#ctor(Biser.Decoder,System.Boolean)">
-            <summary>
-            
-            </summary>
-            <param name="decoder"></param>
         </member>
         <member name="M:Biser.Decoder.CheckNull">
             <summary>
