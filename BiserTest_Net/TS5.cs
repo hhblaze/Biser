@@ -54,9 +54,15 @@ namespace BiserTest_Net
             }
             else
             {
-                decoder = new Biser.Decoder(extDecoder);
-                if (decoder.IsNull)
+
+                if (extDecoder.CheckNull())
                     return null;
+                else
+                    decoder = extDecoder;
+
+                //decoder = new Biser.Decoder(extDecoder);
+                //if (decoder.IsNull)
+                //    return null;
             }
 
             TS5 m = new TS5();  //!!!!!!!!!!!!!! change return type

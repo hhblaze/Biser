@@ -23,8 +23,8 @@ namespace Biser
         internal int encPos = -1;
 
         Decoder rootDecoder = null;
-        //bool externalDecoderExists = false;
-        //DecoderV1 activeDecoder = null; //the one who fills up collection
+        bool externalDecoderExists = false;
+        Decoder activeDecoder = null; //the one who fills up collection
 
         /// <summary>
         /// true in case if object is null
@@ -44,26 +44,26 @@ namespace Biser
             
 
             this.rootDecoder = this;
-            //this.activeDecoder = this;
+            this.activeDecoder = this;
                       
         }
 
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <param name="decoder"></param>
-        //public DecoderV1(DecoderV1 decoder, bool isCollection = false)
-        //{
-        //    this.rootDecoder = decoder.rootDecoder;
-        //    //externalDecoderExists = true;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="decoder"></param>
+        public Decoder(Decoder decoder, bool isCollection = false)
+        {
+            this.rootDecoder = decoder.rootDecoder;
+            externalDecoderExists = true;
 
-        //    if (!isCollection)
-        //    {
-        //        var prot = this.rootDecoder.GetDigit();
-        //        if (prot == 1)
-        //            IsNull = true;
-        //    }
-        //}
+            if (!isCollection)
+            {
+                var prot = this.rootDecoder.GetDigit();
+                if (prot == 1)
+                    IsNull = true;
+            }
+        }
 
 
         ulong GetDigit() //Gets next digit from the byte[] stream, this function works only from root decoder
@@ -75,12 +75,8 @@ namespace Biser
 
             while (true)
             {
-                //if (!this.activeDecoder.collectionIsFinished && this.activeDecoder.collectionShiftToPass < this.activeDecoder.collectionShift)
-                //    byteValue = this.activeDecoder.collectionBuffer[this.activeDecoder.collectionShiftToPass++];
-                if (coldeepcnt > 0 && !coldeep[coldeepcnt-1].collectionIsFinished && coldeep[coldeepcnt-1].collectionShiftToPass < coldeep[coldeepcnt-1].collectionShift)
-                {                  
-                    byteValue = coldeep[coldeepcnt-1].collectionBuffer[coldeep[coldeepcnt-1].collectionShiftToPass++];
-                }
+                if (!this.activeDecoder.collectionIsFinished && this.activeDecoder.collectionShiftToPass < this.activeDecoder.collectionShift)
+                    byteValue = this.activeDecoder.collectionBuffer[this.activeDecoder.collectionShiftToPass++];
                 else
                 {
                     encPos++;
@@ -108,12 +104,12 @@ namespace Biser
         }
 
 
-        //int collectionShift = 0;
-        ////int collectionPos = 0;
-        //int collectionShiftToPass = 0;
-        //byte[] collectionBuffer = new byte[3];
-        //bool collectionIsFinished = true;
-        ////int collectionLength = 0;
+        int collectionShift = 0;
+        int collectionPos = 0;
+        int collectionShiftToPass = 0;
+        byte[] collectionBuffer = new byte[3];
+        bool collectionIsFinished = true;
+        int collectionLength = 0;
 
         /// <summary>
         /// Is used for checking next collection on null, before getting one of the itterators.
@@ -131,68 +127,53 @@ namespace Biser
         /// <returns></returns>
         public IEnumerable<Decoder> GetCollection(bool isNullChecked = false)
         {
-
             ulong prot = 0;
             if (!isNullChecked)
                 prot = this.rootDecoder.GetDigit();
 
             if (prot == 0)
             {
+                collectionLength = (int)((uint)this.rootDecoder.GetDigit());
+                collectionPos = 0;
+                collectionShift = 0;
+                collectionShiftToPass = 0;
 
-                int collectionLength = (int)this.rootDecoder.GetDigit();
+                int cp = this.rootDecoder.encPos;
 
-                if (collectionLength != 0) //JS not noted change
+                if (this.rootDecoder.qb > 1)
                 {
-                    coldeepcnt++;
-                  
-                    int cp = this.rootDecoder.encPos;
-
-                    ch cdi = null;
-                    if (coldeep.Count < coldeepcnt)
-                    {
-                        cdi = new ch();
-                        coldeep.Add(cdi);
-                    }
-                    else
-                        cdi = coldeep[coldeepcnt - 1];
-
-                    if (this.rootDecoder.qb > 1)
-                    {
-                        cdi.collectionShiftToPass = 0;
-                        cdi.collectionShift = this.rootDecoder.qb - 1;
-                        this.rootDecoder.encPos = cp + collectionLength - cdi.collectionShift; //JS not noted change
-                        cdi.collectionBuffer = Read(cdi.collectionShift);
-                        this.rootDecoder.encPos = cp;                        
-                    }
-                    else
-                    {
-                        cdi.collectionShift = 0;
-                        cdi.collectionShiftToPass = 0;
-                    }
-
-
-                    cdi.collectionIsFinished = false;
-
-                    while (!cdi.collectionIsFinished)
-                    {
-                        yield return this;
-
-                        if ((this.rootDecoder.encPos - (cp - cdi.collectionShift)) == collectionLength)
-                        {
-                            cdi.collectionIsFinished = true;
-                            if (cdi.collectionShift > 0)
-                                this.rootDecoder.encPos += cdi.collectionShift;
-
-                            coldeepcnt--;
-                            break;
-                        }
-                    }
+                    collectionShift = this.rootDecoder.qb - 1;
+                    collectionShiftToPass = 0;
+                    this.rootDecoder.encPos = cp + collectionLength - 1;
+                    collectionBuffer = Read(collectionShift);
+                    this.rootDecoder.encPos = cp;
+                    collectionPos += collectionShift;
                 }
 
-                
+                collectionIsFinished = false;
+
+                Decoder oldDecoder = null;
+                if (externalDecoderExists)
+                {
+                    oldDecoder = this.rootDecoder.activeDecoder;
+                    this.rootDecoder.activeDecoder = this;
+                }
+
+                while (!collectionIsFinished)
+                {
+                    yield return this;
+
+                    if ((this.rootDecoder.encPos - (cp - collectionShift)) == collectionLength)
+                    {
+                        collectionIsFinished = true;
+                        if (collectionShift > 0)
+                            this.rootDecoder.encPos += collectionShift;
+                        if (externalDecoderExists)
+                            this.rootDecoder.activeDecoder = oldDecoder;
+                    }
+                }
             }
 
-            
         } //eof
 
         /// <summary>
@@ -226,82 +207,52 @@ namespace Biser
             GetCollection(fk, fv, dict, null, null, isNullChecked);
         }
 
-        List<ch> coldeep = new List<ch>();
-        int coldeepcnt = 0;
-
-        class ch
-        {
-            public int collectionShift = 0;
-            public int collectionShiftToPass = 0;
-            public byte[] collectionBuffer = new byte[3];
-            public bool collectionIsFinished = true;
-        }
-
         void GetCollection<K, V>(Func<K> fk, Func<V> fv, IDictionary<K, V> dict, IList<K> lst, ISet<K> set, bool isNullChecked = false)
         {
-            
             ulong prot = 0;
             if (!isNullChecked)
                 prot = this.rootDecoder.GetDigit();
-            
+
             if (prot == 0)
             {
-                
-
-                //if (!collectionIsFinished)
-                //{
-                //    DecoderV1 nDecoder = new DecoderV1(this, true);
-                //    nDecoder.GetCollection(fk, fv, dict, lst, set, isNullChecked);
-                //    return;
-                //}
-
-                int collectionLength = (int)this.rootDecoder.GetDigit();
-                if (collectionLength == 0) //JS not noted change
+                if (!collectionIsFinished)
                 {
-                    //collectionIsFinished = true;                    
+                    Decoder nDecoder = new Decoder(this, true);
+                    nDecoder.GetCollection(fk, fv, dict, lst, set, isNullChecked);
                     return;
                 }
 
-                coldeepcnt++;
-                //collectionPos = 0;
-                //collectionShift = 0;
-                //collectionShiftToPass = 0;
-
-                int cp = this.rootDecoder.encPos;
-
-                ch cdi = null;
-                if (coldeep.Count < coldeepcnt)
+                collectionLength = (int)((uint)this.rootDecoder.GetDigit());
+                if (collectionLength == 0) //JS not noted change
                 {
-                    cdi = new ch();
-                    coldeep.Add(cdi);
+                    collectionIsFinished = true;
+                    return;
                 }
-                else
-                    cdi = coldeep[coldeepcnt-1];
+                collectionPos = 0;
+                collectionShift = 0;
+                collectionShiftToPass = 0;
+              
+                int cp = this.rootDecoder.encPos;
 
                 if (this.rootDecoder.qb > 1)
                 {
-                    cdi.collectionShiftToPass = 0;
-                    cdi.collectionShift = this.rootDecoder.qb - 1;              
-                    this.rootDecoder.encPos = cp + collectionLength - cdi.collectionShift; //JS not noted change
-                    cdi.collectionBuffer = Read(cdi.collectionShift);
+                    collectionShift = this.rootDecoder.qb - 1;
+                    collectionShiftToPass = 0;
+                    //this.rootDecoder.encPos = cp + collectionLength - 1;
+                    this.rootDecoder.encPos = cp + collectionLength - collectionShift; //JS not noted change
+                    collectionBuffer = Read(collectionShift);
                     this.rootDecoder.encPos = cp;
-                                      //collectionPos += collectionShift;
+                    collectionPos += collectionShift;
                 }
-                else
+
+                collectionIsFinished = false;
+
+                Decoder oldDecoder = null;
+                if (externalDecoderExists)
                 {
-                    cdi.collectionShift = 0;
-                    cdi.collectionShiftToPass = 0;
+                    oldDecoder = this.rootDecoder.activeDecoder;
+                    this.rootDecoder.activeDecoder = this;
                 }
-                
-
-                cdi.collectionIsFinished = false;
-
-                //DecoderV1 oldDecoder = null;
-                //if (externalDecoderExists)
-                //{
-                //    oldDecoder = this.rootDecoder.activeDecoder;
-                //    this.rootDecoder.activeDecoder = this;
-                //}
 
                 while (true)
                 {
@@ -316,16 +267,13 @@ namespace Biser
                         dict.Add(fk(), fv());
 
 
-                    if ((this.rootDecoder.encPos - (cp - cdi.collectionShift)) == collectionLength)
+                    if ((this.rootDecoder.encPos - (cp - collectionShift)) == collectionLength)
                     {
-                        cdi.collectionIsFinished = true;
-                        if (cdi.collectionShift > 0)
-                            this.rootDecoder.encPos += cdi.collectionShift;
-
-                        coldeepcnt--;
-
-                        //if (externalDecoderExists)
-                        //    this.rootDecoder.activeDecoder = oldDecoder;
+                        collectionIsFinished = true;
+                        if (collectionShift > 0)
+                            this.rootDecoder.encPos += collectionShift;
+                        if (externalDecoderExists)
+                            this.rootDecoder.activeDecoder = oldDecoder;
                         break;
                     }
                 }

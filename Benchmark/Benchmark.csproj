@@ -32,9 +32,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Biser, Version=1.2.2018.222, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Biser.1.2.0\lib\net47\Biser.dll</HintPath>
-    </Reference>
     <Reference Include="protobuf-net, Version=2.3.7.0, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
       <HintPath>..\packages\protobuf-net.2.3.7\lib\net40\protobuf-net.dll</HintPath>
     </Reference>
@@ -60,6 +57,12 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Biser\Biser.csproj">
+      <Project>{095e58f4-b9c1-4032-a389-c2e5aee0bb60}</Project>
+      <Name>Biser</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -38,6 +38,12 @@ namespace Biser
             }
         }
 
+        public Encoder(IEncoder obj):
+            this(existingEncoder:null)
+        {
+            this.Add(obj);
+        }
+
         public byte[] Encode()
         {
             if (externalEncoderExists)

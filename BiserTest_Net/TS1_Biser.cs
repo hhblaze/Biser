@@ -141,11 +141,11 @@ namespace BiserTest_Net
                 {
                     case "P1":
                         m.P1 = decoder.GetInt();
-                        //m.P1 = decoder.Get(m.P1);
+                       
                         break;
                     case "P2":
                         m.P2 = decoder.GetInt();
-                        //m.P1 = decoder.Get(m.P2);
+                      
                         break;
                     case "P3":
                         m.P3 = decoder.GetDecimal();
@@ -399,7 +399,7 @@ namespace BiserTest_Net
 
                         break;
                     default:
-                        decoder.SkipValue();
+                        decoder.SkipValue(); //must be here
                         break;
                 }
             }
@@ -423,9 +423,14 @@ namespace BiserTest_Net
             }
             else
             {
-                decoder = new Biser.Decoder(extDecoder);
-                if (decoder.IsNull)
+                if (extDecoder.CheckNull())
                     return null;
+                else
+                    decoder = extDecoder;
+
+                //decoder = new Biser.Decoder(extDecoder);
+                //if (decoder.IsNull)
+                //    return null;
             }
 
             TS1 m = new TS1();  //!!!!!!!!!!!!!! change return type
@@ -475,6 +480,79 @@ namespace BiserTest_Net
 
             return m;
         }
+
+
+        //public static TS1 BiserDecodeV1(byte[] enc = null, Biser.DecoderV1 extDecoder = null) //!!!!!!!!!!!!!! change return type
+        //{
+        //    Biser.DecoderV1 decoder = null;
+        //    if (extDecoder == null)
+        //    {
+        //        if (enc == null || enc.Length == 0)
+        //            return null;
+        //        decoder = new Biser.DecoderV1(enc);
+        //        if (decoder.CheckNull())
+        //            return null;
+        //    }
+        //    else
+        //    {
+        //        if (extDecoder.CheckNull())
+        //            return null;
+        //        else
+        //            decoder = extDecoder;
+        //        //decoder = new Biser.DecoderV1(extDecoder);
+        //        //if (decoder.IsNull)
+        //        //    return null;
+        //    }
+
+        //    TS1 m = new TS1();  //!!!!!!!!!!!!!! change return type
+
+        //    m.P1 = decoder.GetInt();
+        //    m.P2 = decoder.GetInt();
+        //    m.P3 = decoder.GetDecimal();
+
+        //    m.P4 = decoder.CheckNull() ? null : new List<TS2>();
+        //    if (m.P4 != null)
+        //        decoder.GetCollection(() => { return TS2.BiserDecodeV1(null, decoder); }, m.P4, true);
+
+        //    m.P5 = decoder.CheckNull() ? null : new Dictionary<long, TS3>();
+        //    if (m.P5 != null)
+        //        decoder.GetCollection(() => {
+        //            return decoder.GetLong();
+        //        },
+        //            () => { return TS3.BiserDecodeV1(null, decoder); }, m.P5, true);
+
+        //    m.P6 = decoder.CheckNull() ? null : new Dictionary<uint, List<TS3>>();
+        //    if (m.P6 != null)
+        //        decoder.GetCollection(
+        //            () => { return decoder.GetUInt(); },
+        //            () =>
+        //            {
+        //                var iList = decoder.CheckNull() ? null : new List<TS3>();
+        //                if (iList != null)
+        //                {
+        //                    decoder.GetCollection(() => { return TS3.BiserDecodeV1(extDecoder: decoder); }, iList, true);
+        //                }
+        //                return iList;
+        //            },
+        //            m.P6, true);
+
+        //    m.P7 = TS2.BiserDecodeV1(extDecoder: decoder);
+
+        //    m.P8 = decoder.CheckNull() ? null : new List<Tuple<string, byte[], TS3>>();
+        //    if (m.P8 != null)
+        //        decoder.GetCollection
+        //            (() => {
+        //                return new Tuple<string, byte[], TS3>
+        //           (decoder.GetString(),
+        //           decoder.GetByteArray(),
+        //           TS3.BiserDecodeV1(null, decoder));
+        //            }, m.P8, true);
+
+        //    m.P9 = new Tuple<float, TS2, TS3, decimal?>
+        //        (decoder.GetFloat(), TS2.BiserDecodeV1(null, decoder), TS3.BiserDecodeV1(null, decoder), decoder.GetDecimal_NULL());
+
+        //    return m;
+        //}
 
         //public T BiserJsonDecoder<T>(Biser.JsonDecoder decoder)
         //{

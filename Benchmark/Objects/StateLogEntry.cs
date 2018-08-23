@@ -110,6 +110,42 @@ namespace Benchmark.Objects
             return m;
         }
 
+        //public static StateLogEntry BiserDecodeV1(byte[] enc = null, Biser.DecoderV1 extDecoder = null) //!!!!!!!!!!!!!! change return type
+        //{
+        //    Biser.DecoderV1 decoder = null;
+        //    if (extDecoder == null)
+        //    {
+        //        if (enc == null || enc.Length == 0)
+        //            return null;
+        //        decoder = new Biser.DecoderV1(enc);
+        //        if (decoder.CheckNull())
+        //            return null;
+        //    }
+        //    else
+        //    {
+        //        if (extDecoder.CheckNull())
+        //            return null;
+        //        else
+        //            decoder = extDecoder;
+
+        //        //decoder = new Biser.Decoder(extDecoder);
+        //        //if (decoder.IsNull)
+        //        //    return null;
+        //    }
+
+        //    StateLogEntry m = new StateLogEntry();  //!!!!!!!!!!!!!! change return type
+
+        //    m.Term = decoder.GetULong();
+        //    m.Index = decoder.GetULong();
+        //    m.Data = decoder.GetByteArray();
+        //    m.IsCommitted = decoder.GetBool();
+        //    m.PreviousStateLogId = decoder.GetULong();
+        //    m.PreviousStateLogTerm = decoder.GetULong();
+        //    m.RedirectId = decoder.GetULong();
+
+        //    return m;
+        //}
+
         #endregion
     }
 }

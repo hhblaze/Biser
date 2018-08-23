@@ -19,6 +19,8 @@ namespace BiserTest_Net
     {
         static void Main(string[] args)
         {
+            TestDecodeV1();
+            return;
             //var jsres = NetJSON.NetJSON.Serialize((int)12); //12
             //var ojsres = NetJSON.NetJSON.Deserialize<int>(jsres);
 
@@ -245,7 +247,7 @@ namespace BiserTest_Net
             
             var jsts1d1 = TS1.BiserJsonDecode(wow1, null, new JsonSettings { DateFormat = JsonSettings.DateTimeStyle.Default });
 
-            //TestJSONv1();
+            //TestJSONv1();            
             //StreamReader sr=new StreamReader("",Encoding.UTF8)
             //StreamWriter sw=new StreamWriter()
             Console.WriteLine("Press to start test");
@@ -631,6 +633,64 @@ namespace BiserTest_Net
             }
 
 
+        }
+
+        static void TestDecodeV1()
+        {
+            TS3 ts3 = new TS3()
+            {
+                P1 = "dsf",
+                P2 = 45,
+                P3 = DateTime.UtcNow
+            };
+
+            var xl=new List<TS3>();
+            for (int i = 0; i < 10; i++)
+                xl.Add(ts3);
+
+            TS2 ts2 = new TS2()
+            {
+                P1 = 17,
+                P2 = 45.7,
+                //P3 = new List<TS3> { ts3, ts3 },
+                P3 = xl,
+                P4 = ts3,
+                P5 = 47
+            };
+
+            TS1 ts1 = new TS1()
+            {
+                P1 = 12,
+                P2 = 17,
+                P3 = 478.5879m,
+                P4 = new List<TS2> { ts2, ts2 },
+                P5 = new Dictionary<long, TS3> {
+                        { 1, new TS3{ P1 = "t1" } },
+                        { 2, new TS3{ P1 = "t2" } },
+                        { 3, new TS3{ P1 = "t3" } }
+                    },
+                P6 = new Dictionary<uint, List<TS3>> {
+                        { 1, new List<TS3>{ new TS3 { P1 = "h1" }, new TS3 { P1 = "h2" }, new TS3 { P1 = "h3", P3 = DateTime.UtcNow } } },
+                        { 2, new List<TS3>{ new TS3 { P1 = "h2" }, new TS3 { P1 = "h2" }, new TS3 { P1 = "h4" } } },
+                        { 3, new List<TS3>{ new TS3 { P1 = "h3" }, new TS3 { P1 = "h2" }, new TS3 { P1 = "h5" } } },
+                        { 4, new List<TS3>{ new TS3 { P1 = "h4" }, new TS3 { P1 = "h2" }, new TS3 { P1 = "h6" } } }
+                    },
+                P7 = new TS2 { P1 = -789 },
+                P8 = new List<Tuple<string, byte[], TS3>> {
+                        new Tuple<string, byte[], TS3>("tt1",new byte[] { 1,2,3},new TS3 { P1 = "z1" }),
+                        new Tuple<string, byte[], TS3>("tt2",new byte[] { 3,2,3},new TS3 { P1 = "z2" }),
+                        new Tuple<string, byte[], TS3>("tt3",new byte[] { 4,2,3},new TS3 { P1 = "z3" }),
+                    },
+                P9 = new Tuple<float, TS2, TS3, decimal?>(-.8f, new TS2 { P2 = 45 }, new TS3 { P2 = 12 }, -58.8m)
+            };
+            
+            var bt1 = new Biser.Encoder(ts1).Encode();
+            
+            var ts1a = TS1.BiserDecode(bt1);
+
+            var jsonSet = new JsonSettings() { DateFormat = JsonSettings.DateTimeStyle.ISO };
+            var str = new JsonEncoder(ts1, jsonSet).GetJSON();
+            var ts1b = TS1.BiserJsonDecode(str, settings: jsonSet);
         }
 
         static void TestJSONv1()
