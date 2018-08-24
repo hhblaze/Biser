@@ -22,15 +22,6 @@ namespace Biser
         //MemoryStream ms = null;
         internal int encPos = -1;
 
-        //Decoder rootDecoder = null;
-        //bool externalDecoderExists = false;
-        //DecoderV1 activeDecoder = null; //the one who fills up collection
-
-        ///// <summary>
-        ///// true in case if object is null
-        ///// </summary>
-        //public bool IsNull = false;
-
         /// <summary>
         /// 
         /// </summary>
@@ -42,28 +33,7 @@ namespace Biser
             if (encoded == null || encoded.Length == 0)
                 return;
             
-
-            //this.rootDecoder = this;
-            //this.activeDecoder = this;
-                      
         }
-
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <param name="decoder"></param>
-        //public DecoderV1(DecoderV1 decoder, bool isCollection = false)
-        //{
-        //    this.rootDecoder = decoder.rootDecoder;
-        //    //externalDecoderExists = true;
-
-        //    if (!isCollection)
-        //    {
-        //        var prot = this.GetDigit();
-        //        if (prot == 1)
-        //            IsNull = true;
-        //    }
-        //}
 
 
         ulong GetDigit() //Gets next digit from the byte[] stream, this function works only from root decoder
@@ -75,8 +45,7 @@ namespace Biser
 
             while (true)
             {
-                //if (!this.activeDecoder.collectionIsFinished && this.activeDecoder.collectionShiftToPass < this.activeDecoder.collectionShift)
-                //    byteValue = this.activeDecoder.collectionBuffer[this.activeDecoder.collectionShiftToPass++];
+                
                 if (coldeepcnt > 0 && !coldeep[coldeepcnt-1].collectionIsFinished && coldeep[coldeepcnt-1].collectionShiftToPass < coldeep[coldeepcnt-1].collectionShift)
                 {                  
                     byteValue = coldeep[coldeepcnt-1].collectionBuffer[coldeep[coldeepcnt-1].collectionShiftToPass++];
@@ -107,14 +76,6 @@ namespace Biser
             return bt;
         }
 
-
-        //int collectionShift = 0;
-        ////int collectionPos = 0;
-        //int collectionShiftToPass = 0;
-        //byte[] collectionBuffer = new byte[3];
-        //bool collectionIsFinished = true;
-        ////int collectionLength = 0;
-
         /// <summary>
         /// Is used for checking next collection on null, before getting one of the itterators.
         /// </summary>
@@ -141,7 +102,7 @@ namespace Biser
 
                 int collectionLength = (int)this.GetDigit();
 
-                if (collectionLength != 0) //JS not noted change
+                if (collectionLength > 0) //JS not noted change
                 {
                     coldeepcnt++;
                   
@@ -175,6 +136,7 @@ namespace Biser
 
                     while (!cdi.collectionIsFinished)
                     {
+
                         yield return this;
 
                         if ((this.encPos - (cp - cdi.collectionShift)) == collectionLength)
@@ -212,6 +174,13 @@ namespace Biser
             GetCollection(fk, fk, null, null, set,  isNullChecked);
         }
 
+#if NET35
+            public interface ISet<T> : IEnumerable<T>
+            {               
+                bool Add(T item);
+            }
+#endif
+
         /// <summary>
         /// 
         /// </summary>
@@ -247,26 +216,14 @@ namespace Biser
             if (prot == 0)
             {
                 
-
-                //if (!collectionIsFinished)
-                //{
-                //    DecoderV1 nDecoder = new DecoderV1(this, true);
-                //    nDecoder.GetCollection(fk, fv, dict, lst, set, isNullChecked);
-                //    return;
-                //}
-
                 int collectionLength = (int)this.GetDigit();
                 if (collectionLength == 0) //JS not noted change
-                {
-                    //collectionIsFinished = true;                    
+                {                                 
                     return;
                 }
 
                 coldeepcnt++;
-                //collectionPos = 0;
-                //collectionShift = 0;
-                //collectionShiftToPass = 0;
-
+               
                 int cp = this.encPos;
 
                 ch cdi = null;
@@ -295,14 +252,7 @@ namespace Biser
                 
 
                 cdi.collectionIsFinished = false;
-
-                //DecoderV1 oldDecoder = null;
-                //if (externalDecoderExists)
-                //{
-                //    oldDecoder = this.activeDecoder;
-                //    this.activeDecoder = this;
-                //}
-
+                
                 while (true)
                 {
                     if(dict == null)
@@ -324,8 +274,6 @@ namespace Biser
 
                         coldeepcnt--;
 
-                        //if (externalDecoderExists)
-                        //    this.activeDecoder = oldDecoder;
                         break;
                     }
                 }

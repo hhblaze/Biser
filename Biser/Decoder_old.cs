@@ -171,6 +171,7 @@ namespace Biser
                         if (externalDecoderExists)
                             this.rootDecoder.activeDecoder = oldDecoder;
                     }
+
                 }
             }
 

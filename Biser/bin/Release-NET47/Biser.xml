@@ -47,22 +47,11 @@
             Quantity of bytes needed to form latest varint
             </summary>
         </member>
-        <member name="F:Biser.Decoder.IsNull">
-            <summary>
-            true in case if object is null
-            </summary>
-        </member>
         <member name="M:Biser.Decoder.#ctor(System.Byte[])">
             <summary>
             
             </summary>
             <param name="encoded"></param>
-        </member>
-        <member name="M:Biser.Decoder.#ctor(Biser.Decoder,System.Boolean)">
-            <summary>
-            
-            </summary>
-            <param name="decoder"></param>
         </member>
         <member name="M:Biser.Decoder.CheckNull">
             <summary>

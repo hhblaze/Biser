@@ -54,7 +54,9 @@ namespace Biser
             {
                 byte[] res = null;
                 res = ms.ToArray();
+#if !NETPORTABLE
                 ms.Close();
+#endif  
                 ms.Dispose();
                 return res;
             }
