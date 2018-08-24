@@ -17,12 +17,12 @@ namespace Benchmark
             t1();
             /*
            Start
-                  Protobuf obj length: 22
-                  Biser obj length: 17
-                  Protobuf encode: 891 ms
-                  Protobuf decode: 1242 ms
-                  Biser encode: 523 ms
-                  Biser decode: 410 ms
+				Protobuf obj length: 22
+				Biser obj length: 17
+				Protobuf encode: 1160 ms
+				Protobuf decode: 1536 ms
+				Biser encode: 384 ms
+				Biser decode: 205 ms
            Press any key
            */
 
@@ -30,12 +30,12 @@ namespace Benchmark
             t2();
             /*
            Start
-               Protobuf obj length: 28
-               Biser obj length: 20
-               Protobuf encode: 1377 ms
-               Protobuf decode: 1613 ms
-               Biser encode: 588 ms
-               Biser decode: 577 ms
+				Protobuf obj length: 28
+				Biser obj length: 20
+				Protobuf encode: 1336 ms
+				Protobuf decode: 1793 ms
+				Biser encode: 449 ms
+				Biser decode: 263 ms
            Press any key
             */
 
