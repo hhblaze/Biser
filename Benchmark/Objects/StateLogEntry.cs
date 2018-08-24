@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MessagePack;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +10,7 @@ namespace Benchmark.Objects
     /// <summary>
     /// It's an operational class from https://github.com/hhblaze/Raft.Net/blob/master/Raft/StateMachine/StateLogEntry.cs
     /// </summary>
+    [MessagePackObject]
     [ProtoBuf.ProtoContract]
     public class StateLogEntry : Biser.IEncoder, Biser.IJsonEncoder
     {
@@ -22,41 +24,48 @@ namespace Benchmark.Objects
         /// <summary>
         /// 
         /// </summary>  
+        [Key(0)]
         [ProtoBuf.ProtoMember(1, IsRequired = true)]
         public ulong Term { get; set; }
 
         /// <summary>
         /// 
-        /// </summary>        
+        /// </summary>    
+        [Key(1)]
         [ProtoBuf.ProtoMember(2, IsRequired = true)]
         public ulong Index { get; set; }
 
         /// <summary>
         /// 
         /// </summary> 
+        [Key(2)]
         [ProtoBuf.ProtoMember(3, IsRequired = true)]
         public byte[] Data { get; set; }
 
         /// <summary>
         /// If value is committed by Leader
-        /// </summary>        
+        /// </summary>   
+        [Key(3)]
         [ProtoBuf.ProtoMember(4, IsRequired = true)]
         public bool IsCommitted { get; set; }
 
         /// <summary>
         /// Out of protobuf
-        /// </summary>        
+        /// </summary>  
+        [Key(4)]
         [ProtoBuf.ProtoMember(5, IsRequired = true)]
         public ulong PreviousStateLogId = 0;
         /// <summary>
         /// Out of protobuf
         /// </summary>    
+        [Key(5)]
         [ProtoBuf.ProtoMember(6, IsRequired = true)]
         public ulong PreviousStateLogTerm = 0;
 
         /// <summary>
         /// RedirectId
         /// </summary>
+        [Key(6)]
         [ProtoBuf.ProtoMember(7, IsRequired = true)]
         public ulong RedirectId = 0;
         

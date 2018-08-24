@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Benchmark.Objects;
+using MessagePack;
 
 namespace Benchmark
 {
@@ -15,31 +16,35 @@ namespace Benchmark
             Console.WriteLine("Start");
              
             t1();
-             
+
             /*
              Protobuf v.2.3.17
              NetJSON v.1.2.5
              Biser v.1.7
+             MessagePack 1.7.3.4
              */
 
             /*
            Start
-                Protobuf obj length: 22
+               Protobuf obj length: 22
                 Biser Binary obj length: 17
                 NetJson obj length: 129
                 Biser Json obj length: 129
+                Message Pack obj length: 20
 
-                Protobuf encode: 1184 ms
-                Protobuf decode: 1569 ms
-                Biser Binary encode: 396 ms
-                Biser Binary decode: 209 ms
-                NetJson encode: 1350 ms
-                NetJson decode: 1902 ms
-                Biser Json encode: 2266 ms
-                Biser Json decode: 3659 ms
+                Protobuf encode: 1237 ms
+                Protobuf decode: 1525 ms
+                Biser Binary encode: 402 ms
+                Biser Binary decode: 207 ms
+                NetJson encode: 1314 ms
+                NetJson decode: 1839 ms
+                Biser Json encode: 2265 ms
+                Biser Json decode: 3552 ms
+                MessagePack encode: 223 ms
+                MessagePack decode: 182 ms
            Press any key
-           */    
-                
+           */
+
 
             t2();
             /*
@@ -48,15 +53,18 @@ namespace Benchmark
                 Biser Binary obj length: 20
                 NetJson obj length: 182
                 Biser Json obj length: 182
+                Message Pack obj length: 23
 
-                Protobuf encode: 1367 ms
-                Protobuf decode: 1909 ms
-                Biser Binary encode: 464 ms
-                Biser Binary decode: 271 ms
-                NetJson encode: 1687 ms
-                NetJson decode: 2383 ms
-                Biser Json encode: 2871 ms
-                Biser Json decode: 4748 ms
+                Protobuf encode: 1418 ms
+                Protobuf decode: 1810 ms
+                Biser Binary encode: 473 ms
+                Biser Binary decode: 269 ms
+                NetJson encode: 1634 ms
+                NetJson decode: 2353 ms
+                Biser Json encode: 2821 ms
+                Biser Json decode: 4717 ms
+                MessagePack encode: 279 ms
+                MessagePack decode: 241 ms
            Press any key
             */
 
@@ -121,6 +129,11 @@ namespace Benchmark
             var bjss = new Biser.JsonEncoder(obj).GetJSON();
             Console.WriteLine($"Biser Json obj length: {System.Text.Encoding.UTF8.GetBytes(bjss).Length}");
             var bbjss = StateLogEntry.BiserJsonDecode(bjss);
+
+            //Message Pack
+            var mBt = MessagePackSerializer.Serialize(obj);
+            Console.WriteLine($"Message Pack obj length: {mBt.Length}");
+            var mc2 = MessagePackSerializer.Deserialize<StateLogEntry>(mBt);
 
             Console.WriteLine("");
 
@@ -200,6 +213,25 @@ namespace Benchmark
             Console.WriteLine($"Biser Json decode: {sw.ElapsedMilliseconds} ms");
             sw.Reset();
 
+
+            sw.Start();
+            for (int i = 0; i < 1000000; i++)
+            {
+                mBt = MessagePackSerializer.Serialize(obj);
+            }
+            sw.Stop();
+            Console.WriteLine($"MessagePack encode: {sw.ElapsedMilliseconds} ms");
+            sw.Reset();
+
+            sw.Start();
+            for (int i = 0; i < 1000000; i++)
+            {
+                mc2 = MessagePackSerializer.Deserialize<StateLogEntry>(mBt);
+            }
+            sw.Stop();
+            Console.WriteLine($"MessagePack decode: {sw.ElapsedMilliseconds} ms");
+            sw.Reset();
+
         }
 
         static void t2()
@@ -265,6 +297,11 @@ namespace Benchmark
             var bjss = new Biser.JsonEncoder(obj).GetJSON();
             Console.WriteLine($"Biser Json obj length: {System.Text.Encoding.UTF8.GetBytes(bjss).Length}");
             var bbjss = StateLogEntrySuggestion.BiserJsonDecode(bjss);
+
+            //Message Pack
+            var mBt = MessagePackSerializer.Serialize(obj);
+            Console.WriteLine($"Message Pack obj length: {mBt.Length}");
+            var mc2 = MessagePackSerializer.Deserialize<StateLogEntrySuggestion>(mBt);
 
             Console.WriteLine("");
 
@@ -343,6 +380,24 @@ namespace Benchmark
             }
             sw.Stop();
             Console.WriteLine($"Biser Json decode: {sw.ElapsedMilliseconds} ms");
+            sw.Reset();
+
+            sw.Start();
+            for (int i = 0; i < 1000000; i++)
+            {
+                mBt = MessagePackSerializer.Serialize(obj);
+            }
+            sw.Stop();
+            Console.WriteLine($"MessagePack encode: {sw.ElapsedMilliseconds} ms");
+            sw.Reset();
+
+            sw.Start();
+            for (int i = 0; i < 1000000; i++)
+            {
+                mc2 = MessagePackSerializer.Deserialize<StateLogEntrySuggestion>(mBt);
+            }
+            sw.Stop();
+            Console.WriteLine($"MessagePack decode: {sw.ElapsedMilliseconds} ms");
             sw.Reset();
 
         }

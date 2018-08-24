@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MessagePack;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +10,7 @@ namespace Benchmark.Objects
     /// <summary>
     /// It's an operational class from https://github.com/hhblaze/Raft.Net/blob/master/Raft/Objects/StateLogEntrySuggestion.cs
     /// </summary>
+    [MessagePackObject]
     [ProtoBuf.ProtoContract]
     public class StateLogEntrySuggestion : Biser.IEncoder, Biser.IJsonEncoder
     {
@@ -20,12 +22,15 @@ namespace Benchmark.Objects
         /// <summary>
         /// Current leader TermId, must be always included
         /// </summary> 
+        [Key(0)]
         [ProtoBuf.ProtoMember(1, IsRequired = true)]
         public ulong LeaderTerm { get; set; }
 
+        [Key(1)]
         [ProtoBuf.ProtoMember(2, IsRequired = true)]
         public StateLogEntry StateLogEntry { get; set; }
 
+        [Key(2)]
         [ProtoBuf.ProtoMember(3, IsRequired = true)]
         public bool IsCommitted { get; set; } = false;
 
