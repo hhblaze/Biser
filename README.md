@@ -4,7 +4,7 @@
 [![NuGet Badge](https://buildstats.info/nuget/Biser)](https://www.nuget.org/packages/Biser/)
 [![Image of Build](https://img.shields.io/badge/Powered%20by-tiesky.com-1883F5.svg)](http://tiesky.com)
 
-Cross-platform binary serializer for .NET dotnet family and [javascript](https://github.com/hhblaze/Biser#biser-as-a-cross-platform-serializer).  
+Cross-platform binary serializer for .NET dotnet family and [javascript](https://docs.google.com/document/d/e/2PACX-1vQa3C506Esw3Fkroj4OA5erGOHEZpAtnXcQQ90R0w1wnFqO_16CH0dUfBJZt_ppB15ykoZWI9eR8KcG/pub#id.8cf9hq1iypk9.  
 Cross-platform [JSON](https://docs.google.com/document/d/e/2PACX-1vQa3C506Esw3Fkroj4OA5erGOHEZpAtnXcQQ90R0w1wnFqO_16CH0dUfBJZt_ppB15ykoZWI9eR8KcG/pub#id.yqadcf2f2moz) serializer for .NET dotnet family.
 
 - Doesn't use reflection inside, only managed code, perfectly works in [MONO WASM](https://github.com/aspnet/Blazor) and [CoreRT](https://github.com/dotnet/corert) 
@@ -14,7 +14,7 @@ From the other side needs a bit of effort for setting up transformation map for 
 - Has custom encoding possibilities of any complexity.
 - Different encoding/decoding scenarios for one object are supported.
 - Thread safe. No need to "warm up" serializing/encoding entities.
-- Experimantally serialized binary objects can be exchanged with javascript ([documentation](https://github.com/hhblaze/Biser#biser-as-a-cross-platform-serializer)).
+- Experimantally serialized binary objects can be exchanged with javascript ([documentation](https://docs.google.com/document/d/e/2PACX-1vQa3C506Esw3Fkroj4OA5erGOHEZpAtnXcQQ90R0w1wnFqO_16CH0dUfBJZt_ppB15ykoZWI9eR8KcG/pub#id.8cf9hq1iypk9)).
 
 Integrated part of [DBreeze database](https://github.com/hhblaze/DBreeze), used in [Raft.NET](https://github.com/hhblaze/Raft.Net)
 
