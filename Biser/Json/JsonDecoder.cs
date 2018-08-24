@@ -76,7 +76,7 @@ namespace Biser
                     break;
                 }
 
-            }
+            } 
 
             return ret;
         }
@@ -86,8 +86,12 @@ namespace Biser
             if (checkNull && CheckNull())
                 return null;
             bool start = false;
-            
+
+#if NET35
+                        sb.Length = 0;
+#else
             sb.Clear();
+#endif
 
             while (true)
             {
@@ -119,9 +123,13 @@ namespace Biser
         {
             if (checkNull && CheckNull())
                 return null;
-            bool start = false;  
-            
+            bool start = false;
+
+#if NET35
+                        sb.Length = 0;
+#else
             sb.Clear();
+#endif
 
             while (true)
             {
@@ -254,7 +262,11 @@ namespace Biser
         {
             if (checkNull && CheckNull())
                 return null;
+#if NET35
+                        sb.Length = 0;
+#else
             sb.Clear();
+#endif
 
             bool state = false; //0 - before strting, 1 - inSTring
             while (true)
@@ -282,7 +294,7 @@ namespace Biser
                         return String.Empty;
                     else if (c == '\"')
                         state = true;
-
+                   
                     continue;
                 }
 
@@ -423,7 +435,11 @@ namespace Biser
                     /*"\/Date(13257180000000000)\/"*/
                     s = GetStr(false);
                     // StringBuilder dsb = new StringBuilder();
+#if NET35
+                        sb.Length = 0;
+#else
                     sb.Clear();
+#endif
                     for (int i = 6; i < s.Length - 2;i++)
                         sb.Append(s[i]);
                     //v = Convert.ToUInt64(s.Substring(0, s.Length - 2).Replace("/Date(", "")) / 10000;
@@ -531,13 +547,15 @@ namespace Biser
         public bool GetBool()
         {
             var v = GetBoolean(false);
-            return v.Equals("true", StringComparison.OrdinalIgnoreCase) ? true : false;
+            return v[0] == 't' ? true : v[0] == 'f' ? false : v.Equals("true", StringComparison.OrdinalIgnoreCase) ? true : false;
+            //return v.Equals("true", StringComparison.OrdinalIgnoreCase) ? true : false;
         }
 
         public bool? GetBool_NULL()
         {
             var v = GetBoolean(true);
-            return v == null ? null : (bool?)(v.Equals("true",StringComparison.OrdinalIgnoreCase) ? true : false);
+            return v == null ? null : (bool?)(v[0] == 't' ? true : v[0] == 'f' ? false : v.Equals("true", StringComparison.OrdinalIgnoreCase) ? true : false);
+            //return v == null ? null : (bool?)(v.Equals("true",StringComparison.OrdinalIgnoreCase) ? true : false);
         }
 
         public sbyte GetSByte()

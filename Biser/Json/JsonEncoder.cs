@@ -51,6 +51,7 @@ namespace Biser
           
             sb.Append("\"");
             sb.Append(str.Replace("\"", "\\\""));
+            
             //foreach (var ch in str)
             //{
             //    if (ch == '\"')
