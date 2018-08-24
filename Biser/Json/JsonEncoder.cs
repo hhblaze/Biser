@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Biser
@@ -33,23 +34,29 @@ namespace Biser
         void AddProp(string str)
         {
             if(lastchar != '{' && lastchar != '[' && lastchar != ',')
-                sb.Append(",");
+                sb.Append(",\"");
+            else
+                sb.Append("\"");
 
-            AddStr(str);
-            sb.Append(":");
+            sb.Append(str.Replace("\"", "\\\""));
+            sb.Append("\":");
+            //AddStr(str);
+            //sb.Append(":");
             lastchar = ':';
         }
 
+
         void AddStr(string str)
         {
+          
             sb.Append("\"");
-            foreach (var ch in str)
-            {
-                if (ch == '\"')
-                    sb.Append('\\');
-                sb.Append(ch);
-            }
-
+            sb.Append(str.Replace("\"", "\\\""));
+            //foreach (var ch in str)
+            //{
+            //    if (ch == '\"')
+            //        sb.Append('\\');
+            //    sb.Append(ch);
+            //}            
             sb.Append("\"");
         }
 
@@ -701,7 +708,11 @@ namespace Biser
 
         public JsonEncoder Add(bool val)
         {
-            sb.Append(val.ToString().ToLower());
+            if (val)
+                sb.Append("true");
+            else
+                sb.Append("false");
+            //sb.Append(val.ToString().ToLower());
             return this;
             //return Add(null, val);
         }
@@ -710,7 +721,11 @@ namespace Biser
         {
             if (!String.IsNullOrEmpty(propertyName))
                 AddProp(propertyName);
-            sb.Append(val.ToString().ToLower());
+            //sb.Append(val.ToString().ToLower());
+            if (val)
+                sb.Append("true");
+            else
+                sb.Append("false");
             return this;
         }
 
@@ -722,7 +737,11 @@ namespace Biser
                 return this;
             }
 
-            sb.Append(val.ToString().ToLower());
+            //sb.Append(val.ToString().ToLower());
+            if (val.Value)
+                sb.Append("true");
+            else
+                sb.Append("false");
             return this;
             //return Add(null, val);
         }
@@ -743,7 +762,11 @@ namespace Biser
                 return this;
             }
 
-            sb.Append(val.ToString().ToLower());
+            //sb.Append(val.ToString().ToLower());
+            if (val.Value)
+                sb.Append("true");
+            else
+                sb.Append("false");
             return this;
         }
 

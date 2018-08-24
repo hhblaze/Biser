@@ -15,7 +15,7 @@ namespace Benchmark
             Console.WriteLine("Start");
              
             t1();
-
+             
             /*
              Protobuf v.2.3.17
              NetJSON v.1.2.5
@@ -35,10 +35,10 @@ namespace Benchmark
                 Biser Binary decode: 209 ms
                 NetJson encode: 1350 ms
                 NetJson decode: 1902 ms
-                Biser Json encode: 2400 ms
+                Biser Json encode: 2266 ms
                 Biser Json decode: 3659 ms
            Press any key
-           */
+           */    
 
 
             t2();
@@ -55,7 +55,7 @@ namespace Benchmark
                 Biser Binary decode: 271 ms
                 NetJson encode: 1687 ms
                 NetJson decode: 2383 ms
-                Biser Json encode: 3191 ms
+                Biser Json encode: 2871 ms
                 Biser Json decode: 4748 ms
            Press any key
             */
@@ -81,7 +81,7 @@ namespace Benchmark
                 Biser Binary decode: 209 ms
                 NetJson encode: 1350 ms
                 NetJson decode: 1902 ms
-                Biser Json encode: 2400 ms
+                Biser Json encode: 2266 ms
                 Biser Json decode: 3659 ms
            Press any key
            */
@@ -217,7 +217,7 @@ namespace Benchmark
                 Biser Binary decode: 271 ms
                 NetJson encode: 1687 ms
                 NetJson decode: 2383 ms
-                Biser Json encode: 3191 ms
+                Biser Json encode: 2871 ms
                 Biser Json decode: 4748 ms
             Press any key
              */
