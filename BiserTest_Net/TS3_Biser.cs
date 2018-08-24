@@ -102,7 +102,7 @@ namespace BiserTest_Net
                         m.P3 = decoder.GetDateTime();
                         break;
                     default:
-                        decoder.SkipValue();
+                        decoder.SkipValue(); //Must be here
                         break;
                 }
             }

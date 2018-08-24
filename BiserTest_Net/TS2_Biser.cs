@@ -128,44 +128,13 @@ namespace BiserTest_Net
                         m.P5 = decoder.GetUInt_NULL();
                         break;
                     default:
-                        decoder.SkipValue();
+                        decoder.SkipValue(); //Must be here
                         break;
                 }
             }
             return m;
 
-            //while (true)
-            //{
-            //    switch (decoder.GetProperty())
-            //    {
-            //        case "P1":
-            //            m.P1 = decoder.GetLong();
-            //            break;
-            //        case "P2":
-            //            m.P2 = decoder.GetDouble();
-            //            break;
-            //        case "P3":
-            //            m.P3 = decoder.CheckNull() ? null : new List<TS3>();
-            //            if (m.P3 != null)
-            //                decoder.GetCollection(
-            //                           () => { return TS3.BiserJsonDecode(null, decoder); }, m.P3, true);                       
-            //            break;
-            //        case "P4":
-            //            m.P4 = TS3.BiserJsonDecode(null, decoder);
-            //            break;
-            //        case "P5":
-            //            m.P5 = decoder.GetUInt_NULL();
-            //            break;
-            //        default:
-            //            return m;
-            //    }
-
-            //}
         }//eof
 
-        //public T BiserJsonDecoder<T>(Biser.JsonDecoder decoder)
-        //{
-        //    return (T)(object)TS2.BiserJsonDecode(null, decoder, null);
-        //}
     }
 }
