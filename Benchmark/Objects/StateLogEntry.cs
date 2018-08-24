@@ -10,7 +10,7 @@ namespace Benchmark.Objects
     /// It's an operational class from https://github.com/hhblaze/Raft.Net/blob/master/Raft/StateMachine/StateLogEntry.cs
     /// </summary>
     [ProtoBuf.ProtoContract]
-    public class StateLogEntry : Biser.IEncoder
+    public class StateLogEntry : Biser.IEncoder, Biser.IJsonEncoder
     {
         public StateLogEntry()
         {
@@ -113,42 +113,70 @@ namespace Benchmark.Objects
 
             return m;
         }
+        public void BiserJsonEncode(Biser.JsonEncoder encoder)
+        {            
+            encoder.Add("Term", this.Term);
+            encoder.Add("Index", this.Index);
+            encoder.Add("Data", this.Data);
+            encoder.Add("IsCommitted", this.IsCommitted);
+            encoder.Add("PreviousStateLogId", this.PreviousStateLogId);
+            encoder.Add("PreviousStateLogTerm", this.PreviousStateLogTerm);
+            encoder.Add("RedirectId", this.RedirectId);
 
-        //public static StateLogEntry BiserDecodeV1(byte[] enc = null, Biser.DecoderV1 extDecoder = null) //!!!!!!!!!!!!!! change return type
-        //{
-        //    Biser.DecoderV1 decoder = null;
-        //    if (extDecoder == null)
-        //    {
-        //        if (enc == null || enc.Length == 0)
-        //            return null;
-        //        decoder = new Biser.DecoderV1(enc);
-        //        if (decoder.CheckNull())
-        //            return null;
-        //    }
-        //    else
-        //    {
-        //        if (extDecoder.CheckNull())
-        //            return null;
-        //        else
-        //            decoder = extDecoder;
+        }
 
-        //        //decoder = new Biser.Decoder(extDecoder);
-        //        //if (decoder.IsNull)
-        //        //    return null;
-        //    }
+        public static StateLogEntry BiserJsonDecode(string enc = null, Biser.JsonDecoder extDecoder = null, Biser.JsonSettings settings = null) //!!!!!!!!!!!!!! change return type
+        {
+            Biser.JsonDecoder decoder = null;
 
-        //    StateLogEntry m = new StateLogEntry();  //!!!!!!!!!!!!!! change return type
+            if (extDecoder == null)
+            {
+                if (enc == null || String.IsNullOrEmpty(enc))
+                    return null;
+                decoder = new Biser.JsonDecoder(enc, settings);
+                if (decoder.CheckNull())
+                    return null;
+            }
+            else
+            {
+                //JSONSettings of the existing decoder will be used
+                decoder = extDecoder;
+            }
 
-        //    m.Term = decoder.GetULong();
-        //    m.Index = decoder.GetULong();
-        //    m.Data = decoder.GetByteArray();
-        //    m.IsCommitted = decoder.GetBool();
-        //    m.PreviousStateLogId = decoder.GetULong();
-        //    m.PreviousStateLogTerm = decoder.GetULong();
-        //    m.RedirectId = decoder.GetULong();
+            StateLogEntry m = new StateLogEntry();  //!!!!!!!!!!!!!! change return type
+            foreach (var props in decoder.GetDictionary<string>())
+            {
+                switch (props)
+                {
+                    case "Term":
+                        m.Term = decoder.GetULong();
+                        break;
+                    case "Index":
+                        m.Index = decoder.GetULong();
+                        break;
+                    case "Data":
+                        m.Data = decoder.GetByteArray();
+                        break;
+                    case "IsCommitted":
+                        m.IsCommitted = decoder.GetBool();
+                        break;
+                    case "PreviousStateLogId":
+                        m.PreviousStateLogId = decoder.GetULong();
+                        break;
+                    case "PreviousStateLogTerm":
+                        m.PreviousStateLogTerm = decoder.GetULong();
+                        break;
+                    case "RedirectId":
+                        m.RedirectId = decoder.GetULong();
+                        break;
+                    default:
+                        decoder.SkipValue(); //Must be here
+                        break;
+                }
+            }
+            return m;
 
-        //    return m;
-        //}
+        }//eof
 
         #endregion
     }

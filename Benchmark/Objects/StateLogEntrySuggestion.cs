@@ -10,7 +10,7 @@ namespace Benchmark.Objects
     /// It's an operational class from https://github.com/hhblaze/Raft.Net/blob/master/Raft/Objects/StateLogEntrySuggestion.cs
     /// </summary>
     [ProtoBuf.ProtoContract]
-    public class StateLogEntrySuggestion : Biser.IEncoder
+    public class StateLogEntrySuggestion : Biser.IEncoder, Biser.IJsonEncoder
     {
         public StateLogEntrySuggestion()
         {
@@ -74,37 +74,55 @@ namespace Benchmark.Objects
             return m;
         }
 
-        //public static StateLogEntrySuggestion BiserDecodeV1(byte[] enc = null, Biser.DecoderV1 extDecoder = null) //!!!!!!!!!!!!!! change return type
-        //{
-        //    Biser.DecoderV1 decoder = null;
-        //    if (extDecoder == null)
-        //    {
-        //        if (enc == null || enc.Length == 0)
-        //            return null;
-        //        decoder = new Biser.DecoderV1(enc);
-        //        if (decoder.CheckNull())
-        //            return null;
-        //    }
-        //    else
-        //    {
-        //        if (extDecoder.CheckNull())
-        //            return null;
-        //        else
-        //            decoder = extDecoder;
+        public void BiserJsonEncode(Biser.JsonEncoder encoder)
+        {
+            encoder.Add("LeaderTerm", this.LeaderTerm);
+            encoder.Add("StateLogEntry", StateLogEntry);            
+            encoder.Add("IsCommitted", this.IsCommitted);            
 
-        //        //decoder = new Biser.Decoder(extDecoder);
-        //        //if (decoder.IsNull)
-        //        //    return null;
-        //    }
+        }
 
-        //    StateLogEntrySuggestion m = new StateLogEntrySuggestion();  //!!!!!!!!!!!!!! change return type
+        public static StateLogEntrySuggestion BiserJsonDecode(string enc = null, Biser.JsonDecoder extDecoder = null, Biser.JsonSettings settings = null) //!!!!!!!!!!!!!! change return type
+        {
+            Biser.JsonDecoder decoder = null;
 
-        //    m.LeaderTerm = decoder.GetULong();
-        //    m.StateLogEntry = StateLogEntry.BiserDecodeV1(extDecoder: decoder);
-        //    m.IsCommitted = decoder.GetBool();
+            if (extDecoder == null)
+            {
+                if (enc == null || String.IsNullOrEmpty(enc))
+                    return null;
+                decoder = new Biser.JsonDecoder(enc, settings);
+                if (decoder.CheckNull())
+                    return null;
+            }
+            else
+            {
+                //JSONSettings of the existing decoder will be used
+                decoder = extDecoder;
+            }
 
-        //    return m;
-        //}
+            StateLogEntrySuggestion m = new StateLogEntrySuggestion();  //!!!!!!!!!!!!!! change return type
+            foreach (var props in decoder.GetDictionary<string>())
+            {
+                switch (props)
+                {
+                    case "LeaderTerm":
+                        m.LeaderTerm = decoder.GetULong();
+                        break;
+                    case "StateLogEntry":
+                        m.StateLogEntry = StateLogEntry.BiserJsonDecode(null,decoder);
+                        break;
+                    case "IsCommitted":
+                        m.IsCommitted = decoder.GetBool();
+                        break;
+                    default:
+                        decoder.SkipValue(); //Must be here
+                        break;
+                }
+            }
+            return m;
+
+        }//eof
+
         #endregion
     }
 }

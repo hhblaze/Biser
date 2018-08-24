@@ -15,14 +15,28 @@ namespace Benchmark
             Console.WriteLine("Start");
              
             t1();
+
+            /*
+             Protobuf v.2.3.17
+             NetJSON v.1.2.5
+             Biser v.1.7
+             */
+
             /*
            Start
-				Protobuf obj length: 22
-				Biser obj length: 17
-				Protobuf encode: 1160 ms
-				Protobuf decode: 1536 ms
-				Biser encode: 384 ms
-				Biser decode: 205 ms
+                Protobuf obj length: 22
+                Biser Binary obj length: 17
+                NetJson obj length: 129
+                Biser Json obj length: 129
+
+                Protobuf encode: 1184 ms
+                Protobuf decode: 1569 ms
+                Biser Binary encode: 396 ms
+                Biser Binary decode: 209 ms
+                NetJson encode: 1350 ms
+                NetJson decode: 1902 ms
+                Biser Json encode: 2400 ms
+                Biser Json decode: 3659 ms
            Press any key
            */
 
@@ -30,12 +44,19 @@ namespace Benchmark
             t2();
             /*
            Start
-				Protobuf obj length: 28
-				Biser obj length: 20
-				Protobuf encode: 1336 ms
-				Protobuf decode: 1793 ms
-				Biser encode: 449 ms
-				Biser decode: 263 ms
+                Protobuf obj length: 28
+                Biser Binary obj length: 20
+                NetJson obj length: 182
+                Biser Json obj length: 182
+
+                Protobuf encode: 1367 ms
+                Protobuf decode: 1909 ms
+                Biser Binary encode: 464 ms
+                Biser Binary decode: 271 ms
+                NetJson encode: 1687 ms
+                NetJson decode: 2383 ms
+                Biser Json encode: 3191 ms
+                Biser Json decode: 4748 ms
            Press any key
             */
 
@@ -49,12 +70,19 @@ namespace Benchmark
         {
             /*
            Start
-				Protobuf obj length: 22
-				Biser obj length: 17
-				Protobuf encode: 1160 ms
-				Protobuf decode: 1536 ms
-				Biser encode: 384 ms
-				Biser decode: 205 ms
+                Protobuf obj length: 22
+                Biser Binary obj length: 17
+                NetJson obj length: 129
+                Biser Json obj length: 129
+
+                Protobuf encode: 1184 ms
+                Protobuf decode: 1569 ms
+                Biser Binary encode: 396 ms
+                Biser Binary decode: 209 ms
+                NetJson encode: 1350 ms
+                NetJson decode: 1902 ms
+                Biser Json encode: 2400 ms
+                Biser Json decode: 3659 ms
            Press any key
            */
 
@@ -72,6 +100,8 @@ namespace Benchmark
                 Term = 99
             };
 
+            Console.WriteLine("t1----------------------------------");
+
             //Protobuf. Warming up, getting length
             var pBt = obj.SerializeProtobuf();
             Console.WriteLine($"Protobuf obj length: {pBt.Length}");
@@ -79,8 +109,20 @@ namespace Benchmark
 
             //Biser. Getting length
             var bBt = new Biser.Encoder().Add(obj).Encode();
-            Console.WriteLine($"Biser obj length: {bBt.Length}");            
+            Console.WriteLine($"Biser Binary obj length: {bBt.Length}");            
             var bObj = StateLogEntry.BiserDecode(bBt);
+
+            //NetJson. Getting length
+            var njss = NetJSON.NetJSON.Serialize(obj);
+            Console.WriteLine($"NetJson obj length: {System.Text.Encoding.UTF8.GetBytes(njss).Length}");
+            var bnjss = NetJSON.NetJSON.Deserialize<StateLogEntry>(njss);
+
+            //Biser Json. Getting length
+            var bjss = new Biser.JsonEncoder(obj).GetJSON();
+            Console.WriteLine($"Biser Json obj length: {System.Text.Encoding.UTF8.GetBytes(bjss).Length}");
+            var bbjss = StateLogEntry.BiserJsonDecode(bjss);
+
+            Console.WriteLine("");
 
             byte[] tbt = null;
             StateLogEntry tobj = null;
@@ -109,7 +151,7 @@ namespace Benchmark
                 tbt = new Biser.Encoder().Add(obj).Encode();
             }
             sw.Stop();
-            Console.WriteLine($"Biser encode: {sw.ElapsedMilliseconds} ms");
+            Console.WriteLine($"Biser Binary encode: {sw.ElapsedMilliseconds} ms");
             sw.Reset();
 
             sw.Start();
@@ -118,7 +160,44 @@ namespace Benchmark
                 tobj = StateLogEntry.BiserDecode(bBt);
             }
             sw.Stop();
-            Console.WriteLine($"Biser decode: {sw.ElapsedMilliseconds} ms");
+            Console.WriteLine($"Biser Binary decode: {sw.ElapsedMilliseconds} ms");
+            sw.Reset();
+
+            sw.Start();
+            for (int i = 0; i < 1000000; i++)
+            {
+                njss = NetJSON.NetJSON.Serialize(obj);
+            }
+            sw.Stop();
+            Console.WriteLine($"NetJson encode: {sw.ElapsedMilliseconds} ms");
+            sw.Reset();
+
+            sw.Start();
+            for (int i = 0; i < 1000000; i++)
+            {
+                bnjss = NetJSON.NetJSON.Deserialize<StateLogEntry>(njss);
+            }
+            sw.Stop();
+            Console.WriteLine($"NetJson decode: {sw.ElapsedMilliseconds} ms");
+            sw.Reset();
+
+
+            sw.Start();
+            for (int i = 0; i < 1000000; i++)
+            {
+                bjss = new Biser.JsonEncoder(obj).GetJSON();
+            }
+            sw.Stop();
+            Console.WriteLine($"Biser Json encode: {sw.ElapsedMilliseconds} ms");
+            sw.Reset();
+
+            sw.Start();
+            for (int i = 0; i < 1000000; i++)
+            {
+                bbjss = StateLogEntry.BiserJsonDecode(bjss);
+            }
+            sw.Stop();
+            Console.WriteLine($"Biser Json decode: {sw.ElapsedMilliseconds} ms");
             sw.Reset();
 
         }
@@ -126,15 +205,22 @@ namespace Benchmark
         static void t2()
         {
             /*
-           Start
-				Protobuf obj length: 28
-				Biser obj length: 20
-				Protobuf encode: 1336 ms
-				Protobuf decode: 1793 ms
-				Biser encode: 449 ms
-				Biser decode: 263 ms
-           Press any key
-            */
+            Start
+                Protobuf obj length: 28
+                Biser Binary obj length: 20
+                NetJson obj length: 182
+                Biser Json obj length: 182
+
+                Protobuf encode: 1367 ms
+                Protobuf decode: 1909 ms
+                Biser Binary encode: 464 ms
+                Biser Binary decode: 271 ms
+                NetJson encode: 1687 ms
+                NetJson decode: 2383 ms
+                Biser Json encode: 3191 ms
+                Biser Json decode: 4748 ms
+            Press any key
+             */
 
             System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
 
@@ -158,6 +244,8 @@ namespace Benchmark
                 StateLogEntry = sle
             };
 
+            Console.WriteLine("t2----------------------------------");
+
             //Protobuf. Warming up, getting length
             var pBt = obj.SerializeProtobuf();
             Console.WriteLine($"Protobuf obj length: {pBt.Length}");
@@ -165,10 +253,21 @@ namespace Benchmark
 
             //Biser. Getting length
             var bBt = new Biser.Encoder().Add(obj).Encode();
-            Console.WriteLine($"Biser obj length: {bBt.Length}");
+            Console.WriteLine($"Biser Binary obj length: {bBt.Length}");
             var bObj = StateLogEntry.BiserDecode(bBt);
 
-            
+            //NetJson. Getting length
+            var njss = NetJSON.NetJSON.Serialize(obj);
+            Console.WriteLine($"NetJson obj length: {System.Text.Encoding.UTF8.GetBytes(njss).Length}");
+            var bnjss = NetJSON.NetJSON.Deserialize<StateLogEntrySuggestion>(njss);
+
+            //Biser Json. Getting length
+            var bjss = new Biser.JsonEncoder(obj).GetJSON();
+            Console.WriteLine($"Biser Json obj length: {System.Text.Encoding.UTF8.GetBytes(bjss).Length}");
+            var bbjss = StateLogEntrySuggestion.BiserJsonDecode(bjss);
+
+            Console.WriteLine("");
+
             byte[] tbt = null;
             StateLogEntrySuggestion tobj = null;
 
@@ -196,7 +295,7 @@ namespace Benchmark
                 tbt = new Biser.Encoder().Add(obj).Encode();
             }
             sw.Stop();
-            Console.WriteLine($"Biser encode: {sw.ElapsedMilliseconds} ms");
+            Console.WriteLine($"Biser Binary encode: {sw.ElapsedMilliseconds} ms");
             sw.Reset();
 
             sw.Start();
@@ -205,7 +304,45 @@ namespace Benchmark
                 tobj = StateLogEntrySuggestion.BiserDecode(bBt);
             }
             sw.Stop();
-            Console.WriteLine($"Biser decode: {sw.ElapsedMilliseconds} ms");
+            Console.WriteLine($"Biser Binary decode: {sw.ElapsedMilliseconds} ms");
+            sw.Reset();
+
+
+            sw.Start();
+            for (int i = 0; i < 1000000; i++)
+            {
+                njss = NetJSON.NetJSON.Serialize(obj);
+            }
+            sw.Stop();
+            Console.WriteLine($"NetJson encode: {sw.ElapsedMilliseconds} ms");
+            sw.Reset();
+
+            sw.Start();
+            for (int i = 0; i < 1000000; i++)
+            {
+                bnjss = NetJSON.NetJSON.Deserialize<StateLogEntrySuggestion>(njss);
+            }
+            sw.Stop();
+            Console.WriteLine($"NetJson decode: {sw.ElapsedMilliseconds} ms");
+            sw.Reset();
+
+
+            sw.Start();
+            for (int i = 0; i < 1000000; i++)
+            {
+                bjss = new Biser.JsonEncoder(obj).GetJSON();
+            }
+            sw.Stop();
+            Console.WriteLine($"Biser Json encode: {sw.ElapsedMilliseconds} ms");
+            sw.Reset();
+
+            sw.Start();
+            for (int i = 0; i < 1000000; i++)
+            {
+                bbjss = StateLogEntrySuggestion.BiserJsonDecode(bjss);
+            }
+            sw.Stop();
+            Console.WriteLine($"Biser Json decode: {sw.ElapsedMilliseconds} ms");
             sw.Reset();
 
         }
