@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>Biser</id>
-        <version>1.7.0</version>
+        <version>1.8.0</version>
         <title>Biser.NET dotnet binary and JSON serializer</title>
         <authors>Alex Solovyov</authors>
         <owners>tiesky.com / Alex Solovyov</owners>
@@ -11,7 +11,7 @@
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>Biser.NET dotnet binary javascript and JSON serializer</description>
         <summary>Biser.NET dotnet binary javascript and JSON serializer</summary>
-        <releaseNotes>added javascript compatibility functions</releaseNotes>
+        <releaseNotes>JSON encoder fixing and opts</releaseNotes>
         <copyright>Copyright © 2018 tiesky.com / Alex Solovyov</copyright>
         <language>es-US</language>
         <tags>Biser protobuf JSON alternative dbreeze serializer binary serialization netcore netstandard net javascript framework</tags>
