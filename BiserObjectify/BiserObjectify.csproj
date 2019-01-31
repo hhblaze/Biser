@@ -4,16 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{794223CD-2EAC-438B-9378-3E5E5BEB7F39}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>BiserTest_Net</RootNamespace>
-    <AssemblyName>BiserTest_Net</AssemblyName>
+    <ProjectGuid>{360475E5-CBB3-4400-AD5C-65AEEE6F1C9D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BiserObjectify</RootNamespace>
+    <AssemblyName>BiserObjectify</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,7 +23,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -32,9 +31,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NetJSON, Version=1.2.9.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NetJSON.1.2.9\lib\net40\NetJSON.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -45,32 +41,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="Generator.cs" />
+    <Compile Include="JsonGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TS1.cs" />
-    <Compile Include="TS1_Biser.cs" />
-    <Compile Include="TS2.cs" />
-    <Compile Include="TS2_Biser.cs" />
-    <Compile Include="TS3.cs" />
-    <Compile Include="TS3_Biser.cs" />
-    <Compile Include="TS4.cs" />
-    <Compile Include="TS5.cs" />
-    <Compile Include="TS6.cs" />
-    <Compile Include="TS6_Biser.cs" />
+    <Compile Include="Properties\Resource1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resource1.resx</DependentUpon>
+    </Compile>
+    <Compile Include="StandardTypes.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-    <None Include="packages.config" />
+    <EmbeddedResource Include="Properties\Resource1.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource1.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BiserObjectify\BiserObjectify.csproj">
-      <Project>{360475e5-cbb3-4400-ad5c-65aeee6f1c9d}</Project>
-      <Name>BiserObjectify</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Biser\Biser.csproj">
-      <Project>{095e58f4-b9c1-4032-a389-c2e5aee0bb60}</Project>
-      <Name>Biser</Name>
-    </ProjectReference>
+    <Content Include="tf1.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

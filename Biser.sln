@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BiserTest_Net", "BiserTest_
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Benchmark", "Benchmark\Benchmark.csproj", "{2A28E987-E75E-4C7F-99EA-E82529CC12BB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BiserObjectify", "BiserObjectify\BiserObjectify.csproj", "{360475E5-CBB3-4400-AD5C-65AEEE6F1C9D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{2A28E987-E75E-4C7F-99EA-E82529CC12BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2A28E987-E75E-4C7F-99EA-E82529CC12BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2A28E987-E75E-4C7F-99EA-E82529CC12BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{360475E5-CBB3-4400-AD5C-65AEEE6F1C9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{360475E5-CBB3-4400-AD5C-65AEEE6F1C9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{360475E5-CBB3-4400-AD5C-65AEEE6F1C9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{360475E5-CBB3-4400-AD5C-65AEEE6F1C9D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

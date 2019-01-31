@@ -1,0 +1,50 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace {@NamespaceName}
+{
+
+public partial class {@ObjName} : Biser.IJsonEncoder
+{
+	public void BiserJsonEncode(Biser.JsonEncoder encoder)
+	{
+{@ContentJsonEncode}
+	}
+
+	public static {@ObjName} BiserJsonDecode(string enc = null, Biser.JsonDecoder extDecoder = null, Biser.JsonSettings settings = null)
+	{
+		Biser.JsonDecoder decoder = null;
+
+		if (extDecoder == null)
+		{
+			if (enc == null || String.IsNullOrEmpty(enc))
+				return null;
+			decoder = new Biser.JsonDecoder(enc, settings);
+			if (decoder.CheckNull())
+				return null;
+		}
+		else
+		{
+			//JSONSettings of the existing decoder will be used
+			decoder = extDecoder;
+		}
+
+		{@ObjName} m = new {@ObjName}();  
+		foreach (var props in decoder.GetDictionary<string>())
+		{
+			switch (props.ToLower())
+			{
+
+{@ContentJsonDecode}
+
+				default:
+					decoder.SkipValue();//MUST BE HERE
+					break;
+			}
+		}
+		return m;
+	}
+}
+
+
+}
