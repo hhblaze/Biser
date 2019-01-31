@@ -85,11 +85,11 @@ namespace BiserObjectify
                 var name = f.Name;
                 iType = f.PropertyType;//.FieldType;
                
-                sbJsonDecode.Append($"\t\t\t\tcase \"{name.ToLower()}\":\n");
+                sbJsonDecode.Append($"\n\t\t\t\tcase \"{name.ToLower()}\":");
                 UsedVars.Add($"m.{name}");
                 DecodeSingle(iType, sbJsonDecode, $"m.{name}", varCnt, ref varCntTotal, null);
                 varCnt = varCntTotal;
-                sbJsonDecode.Append("\n\t\t\t\t\tbreak;\n");
+                sbJsonDecode.Append("\n\t\t\t\t\tbreak;");
                
             }
 
@@ -130,8 +130,10 @@ namespace BiserObjectify
                 if(!UsedVars.Contains(varName))
                 {
                     UsedVars.Add(varName);
-                    sbJsonDecode.Append("var ");
+                    sbJsonDecode.Append("\nvar ");
                 }
+                else
+                    sbJsonDecode.Append("\n");
                 sbJsonDecode.Append($"{varName} = ");
 
                 if (StandardTypes.STypes.TryGetValue(iType, out var tf))
@@ -139,7 +141,7 @@ namespace BiserObjectify
                     sbJsonDecode.Append(tf.FGet);
                 }
 
-                sbJsonDecode.Append(";\n");
+                sbJsonDecode.Append(";");
             }
             else if (iType.IsArray)
             {
@@ -164,15 +166,18 @@ namespace BiserObjectify
                     if (!UsedVars.Contains(varName))
                     {
                         UsedVars.Add(varName);
-                        msb.Append("var ");
+                        msb.Append("\nvar ");
                     }
-                    msb.Append($"{varName} = decoder.CheckNull() ? null : new {{@45879846845}}();\n");
-                    msb.Append($"if({varName} != null){{\n");
+                    else
+                        msb.Append("\n");
+
+                    msb.Append($"{varName} = decoder.CheckNull() ? null : new {{@45879846845}}();");
+                    msb.Append($"\nif({varName} != null){{");
 
                     varCnt++;
                     varCntTotal++;
                     int pv1 = varCnt;
-                    msb.Append($"\tforeach(var el{pv1} in decoder.GetList()) {{\n");
+                    msb.Append($"\n\tforeach(var el{pv1} in decoder.GetList()) {{");
 
                     StringBuilder sbi = new StringBuilder();
                     varCnt++;
@@ -181,10 +186,10 @@ namespace BiserObjectify
                     DecodeSingle(iType, sbi, $"pvar{pv2}", varCnt, ref varCntTotal, myMapper);
                     msb.Append(sbi.ToString());
 
-                    msb.Append($"\t\t{varName}.Add(pvar{pv2});\n");
-                    msb.Append($"\t}}\n");
+                    msb.Append($"\n\t\t{varName}.Add(pvar{pv2});");
+                    msb.Append($"\n\t}}");
 
-                    msb.Append($"}}"); //eof if varname != null
+                    msb.Append($"\n}}"); //eof if varname != null
 
                     myMapper.Lst.Add(">");
 
@@ -219,15 +224,18 @@ namespace BiserObjectify
                     if (!UsedVars.Contains(varName))
                     {
                         UsedVars.Add(varName);
-                        msb.Append("var ");
+                        msb.Append("\nvar ");
                     }
-                    msb.Append($"{varName} = decoder.CheckNull() ? null : new {{@45879846845}}();\n");
-                    msb.Append($"if({varName} != null){{\n");
+                    else
+                        msb.Append("\n");
+
+                    msb.Append($"{varName} = decoder.CheckNull() ? null : new {{@45879846845}}();");
+                    msb.Append($"\nif({varName} != null){{");
 
                     varCnt++;
                     varCntTotal++;
                     int pv1 = varCnt;
-                    msb.Append($"\tforeach(var el{pv1} in decoder.GetDictionary<{kT}>()) {{\n");
+                    msb.Append($"\n\tforeach(var el{pv1} in decoder.GetDictionary<{kT}>()) {{");
 
                     StringBuilder sbi = new StringBuilder();
                     varCnt++;
@@ -237,11 +245,11 @@ namespace BiserObjectify
 
                     msb.Append(sbi.ToString());
 
-                    msb.Append($"\t\t{varName}.Add(el{pv1}, pvar{pv2});\n");
+                    msb.Append($"\n\t\t{varName}.Add(el{pv1}, pvar{pv2});");
 
-                    msb.Append($"\t}}\n");
+                    msb.Append($"\n\t}}");
 
-                    msb.Append($"}}"); //eof if varname != null
+                    msb.Append($"\n}}"); //eof if varname != null
 
                     myMapper.Lst.Add(">");
 
@@ -298,28 +306,29 @@ namespace BiserObjectify
 
                     // tuplSbi.Add(sbi.ToString().Substring(4)); //cutting 'var '
 
-                    //cutting 'var '  workaround
-                    var sbis = sbi.ToString();
-                    if (sbis.StartsWith("var "))
-                        sbis = sbis.Substring(4);
-                    tuplSbi.Add(sbis); 
+                    ////////cutting 'var '  workaround
+                    //////var sbis = sbi.ToString();
+                    //////if (sbis.StartsWith("var "))
+                    //////    sbis = sbis.Substring(4);
+                    //////tuplSbi.Add(sbis);
+                    tuplSbi.Add(sbi.ToString());
 
                 }
 
                 varCnt++;
                 varCntTotal++;
 
-                msb.Append($"\nforeach (var tupleProps{varCnt} in decoder.GetDictionary<string>()){{\n");
-                msb.Append($"\nswitch(tupleProps{varCnt}){{\n");
+                msb.Append($"\nforeach (var tupleProps{varCnt} in decoder.GetDictionary<string>()){{");
+                msb.Append($"\nswitch(tupleProps{varCnt}){{");
                 int elcnt = 0;
                 foreach (var el in tuplSbi)
                 {
                     elcnt++;
-                    msb.Append($"\ncase \"Item{elcnt}\":\n");
+                    msb.Append($"\ncase \"Item{elcnt}\":");
                     msb.Append(el);
                     msb.Append($"\nbreak;");
                 }
-                msb.Append("\n}}\n");
+                msb.Append("\n}}");
 
 
                 //if (mapper != null)
@@ -327,8 +336,11 @@ namespace BiserObjectify
                 if (!UsedVars.Contains(varName))
                 {
                     UsedVars.Add(varName);
-                    msb.Append("var ");
+                    msb.Append("\nvar ");
                 }
+                else
+                    msb.Append("\n");
+
                 msb.Append($"{varName} = new Tuple<{tupleType.ToString()}>(");
                 first = true;
 
@@ -340,7 +352,7 @@ namespace BiserObjectify
                         msb.Append(", ");
                     msb.Append($"pvar{el.Key}");
                 }
-                msb.Append(");\n");
+                msb.Append(");");
 
 
                 sbJsonDecode.Append(msb.ToString());
@@ -361,8 +373,10 @@ namespace BiserObjectify
                 if (!UsedVars.Contains(varName))
                 {
                     UsedVars.Add(varName);
-                    sbJsonDecode.Append("var ");
+                    sbJsonDecode.Append("\nvar ");
                 }
+                else
+                    sbJsonDecode.Append("\n");
 
                 sbJsonDecode.Append($"{varName} = ");
                 //sbJsonDecode.Append($"var {varName} = ");
@@ -377,7 +391,7 @@ namespace BiserObjectify
                 }
 
 
-                sbJsonDecode.Append(";\n");
+                sbJsonDecode.Append(";");
 
             }
 

@@ -24,19 +24,14 @@ public partial class {@ObjName} : Biser.IJsonEncoder
 				return null;
 		}
 		else
-		{
-			//JSONSettings of the existing decoder will be used
 			decoder = extDecoder;
-		}
 
 		{@ObjName} m = new {@ObjName}();  
 		foreach (var props in decoder.GetDictionary<string>())
 		{
 			switch (props.ToLower())
 			{
-
 {@ContentJsonDecode}
-
 				default:
 					decoder.SkipValue();//MUST BE HERE
 					break;

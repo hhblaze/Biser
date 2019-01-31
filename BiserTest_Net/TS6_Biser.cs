@@ -32,10 +32,7 @@ namespace BiserTest_Net
                     return null;
             }
             else
-            {
-                //JSONSettings of the existing decoder will be used
                 decoder = extDecoder;
-            }
 
             TS6 m = new TS6();
             foreach (var props in decoder.GetDictionary<string>())
@@ -45,15 +42,12 @@ namespace BiserTest_Net
 
                     case "p1":
                         m.P1 = decoder.GetString();
-
                         break;
                     case "p2":
                         m.P2 = decoder.GetInt();
-
                         break;
                     case "p3":
                         m.P3 = decoder.GetDateTime();
-
                         break;
                     case "p4":
                         m.P4 = decoder.CheckNull() ? null : new System.Collections.Generic.List<System.Collections.Generic.Dictionary<System.DateTime, Tuple<System.Int32, System.String>>>();
@@ -66,22 +60,17 @@ namespace BiserTest_Net
                                 {
                                     foreach (var el3 in decoder.GetDictionary<System.DateTime>())
                                     {
-
                                         System.Int32 pvar5 = 0;
                                         System.String pvar6 = null;
                                         foreach (var tupleProps7 in decoder.GetDictionary<string>())
                                         {
-
                                             switch (tupleProps7)
                                             {
-
                                                 case "Item1":
                                                     pvar5 = decoder.GetInt();
-
                                                     break;
                                                 case "Item2":
                                                     pvar6 = decoder.GetString();
-
                                                     break;
                                             }
                                         }
@@ -99,22 +88,17 @@ namespace BiserTest_Net
                         {
                             foreach (var el8 in decoder.GetDictionary<System.Int32>())
                             {
-
                                 System.Int32 pvar10 = 0;
                                 System.String pvar11 = null;
                                 foreach (var tupleProps12 in decoder.GetDictionary<string>())
                                 {
-
                                     switch (tupleProps12)
                                     {
-
                                         case "Item1":
                                             pvar10 = decoder.GetInt();
-
                                             break;
                                         case "Item2":
                                             pvar11 = decoder.GetString();
-
                                             break;
                                     }
                                 }
@@ -124,34 +108,26 @@ namespace BiserTest_Net
                         }
                         break;
                     case "p6":
-
                         System.Int32 pvar13 = 0;
                         System.String pvar14 = null;
                         Tuple<System.Collections.Generic.List<System.String>, System.DateTime> pvar15 = default(Tuple<System.Collections.Generic.List<System.String>, System.DateTime>);
                         foreach (var tupleProps16 in decoder.GetDictionary<string>())
                         {
-
                             switch (tupleProps16)
                             {
-
                                 case "Item1":
                                     pvar13 = decoder.GetInt();
-
                                     break;
                                 case "Item2":
                                     pvar14 = decoder.GetString();
-
                                     break;
                                 case "Item3":
-
-                                    System.Collections.Generic.List<System.String> pvar16 = default(System.Collections.Generic.List<System.String>);
+                                    System.Collections.Generic.List<System.String> pvar16 = null;
                                     System.DateTime pvar17 = default(DateTime);
                                     foreach (var tupleProps18 in decoder.GetDictionary<string>())
                                     {
-
                                         switch (tupleProps18)
                                         {
-
                                             case "Item1":
                                                 pvar16 = decoder.CheckNull() ? null : new System.Collections.Generic.List<System.String>();
                                                 if (pvar16 != null)
@@ -165,17 +141,14 @@ namespace BiserTest_Net
                                                 break;
                                             case "Item2":
                                                 pvar17 = decoder.GetDateTime();
-
                                                 break;
                                         }
                                     }
                                     pvar15 = new Tuple<System.Collections.Generic.List<System.String>, System.DateTime>(pvar16, pvar17);
-
                                     break;
                             }
                         }
                         m.P6 = new Tuple<System.Int32, System.String, Tuple<System.Collections.Generic.List<System.String>, System.DateTime>>(pvar13, pvar14, pvar15);
-
                         break;
                     case "p7":
                         m.P7 = decoder.CheckNull() ? null : new System.Collections.Generic.List<System.String>();
@@ -207,8 +180,6 @@ namespace BiserTest_Net
                             }
                         }
                         break;
-
-
                     default:
                         decoder.SkipValue();//MUST BE HERE
                         break;

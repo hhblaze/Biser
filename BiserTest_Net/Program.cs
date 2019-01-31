@@ -20,8 +20,8 @@ namespace BiserTest_Net
     {
         static void Main(string[] args)
         {
-            //BiserObjectify.Generator.Run(typeof(TS6), true, @"", true, true);
-            //return;
+            BiserObjectify.Generator.Run(typeof(TS6), true, @"", true, true);
+            return;
 
             TS6 t6 = new TS6()
             {

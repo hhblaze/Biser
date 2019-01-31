@@ -62,6 +62,8 @@ namespace BiserObjectify
         {
             if (STypes.TryGetValue(type, out var tf))
                 return tf.DefaultValue;
+            if (type.GetInterface("ICollection`1") != null)
+                return "null";
             return null;
         }
 
