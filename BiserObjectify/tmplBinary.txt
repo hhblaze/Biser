@@ -1,0 +1,39 @@
+﻿public Biser.Encoder BiserEncoder(Biser.Encoder existingEncoder = null)
+        {
+            Biser.Encoder encoder = new Biser.Encoder(existingEncoder);
+
+{@ContentEncode}
+
+            return encoder;
+        }
+
+
+        public static {@ObjName} BiserDecode(byte[] enc = null, Biser.Decoder extDecoder = null)
+        {
+            Biser.Decoder decoder = null;
+            if (extDecoder == null)
+            {
+                if (enc == null || enc.Length == 0)
+                    return null;
+                decoder = new Biser.Decoder(enc);
+				/*
+                if (decoder.CheckNull())
+                    return null;
+				*/
+            }
+            else
+            {
+                if (extDecoder.CheckNull())
+                    return null;
+                else
+                    decoder = extDecoder;
+            }
+
+            {@ObjName} m = new {@ObjName}(); 
+
+
+{@ContentDecode}
+
+
+			 return m;
+        }

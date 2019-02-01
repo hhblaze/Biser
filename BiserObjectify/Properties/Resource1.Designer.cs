@@ -61,9 +61,7 @@ namespace BiserObjectify.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to public partial class {@ObjName} : Biser.IJsonEncoder
-        ///{
-        ///	public void BiserJsonEncode(Biser.JsonEncoder encoder)
+        ///   Looks up a localized string similar to public void BiserJsonEncode(Biser.JsonEncoder encoder)
         ///	{
         ///{@ContentJsonEncode}
         ///	}
@@ -78,11 +76,67 @@ namespace BiserObjectify.Properties {
         ///				return null;
         ///			decoder = new Biser.JsonDecoder(enc, settings);
         ///			if (decoder.CheckNull())
-        ///				ret [rest of string was truncated]&quot;;.
+        ///				return null;
+        ///		}
+        ///		else
+        ///			decoder = extDecoder;
+        ///
+        ///		{@Ob [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string tf1 {
+        internal static string tmplBinary {
             get {
-                return ResourceManager.GetString("tf1", resourceCulture);
+                return ResourceManager.GetString("tmplBinary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to using System;
+        ///using System.Collections.Generic;
+        ///
+        ///namespace {@NamespaceName}
+        ///{
+        ///
+        ///	public partial class {@ObjName} : {@IfcJson} {@IfcComma1} {@IfcBinary}
+        ///	{
+        ///		{@ContentJson}
+        ///
+        ///		{@ContentBinary}
+        ///
+        ///	}
+        ///}.
+        /// </summary>
+        internal static string tmplBiserContainer {
+            get {
+                return ResourceManager.GetString("tmplBiserContainer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to public void BiserJsonEncode(Biser.JsonEncoder encoder)
+        ///	{
+        ///{@ContentJsonEncode}
+        ///	}
+        ///
+        ///	public static {@ObjName} BiserJsonDecode(string enc = null, Biser.JsonDecoder extDecoder = null, Biser.JsonSettings settings = null)
+        ///	{
+        ///		Biser.JsonDecoder decoder = null;
+        ///
+        ///		if (extDecoder == null)
+        ///		{
+        ///			if (enc == null || String.IsNullOrEmpty(enc))
+        ///				return null;
+        ///			decoder = new Biser.JsonDecoder(enc, settings);
+        ///			if (decoder.CheckNull())
+        ///				return null;
+        ///		}
+        ///		else
+        ///			decoder = extDecoder;
+        ///
+        ///		{@Ob [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string tmplJson {
+            get {
+                return ResourceManager.GetString("tmplJson", resourceCulture);
             }
         }
     }

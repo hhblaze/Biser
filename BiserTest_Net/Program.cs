@@ -20,14 +20,14 @@ namespace BiserTest_Net
     {
         static void Main(string[] args)
         {
-            BiserObjectify.Generator.Run(typeof(TS6), true, @"", true, true);
-            return;
+            //BiserObjectify.Generator.Run(typeof(TS6), true, @"", true, false);
+            //return;
 
             TS6 t6 = new TS6()
             {
-                P1 = "dsfs",
-                P2 = 456,
-                P3 = DateTime.UtcNow,
+                //P1 = "dsfs",
+                //P2 = 456,
+                //P3 = DateTime.UtcNow,
                 P4 = new List<Dictionary<DateTime, Tuple<int, string>>>
                     {
                         new Dictionary<DateTime, Tuple<int, string>>{
@@ -39,22 +39,68 @@ namespace BiserTest_Net
                             { DateTime.UtcNow.AddMinutes(-4), new Tuple<int, string>(15625,"pipfghec123") }
                         }
                     },
-                 P5 = new Dictionary<int, Tuple<int, string>> {
-                     { 12, new Tuple<int, string>(478,"dsffdf") },
-                     { 178, new Tuple<int, string>(5687,"sdfsd") }
-                 },
-                  P6=new Tuple<int, string, Tuple<List<string>, DateTime>>(445,"dsfdfgfgfg",new Tuple<List<string>, DateTime>(new List<string> {"a1","a2" },DateTime.Now.AddDays(58))),
-                   P7=new List<string> { "fgdfgrdfg", "dfgfdgdfg"},
-                    P8 = new Dictionary<int, List<string>> {
-                        { 34,new List<string> { "drtttz","ghhtht"} },
-                        { 4534,new List<string> { "dfgfghfgz","6546ghhtht"} }
-                    }
+                //P5 = new Dictionary<int, Tuple<int, string>> {
+                //     { 12, new Tuple<int, string>(478,"dsffdf") },
+                //     { 178, new Tuple<int, string>(5687,"sdfsd") }
+                // },
+                //P6 = new Tuple<int, string, Tuple<List<string>, DateTime>>(445, "dsfdfgfgfg", new Tuple<List<string>, DateTime>(new List<string> { "a1", "a2" }, DateTime.Now.AddDays(58))),
+                //P7 = new List<string> { "fgdfgrdfg", "dfgfdgdfg" },
+                //P8 = new Dictionary<int, List<string>> {
+                //        { 34,new List<string> { "drtttz","ghhtht"} },
+                //        { 4534,new List<string> { "dfgfghfgz","6546ghhtht"} }
+                //    },
+
+
+                //P13 = new List<List<int>> { new List<int> {12,43,54 }, new List<int> { 12, 43, 54 } }
+
+                P16 = new List<Dictionary<int, Tuple<int, string>>>
+                    {
+                        new Dictionary<int, Tuple<int, string>>{
+                            { 1, new Tuple<int, string>(12,"pipec") },
+                            { 2, new Tuple<int, string>(125,"pipec123") }
+                        },
+                        new Dictionary<int, Tuple<int, string>>{
+                            { 3, new Tuple<int, string>(17,"pihfpec") },
+                            { 4, new Tuple<int, string>(15625,"pipfghec123") }
+                        }
+                    },
             };
 
-            var jsonSet = new Biser.JsonSettings { DateFormat = Biser.JsonSettings.DateTimeStyle.ISO };
-            Biser.JsonEncoder enc = new Biser.JsonEncoder(t6, jsonSet);
-            string es = enc.GetJSON(Biser.JsonSettings.JsonStringStyle.Prettify);
-            var ot2 = TS6.BiserJsonDecode(es, settings: jsonSet);
+
+            //t6.P11 = new int[2][];
+            //t6.P11[0] = new int[3];
+            //t6.P11[1] = new int[3];
+            //t6.P11[0][0] = 12;
+            //t6.P11[0][1] = 14;
+            //t6.P11[1][0] = 125;
+            //t6.P11[1][2] = 19;
+
+            //t6.P12 = new int[2, 3, 4];
+            //t6.P12[0, 0, 0] = 12;
+            //t6.P12[0, 0, 1] = 13;
+            //t6.P12[0, 1, 0] = 14;
+            //t6.P12[0, 1, 1] = 15;
+            //t6.P12[1, 0, 0] = 16;
+            //t6.P12[1, 0, 1] = 17;
+
+
+            //Json test
+
+
+            //var njSer = NetJSON.NetJSON.Serialize(t6, new NetJSON.NetJSONSettings { DateFormat = NetJSON.NetJSONDateFormat.ISO });
+
+            //var jsonSet = new Biser.JsonSettings { DateFormat = Biser.JsonSettings.DateTimeStyle.ISO };
+            //Biser.JsonEncoder enc = new Biser.JsonEncoder(t6, jsonSet);
+            //string es = enc.GetJSON(Biser.JsonSettings.JsonStringStyle.Prettify);
+            //var ot2 = TS6.BiserJsonDecode(es, settings: jsonSet);
+
+
+            //Binary test
+
+
+
+            var enc = t6.BiserEncoder().Encode();
+            var t6n = TS6.BiserDecode(enc);
 
             return;
             TestDecodeV1();

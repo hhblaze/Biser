@@ -1,0 +1,14 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace {@NamespaceName}
+{
+
+	public partial class {@ObjName} : {@IfcJson} {@IfcComma1} {@IfcBinary}
+	{
+		{@ContentJson}
+
+		{@ContentBinary}
+
+	}
+}

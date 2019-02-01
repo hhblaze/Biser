@@ -22,7 +22,7 @@ namespace BiserObjectify
         string tmplEnc9 = "{ \"ITEMPROP\",()=>encoder.Add(";// PROP.ITEMPROP"; //PROP
         string tmplEnc9ending = ")},"; //PROP
 
-        public void Run(Type incomingType)
+        public string Run(Type incomingType)
         {
             var tf = incomingType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
 
@@ -40,7 +40,11 @@ namespace BiserObjectify
             foreach (var f in tf)
             {              
                 var name = f.Name;
-                iType = f.PropertyType;//.FieldType;              
+                iType = f.PropertyType;//.FieldType;      
+
+                if (iType == typeof(object))
+                    continue;
+
                 endings.Clear();              
 
                 if (iType.GetInterface("ITuple") != null)
@@ -84,7 +88,10 @@ namespace BiserObjectify
             {
                 var name = f.Name;
                 iType = f.PropertyType;//.FieldType;
-               
+
+                if (iType == typeof(object))
+                    continue;
+
                 sbJsonDecode.Append($"\n\t\t\t\tcase \"{name.ToLower()}\":");
                 UsedVars.Add($"m.{name}");
                 DecodeSingle(iType, sbJsonDecode, $"m.{name}", varCnt, ref varCntTotal, null);
@@ -94,14 +101,24 @@ namespace BiserObjectify
             }
 
             //JSON Final view
-            var nsLen = incomingType.FullName.Length - incomingType.Name.Length - 1;
-            sb.Append(Resource1.tf1.Replace("{@NamespaceName}", incomingType.FullName.Substring(0, nsLen)).Replace("{@ObjName}", incomingType.Name).Replace("{@ContentJsonEncode}", sbJsonEncode.ToString()).Replace("{@ContentJsonDecode}", sbJsonDecode.ToString()));
+            //var nsLen = incomingType.FullName.Length - incomingType.Name.Length - 1;
+            sb.Append(
+                Resource1.tmplJson
+                .ReplaceMultiple(new Dictionary<string, string> {
+                    {"{@ObjName}", incomingType.Name },
+                    { "{@ContentJsonEncode}", sbJsonEncode.ToString()},
+                    { "{@ContentJsonDecode}", sbJsonDecode.ToString()}
+                }));
+                //.Replace("{@ObjName}", incomingType.Name).Replace("{@ContentJsonEncode}", sbJsonEncode.ToString()).Replace("{@ContentJsonDecode}", sbJsonDecode.ToString()));
 
             var res = sb.ToString();
 
-            System.IO.File.WriteAllText(@"D:\Temp\1\TS6_Biser.cs", res);
+            //System.IO.File.WriteAllText(@"D:\Temp\1\TS6_Biser.cs", res);
+
             //Debug.WriteLine(res);
             //Console.WriteLine(res);
+
+            return res;
         }
 
        
@@ -145,7 +162,7 @@ namespace BiserObjectify
             }
             else if (iType.IsArray)
             {
-                throw new NotSupportedException();
+               // throw new NotSupportedException();
             }
             else if (iType.GetInterface("ICollection`1") != null)
             {
@@ -421,14 +438,47 @@ namespace BiserObjectify
             }
             else if (iType.IsArray)
             {
-                nest++; //???
+                //not yet implemented
+                //nest++; //???
 
-                sbJsonEncode.Append(tmplEnc7.Replace("RN", "r" + nest));
-                sbJsonEncode.Append("r" + nest);
-                endings.Add(tmplEnc7ending);
-                //nest++;
+                /*
+                  t6.P11 = new int[2][];
+    t6.P11[0] = new int[3];
+    t6.P11[1] = new int[3];
+    t6.P11[0][0] = 12;
+    t6.P11[0][1] = 14;
+    t6.P11[1][0] = 125;
+    t6.P11[1][2] = 19;
 
-                iType = iType.GetElementType();
+    t6.P12 = new int[2, 3, 4];
+
+    t6.P12[0, 0, 0] = 12;
+    t6.P12[0, 0, 1] = 13;
+    t6.P12[0, 1, 0] = 14;
+    t6.P12[0, 1, 1] = 15;
+    t6.P12[1, 0, 0] = 16;
+    t6.P12[1, 0, 1] = 17;
+
+
+
+    "P11":[[12,14,0],[125,0,19]],
+    "P12":[2,3,4,0,0,0,12,13,0,0,14,15,0,0,0,0,0,0,16,17,0,0,0,0],
+
+
+
+    t6.P12.Rank	3	int
+    t6.P11.Rank	1	int
+    t6.P11.LongLength	2	long
+    t6.P11[0].Rank	1	int
+    t6.P11[0].LongLength	3	long
+                 */
+
+                //sbJsonEncode.Append(tmplEnc7.Replace("RN", "r" + nest));
+                //sbJsonEncode.Append("r" + nest);
+                //endings.Add(tmplEnc7ending);
+                ////nest++;
+
+                //iType = iType.GetElementType();
             }
             else if (iType.GetInterface("ICollection`1") != null)
             {

@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace {@NamespaceName}
-{
-
-public partial class {@ObjName} : Biser.IJsonEncoder
-{
-	public void BiserJsonEncode(Biser.JsonEncoder encoder)
+﻿public void BiserJsonEncode(Biser.JsonEncoder encoder)
 	{
 {@ContentJsonEncode}
 	}
@@ -33,13 +25,9 @@ public partial class {@ObjName} : Biser.IJsonEncoder
 			{
 {@ContentJsonDecode}
 				default:
-					decoder.SkipValue();//MUST BE HERE
+					decoder.SkipValue();
 					break;
 			}
 		}
 		return m;
 	}
-}
-
-
-}

@@ -78,7 +78,9 @@ namespace BiserObjectify
                 idx = io;
             //var rio = type.FullName.IndexOf("?"); //-1
 
-            if (idx == Int32.MaxValue)
+            if (type.IsArray)
+                return type.FullName;
+            else if (idx == Int32.MaxValue)
                 return type.FullName;
             else
                 return type.FullName.Substring(0, idx);
