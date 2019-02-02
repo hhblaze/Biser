@@ -308,7 +308,7 @@ namespace BiserObjectify
                    
                     UsedVars.Add($"pvar{varCnt}");
 
-                    DecodeSingle(gta, sbi, $"pvar{varCnt}", varCnt, ref varCntTotal, myMapper);
+                    var varCntNew = DecodeSingle(gta, sbi, $"pvar{varCnt}", varCnt, ref varCntTotal, myMapper);
                                        
                     if (first)
                         first = false;
@@ -320,7 +320,7 @@ namespace BiserObjectify
                     if (defaultValue == null)
                         defaultValue = $"default({myMapper.PrepareContent()})";
                     msb.Append($"\n{myMapper.PrepareContent()} pvar{varCnt} = {defaultValue};");
-
+                    varCnt = varCntNew;
                     // tuplSbi.Add(sbi.ToString().Substring(4)); //cutting 'var '
 
                     ////////cutting 'var '  workaround
