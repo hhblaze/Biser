@@ -130,12 +130,18 @@ namespace BiserObjectify
                     }
                     else
                     { //else rank == 1 (jagged)
-                        varCnt++;
-                        sbEncode.Append($"\nencoder.Add({varName}, (r{varCnt}) => {{");
-                        EncodeSingle(iType.GetElementType(), sbEncode, "r" + varCnt, varCnt);
-                        sbEncode.Append($"}});");
+
+
+                        //not implemented must be represented as -> e.g. int[] must be List<int>
+                        //int[][] can be represented as //so can be represented as List<List<List<
+
+                        //implementation for list, but without initial count
+                        //varCnt++;
+                        //sbEncode.Append($"\nencoder.Add({varName}, (r{varCnt}) => {{");
+                        //EncodeSingle(iType.GetElementType(), sbEncode, "r" + varCnt, varCnt);
+                        //sbEncode.Append($"}});");
                     }
-                  
+
                     sbEncode.Append($"\n}}"); //eo if
                 }
             }
@@ -277,6 +283,8 @@ namespace BiserObjectify
                 else
                 {//jagged array
 
+                    //not implemented must be represented as -> e.g. int[] must be List<int>
+                    //int[][] can be represented as //so can be represented as List<List<List<
                 }
 
                 sbDecode.Append($"\n}}"); //eof decoder check NULL

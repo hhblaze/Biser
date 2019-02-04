@@ -38,9 +38,9 @@ namespace BiserTest_Net
 
         //public List<Dictionary<int, Tuple<int, string>>> P16 { get; set; }
 
-        //public int[] P17 { get; set; }
+        public int[] P17 { get; set; }
 
-        public List<int>[,,] P18 { get; set; }
+        //public List<int>[,,] P18 { get; set; }
 
     }
 

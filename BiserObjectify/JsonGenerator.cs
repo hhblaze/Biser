@@ -162,7 +162,9 @@ namespace BiserObjectify
             }
             else if (iType.IsArray)
             {
-               // throw new NotSupportedException();
+                // throw new NotSupportedException();
+
+                //not implemented must be represented as -> e.g. int[] must be List<int>
             }
             else if (iType.GetInterface("ICollection`1") != null)
             {
@@ -438,8 +440,10 @@ namespace BiserObjectify
             }
             else if (iType.IsArray)
             {
-                //not yet implemented
-                //nest++; //???
+                //not implemented must be represented as -> e.g. int[] must be List<int>
+                //Multidemensional arrays are represented in BinaryBiser and not supported directly by javascript JSON
+                //so can be represented as List<List<List<
+
 
                 /*
                   t6.P11 = new int[2][];
@@ -473,12 +477,6 @@ namespace BiserObjectify
     t6.P11[0].LongLength	3	long
                  */
 
-                //sbJsonEncode.Append(tmplEnc7.Replace("RN", "r" + nest));
-                //sbJsonEncode.Append("r" + nest);
-                //endings.Add(tmplEnc7ending);
-                ////nest++;
-
-                //iType = iType.GetElementType();
             }
             else if (iType.GetInterface("ICollection`1") != null)
             {
