@@ -13,14 +13,14 @@ namespace BiserObjectify
     {
         HashSet<string> UsedVars = new HashSet<string>();
 
-        string tmplEnc6 = "encoder.Add(\"PROP\", PROP"; //PROP
-        string tmplEnc6ending = ");\n"; //PROP        
-        string tmplEnc7 = ", (RN)=> { encoder.Add("; //PROP
-        string tmplEnc7ending = "); }"; //PROP
-        string tmplEnc8 = "encoder.Add(\"PROP\", PROP == null ? new Dictionary<string,Action>() : new Dictionary<string,Action>() {"; //PROP
-        string tmplEnc8ending = "});\n"; //PROP        
-        string tmplEnc9 = "{ \"ITEMPROP\",()=>encoder.Add(";// PROP.ITEMPROP"; //PROP
-        string tmplEnc9ending = ")},"; //PROP
+        //string tmplEnc6 = "encoder.Add(\"PROP\", PROP"; //PROP
+        //string tmplEnc6ending = ");\n"; //PROP        
+        //string tmplEnc7 = ", (RN)=> { encoder.Add("; //PROP
+        //string tmplEnc7ending = "); }"; //PROP
+        //string tmplEnc8 = "encoder.Add(\"PROP\", PROP == null ? new Dictionary<string,Action>() : new Dictionary<string,Action>() {"; //PROP
+        //string tmplEnc8ending = "});\n"; //PROP        
+        //string tmplEnc9 = "{ \"ITEMPROP\",()=>encoder.Add(";// PROP.ITEMPROP"; //PROP
+        //string tmplEnc9ending = ")},"; //PROP
 
         public string Run(Type incomingType)
         {
@@ -48,39 +48,9 @@ namespace BiserObjectify
                 if (iType == typeof(object))
                     continue;
 
-                //endings.Clear();              
-
-                //if (iType.GetInterface("ITuple") != null)
-                //{
-
-                //    sbEncode.Append(tmplEnc8.Replace("PROP", name));
-                //    int tn = 1;
-                //    foreach (var gta in iType.GetGenericArguments())
-                //    {
-                //        sbEncode.Append(tmplEnc9.Replace("ITEMPROP", "Item" + tn.ToString()));//.Replace("PROP", name));                                      
-                //        EncodeSingle(gta, sbEncode, name + ".Item" + tn.ToString(), 0, true);
-                //        sbEncode.Append(tmplEnc9ending);
-                //        tn++;
-                //    }
-
-                //    sbEncode.Append(tmplEnc8ending);
-                //    continue;
-                //}
-                //else
-                //{
-                //    sbEncode.Append(tmplEnc6.Replace("PROP", name));
-                //    endings.Add(tmplEnc6ending);
-                //}
-
                 EncodeSingle(iType, sbEncode, name, varCnt);
-
-                //for (int i = endings.Count - 1; i >= 0; i--)
-                //{
-                //    sbEncode.Append(endings[i]);
-                //}
             }
-
-
+            
 
             //Binary Decoder
             varCnt = 0;
@@ -131,14 +101,43 @@ namespace BiserObjectify
        /// <param name="varCnt"></param>
         void EncodeSingle(Type iType, StringBuilder sbEncode, string varName, int varCnt)
         {
-            if (iType == typeof(byte[]))
-            {
-                sbEncode.Append($"\nencoder.Add({varName});");
+            //if (iType == typeof(byte[]))
+            //{
+            //    sbEncode.Append($"\nencoder.Add({varName});");
                 
-            }
-            else if (iType.IsArray)
+            //}
+            //else 
+            if (iType.IsArray)
             {
-               //not implemented
+                if (iType == typeof(byte[]))
+                {
+                    sbEncode.Append($"\nencoder.Add({varName});");
+
+                }
+                else
+                {
+                    varCnt++;
+                    int lv = varCnt;
+                    sbEncode.Append($"\nif({varName} == null) \nencoder.Add((byte)1);\nelse {{");
+
+                    if(iType.GetArrayRank() > 1)
+                    {
+                        sbEncode.Append($"\nfor(int it{lv}=0; it{lv} < {varName}.Rank; it{lv}++)");
+                        sbEncode.Append($"\nencoder.Add({varName}.GetLength(it{lv}));");
+                        varCnt++;
+                        sbEncode.Append($"\nforeach(var el{varCnt} in {varName})");
+                        EncodeSingle(iType.GetElementType(), sbEncode, $"el{varCnt}", varCnt);
+                    }
+                    else
+                    { //else rank == 1 (jagged)
+                        varCnt++;
+                        sbEncode.Append($"\nencoder.Add({varName}, (r{varCnt}) => {{");
+                        EncodeSingle(iType.GetElementType(), sbEncode, "r" + varCnt, varCnt);
+                        sbEncode.Append($"}});");
+                    }
+                  
+                    sbEncode.Append($"\n}}"); //eo if
+                }
             }
             else if (iType.GetInterface("ICollection`1") != null)
             {              
@@ -216,7 +215,72 @@ namespace BiserObjectify
             }
             else if (iType.IsArray)
             {
-               // throw new NotSupportedException();
+                StringBuilder msb1 = new StringBuilder();
+                StringBuilder msb2 = new StringBuilder();
+                StringBuilder msb3 = new StringBuilder();
+
+                var myMapper = new MapperContent { };
+
+                if (mapper != null)
+                {
+                    mapper.Lst.Add(StandardTypes.GetCSharpTypeName(iType));
+                }
+
+                if (!UsedVars.Contains(varName))
+                {
+                    UsedVars.Add(varName);
+                    sbDecode.Append("\nvar ");
+                }
+                else
+                    sbDecode.Append("\n");
+                sbDecode.Append($"{varName} = null;");
+
+                sbDecode.Append($"\nif(!decoder.CheckNull()) {{");
+
+                if (iType.GetArrayRank() > 1)
+                {                  
+                    for (int i = 0; i < iType.GetArrayRank(); i++)
+                    {
+                        if (i > 0)
+                        {
+                            msb1.Append(", ");
+                            msb3.Append(", ");
+                        }
+
+                        msb1.Append("decoder.GetInt()");
+                        msb3.Append($"ard{i}");
+                        //---
+                        if (i == iType.GetArrayRank() - 1)
+                        {//last element
+                            msb2.Append($"\nfor(int ard{i} = 0; ard{i} < {varName}.GetLength({i}); ard{i}++) {{");
+                            varCnt++;
+                            varCntTotal++;
+                            UsedVars.Add($"{varName}[{msb3.ToString()}]");
+                            DecodeSingle(iType.GetElementType(), msb2, $"{varName}[{msb3.ToString()}]", varCnt, ref varCntTotal, myMapper); //myMapper
+                            msb2.Append($"\n}}");
+                        }
+                        else
+                        {
+                            msb2.Append($"\nfor(int ard{i} = 0; ard{i} < {varName}.GetLength({i}); ard{i}++)");
+                        }
+                    }
+                    sbDecode.Append($"\n{varName} = new {myMapper.PrepareContent()}[");
+                    sbDecode.Append(msb1.ToString());
+                    msb1.Clear();
+                    sbDecode.Append($"];");
+
+                    sbDecode.Append($"\n{msb2.ToString()}");
+                    //msb2.Append($"\n");
+                    //sbDecode.Append($"\n");
+                    //sbDecode.Append($"\n");
+                }
+                else
+                {//jagged array
+
+                }
+
+                sbDecode.Append($"\n}}"); //eof decoder check NULL
+
             }
             else if (iType.GetInterface("ICollection`1") != null)
             {

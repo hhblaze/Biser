@@ -67,6 +67,14 @@ namespace BiserObjectify
             return null;
         }
 
+        //public static string GetCSharpArrayName(Type type)
+        //{
+        //    int io = type.FullName.IndexOf("[");
+        //    if(io>0)
+        //        return type.FullName.Substring(0, io);
+        //    return type.FullName;
+        //}
+
         public static string GetCSharpTypeName(Type type)
         {
             int idx = Int32.MaxValue;
