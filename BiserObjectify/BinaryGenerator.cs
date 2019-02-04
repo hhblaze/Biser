@@ -11,20 +11,14 @@ namespace BiserObjectify
 {
     internal class BinaryGenerator
     {
-        HashSet<string> UsedVars = new HashSet<string>();
-
-        //string tmplEnc6 = "encoder.Add(\"PROP\", PROP"; //PROP
-        //string tmplEnc6ending = ");\n"; //PROP        
-        //string tmplEnc7 = ", (RN)=> { encoder.Add("; //PROP
-        //string tmplEnc7ending = "); }"; //PROP
-        //string tmplEnc8 = "encoder.Add(\"PROP\", PROP == null ? new Dictionary<string,Action>() : new Dictionary<string,Action>() {"; //PROP
-        //string tmplEnc8ending = "});\n"; //PROP        
-        //string tmplEnc9 = "{ \"ITEMPROP\",()=>encoder.Add(";// PROP.ITEMPROP"; //PROP
-        //string tmplEnc9ending = ")},"; //PROP
+        HashSet<string> UsedVars = new HashSet<string>();        
+        public HashSet<Type> UsedObjects = new HashSet<Type>();
+        Type myType = null;
 
         public string Run(Type incomingType)
         {
             var tf = incomingType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
+            myType = incomingType;
 
             StringBuilder sb = new StringBuilder();
 
@@ -36,6 +30,7 @@ namespace BiserObjectify
             int varCntTotal = 0;
 
             UsedVars.Clear();
+            UsedObjects.Clear();
 
             //Binary Encoder
             List<string> endings = new List<string>();
@@ -531,6 +526,12 @@ namespace BiserObjectify
                 }
                 else
                 {
+                    if (iType == myType)
+                        throw new Exception("Cross-Reference exception. Object can't contain itself as a property");
+
+                    //adding object to UsedObjects list
+                    UsedObjects.Add(iType);
+
                     sbDecode.Append(StandardTypes.GetCSharpTypeName(iType) + ".BiserDecode(null, decoder)");
                 }
 

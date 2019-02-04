@@ -10,39 +10,68 @@ namespace BiserObjectify
     public static class Generator
     {
        
-
-        public static void Run(Type incomingType, bool generateIncludedTypes, string destinationFolder, bool forBiserBinary=true, bool forBiserJson = true)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="incomingType"></param>
+        /// <param name="generateIncludedTypes"></param>
+        /// <param name="destinationFolder"></param>
+        /// <param name="forBiserBinary"></param>
+        /// <param name="forBiserJson"></param>
+        /// <returns></returns>
+        public static Dictionary<string, string> Run(Type incomingType, bool generateIncludedTypes, string destinationFolder, bool forBiserBinary=true, bool forBiserJson = true)
         {
+            Dictionary<string, string> retT = new Dictionary<string, string>();
             StandardTypes.InitDict();
             JsonGenerator jg = new JsonGenerator();
             BinaryGenerator bg = new BinaryGenerator();
 
-            string tmplIfcJson = "";
-            string tmplIfcBinary = "";
+            HashSet<Type> typesToProcess = new HashSet<Type>();
+            HashSet<Type> typesProcessed = new HashSet<Type>();
 
-            string contentJson = "";
-            string contentBinary = "";
+            typesToProcess.Add(incomingType);
+            Type toProcess = null;
 
-            if (forBiserJson)
-            {
-                
-                tmplIfcJson = "Biser.IJsonEncoder";
-                contentJson = jg.Run(incomingType);
-            }
+            if (!String.IsNullOrEmpty(destinationFolder) && !System.IO.Directory.Exists(destinationFolder))
+                System.IO.Directory.CreateDirectory(destinationFolder);
 
-            if (forBiserBinary)
-            {
-                contentBinary = bg.Run(incomingType);
-                tmplIfcBinary = " Biser.IEncoder";
-            }
-
-            string tmplIfcComma1 = (forBiserJson && forBiserBinary) ? "," : "";
+            while (true)
+            {                
+                toProcess = typesToProcess.Where(r => !typesProcessed.Contains(r)).FirstOrDefault();
+                if (toProcess == null)
+                    break;
 
 
-            var nsLen = incomingType.FullName.Length - incomingType.Name.Length - 1;
+                string tmplIfcJson = "";
+                string tmplIfcBinary = "";
 
-            var ret = Resource1.tmplBiserContainer.ReplaceMultiple(
-                new Dictionary<string, string> {
+                string contentJson = "";
+                string contentBinary = "";
+
+                if (forBiserJson)
+                {
+
+                    tmplIfcJson = "Biser.IJsonEncoder";
+                    contentJson = jg.Run(incomingType);
+                    foreach (var el in jg.UsedObjects)
+                        typesToProcess.Add(el);
+                }
+
+                if (forBiserBinary)
+                {
+                    tmplIfcBinary = " Biser.IEncoder";
+                    contentBinary = bg.Run(incomingType);                    
+                    foreach (var el in bg.UsedObjects)
+                        typesToProcess.Add(el);
+                }
+
+                string tmplIfcComma1 = (forBiserJson && forBiserBinary) ? "," : "";
+
+
+                var nsLen = incomingType.FullName.Length - incomingType.Name.Length - 1;
+
+                var ret = Resource1.tmplBiserContainer.ReplaceMultiple(
+                    new Dictionary<string, string> {
                     { "{@NamespaceName}", incomingType.FullName.Substring(0, nsLen) },
                     { "{@ObjName}", incomingType.Name},
                     { "{@IfcJson}", tmplIfcJson},
@@ -50,10 +79,29 @@ namespace BiserObjectify
                     { "{@IfcComma1}", tmplIfcComma1 },
                     { "{@ContentJson}", contentJson },
                     { "{@ContentBinary}", contentBinary}
-                });               
+                    });
 
-            System.IO.File.WriteAllText(@"D:\Temp\1\TS6_Biser.cs", ret);
+                if (!String.IsNullOrEmpty(destinationFolder))
+                {
+                    System.IO.File.WriteAllText(System.IO.Path.Combine(destinationFolder, incomingType.FullName + "_Biser.cs"), ret);
+                    //System.IO.File.WriteAllText(@"D:\Temp\1\TS6_Biser.cs", ret);
+                }
 
-        }
-    }
+
+                retT.Add(incomingType.FullName + "_Biser.cs", ret);
+
+
+                typesProcessed.Add(toProcess);
+
+                if (!generateIncludedTypes)
+                    break;
+
+            }//eo while           
+
+            return retT;
+        }//eof
+
+
+
+    }//eoc
 }

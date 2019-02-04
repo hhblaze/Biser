@@ -12,6 +12,8 @@ namespace BiserObjectify
     internal class JsonGenerator
     {
         HashSet<string> UsedVars = new HashSet<string>();
+        public HashSet<Type> UsedObjects = new HashSet<Type>();
+        Type myType = null;
 
         string tmplEnc6 = "encoder.Add(\"PROP\", PROP"; //PROP
         string tmplEnc6ending = ");\n"; //PROP        
@@ -25,6 +27,7 @@ namespace BiserObjectify
         public string Run(Type incomingType)
         {
             var tf = incomingType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
+            myType = incomingType;
 
             StringBuilder sb = new StringBuilder();
 
@@ -33,6 +36,7 @@ namespace BiserObjectify
             Type iType = null;
 
             UsedVars.Clear();
+            UsedObjects.Clear();
 
             //JSON Encoder
             List<string> endings = new List<string>();
@@ -406,6 +410,13 @@ namespace BiserObjectify
                 }
                 else
                 {
+                    if (iType == myType)
+                        throw new Exception("Cross-Reference exception. Object can't contain itself as a property");
+
+                    //adding object to UsedObjects list
+                    UsedObjects.Add(iType);
+
+
                     sbJsonDecode.Append(StandardTypes.GetCSharpTypeName(iType) + ".BiserJsonDecode(null, decoder)");
                 }
 
