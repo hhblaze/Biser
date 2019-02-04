@@ -12,11 +12,11 @@ namespace BiserTest_Net
         //public int P2 { get; set; }
         //public DateTime P3 { get; set; }
 
-        //public List<Dictionary<DateTime,Tuple<int,string>>> P4 { get; set; }
+        //public List<Dictionary<DateTime, Tuple<int, string>>> P4 { get; set; }
 
-        //public Dictionary<int, Tuple<int, string>> P5 { get; set; }
+        public Dictionary<int, Tuple<int, string>> P5 { get; set; }
 
-        //public Tuple<int, string, Tuple<List<string>, DateTime>> P6 { get; set; }
+       // public Tuple<int, string, Tuple<List<string>, DateTime>> P6 { get; set; }
 
         //public List<string> P7 { get; set; }
 
@@ -34,11 +34,11 @@ namespace BiserTest_Net
 
         //public Dictionary<int, string> P14 { get; set; }
 
-        //public Tuple<int, string, DateTime, byte[]> P15 { get; set; }
+       // public Tuple<int, string, DateTime, byte[]> P15 { get; set; }
 
-        //public List<Dictionary<int, Tuple<int, string>>> P16 { get; set; }
+       // public List<Dictionary<int, Tuple<int, string>>> P16 { get; set; }
 
-        public int[] P17 { get; set; }
+        //public int[] P17 { get; set; }
 
         //public List<int>[,,] P18 { get; set; }
 

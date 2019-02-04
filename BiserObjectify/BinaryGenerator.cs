@@ -33,7 +33,7 @@ namespace BiserObjectify
             UsedObjects.Clear();
 
             //Binary Encoder
-            List<string> endings = new List<string>();
+            //List<string> endings = new List<string>();
 
             foreach (var f in tf)
             {              

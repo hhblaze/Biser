@@ -38,55 +38,72 @@ namespace BiserObjectify
             UsedVars.Clear();
             UsedObjects.Clear();
 
+            int varCnt = 0;
+            int varCntTotal = 0;
+
+
             //JSON Encoder
-            List<string> endings = new List<string>();
+
 
             foreach (var f in tf)
-            {              
+            {
                 var name = f.Name;
-                iType = f.PropertyType;//.FieldType;      
+                iType = f.PropertyType;//.FieldType;       
 
                 if (iType == typeof(object))
                     continue;
 
-                endings.Clear();              
-
-                if (iType.GetInterface("ITuple") != null)
-                {
-
-                    sbJsonEncode.Append(tmplEnc8.Replace("PROP", name));
-                    int tn = 1;
-                    foreach (var gta in iType.GetGenericArguments())
-                    {
-                        sbJsonEncode.Append(tmplEnc9.Replace("ITEMPROP", "Item" + tn.ToString()));//.Replace("PROP", name));                                      
-                        EncodeSingle(gta, sbJsonEncode, name + ".Item" + tn.ToString(), 0, true);
-                        sbJsonEncode.Append(tmplEnc9ending);
-                        tn++;
-                    }
-
-                    sbJsonEncode.Append(tmplEnc8ending);
-                    continue;
-                }
-                else
-                {
-                    sbJsonEncode.Append(tmplEnc6.Replace("PROP", name));
-                    endings.Add(tmplEnc6ending);
-                }
-
-                //EncodeSingle(iType, sbJsonEncode, name);
-                EncodeSingle(iType, sbJsonEncode, "");
-
-                for (int i = endings.Count - 1; i >= 0; i--)
-                {
-                    sbJsonEncode.Append(endings[i]);
-                }
+                EncodeSingle(iType, sbJsonEncode, name, true, varCnt);
             }
+
+            //List<string> endings = new List<string>();
+
+            //foreach (var f in tf)
+            //{
+            //    var name = f.Name;
+            //    iType = f.PropertyType;//.FieldType;      
+
+            //    if (iType == typeof(object))
+            //        continue;
+
+            //    endings.Clear();
+
+            //    if (iType.GetInterface("ITuple") != null)
+            //    {
+
+            //        sbJsonEncode.Append(tmplEnc8.Replace("PROP", name));
+            //        int tn = 1;
+            //        foreach (var gta in iType.GetGenericArguments())
+            //        {
+            //            sbJsonEncode.Append(tmplEnc9.Replace("ITEMPROP", "Item" + tn.ToString()));//.Replace("PROP", name));                                      
+            //            EncodeSingle1(gta, sbJsonEncode, name + ".Item" + tn.ToString(), 0, true);
+            //            sbJsonEncode.Append(tmplEnc9ending);
+            //            tn++;
+            //        }
+
+            //        sbJsonEncode.Append(tmplEnc8ending);
+            //        continue;
+            //    }
+            //    else
+            //    {
+            //        sbJsonEncode.Append(tmplEnc6.Replace("PROP", name));
+            //        endings.Add(tmplEnc6ending);
+            //    }
+
+            //    //EncodeSingle(iType, sbJsonEncode, name);
+            //    EncodeSingle1(iType, sbJsonEncode, "");
+
+            //    for (int i = endings.Count - 1; i >= 0; i--)
+            //    {
+            //        sbJsonEncode.Append(endings[i]);
+            //    }
+            //}
 
 
 
             //JSON Decoder
-            int varCnt = 0;
-            int varCntTotal = 0;
+            varCnt = 0;
+            varCntTotal = 0;
 
             foreach (var f in tf)
             {
@@ -125,8 +142,124 @@ namespace BiserObjectify
             return res;
         }
 
-       
-       
+
+        void EncodeSingle(Type iType, StringBuilder sbJsonEncode, string varName, bool root,int varCnt = 0)
+        {
+
+            //List<string> endings = new List<string>();
+
+            if (iType.IsArray)
+            {
+                if (iType == typeof(byte[]))
+                {
+                    if (root)
+                    {
+                        sbJsonEncode.Append($"\nencoder.Add(\"{varName}\", {varName});");
+                    }
+                    else
+                        sbJsonEncode.Append($"\nencoder.Add({varName});");
+                }
+                else
+                {
+                    //not implemented must be represented as -> e.g. int[] must be List<int>
+                    //Multidemensional arrays are represented in BinaryBiser and not supported directly by javascript JSON
+                    //so can be represented as List<List<List<
+                    //if (iType.GetArrayRank() > 1)
+                    //{
+
+                    //}
+                    //else
+                    //{//one dimensional or jagged array
+                    //    int[] j = null;
+                    //    //j.ToList()
+                    //    EncodeSingle(iType.GetElementType(), sbJsonEncode, "r" + nest, nest);
+                    //}               
+
+                }
+
+            }
+            else if (iType.GetInterface("ICollection`1") != null)
+            {
+                if (root)
+                {
+                    sbJsonEncode.Append($"\nencoder.Add(\"{varName}\", {varName}");
+                }
+                else
+                    sbJsonEncode.Append($"\nencoder.Add({varName}");
+
+                if (iType.GetInterface("ISet`1") != null || iType.GetInterface("IList`1") != null)
+                {
+                    varCnt++;
+
+                    sbJsonEncode.Append($", (r{varCnt}) => {{");
+                    EncodeSingle(iType.GenericTypeArguments[0], sbJsonEncode, "r" + varCnt, false, varCnt);
+                    sbJsonEncode.Append($"}});");
+                }
+                else if (iType.GetInterface("IDictionary`2") != null)
+                {
+                    varCnt++;
+
+                    sbJsonEncode.Append($", (r{varCnt}) => {{");
+                    EncodeSingle(iType.GenericTypeArguments[1], sbJsonEncode, "r" + varCnt + "", false, varCnt);
+                    //sbJsonEncode.Append($"\"");
+                    //EncodeSingle(iType.GenericTypeArguments[0], sbJsonEncode, "r" + varCnt + ".Key", false, varCnt);
+                    //sbJsonEncode.Append($"\":");
+                    //EncodeSingle(iType.GenericTypeArguments[1], sbJsonEncode, "r" + varCnt + ".Value", false, varCnt);
+                    // sbJsonEncode.Append($" encoder.Add(r{varCnt}); ");
+                    sbJsonEncode.Append($"}});");
+                }
+
+            }
+            else if (iType.GetInterface("ITuple") != null)
+            {
+                if (root)
+                {
+                    sbJsonEncode.Append($"\nencoder.Add(\"{varName}\", ");
+                }
+                else
+                    sbJsonEncode.Append($"\nencoder.Add(");
+
+                sbJsonEncode.Append($"({varName} == null) ? new Dictionary<string,Action>() : new Dictionary<string, Action>() {{");
+
+                int tn = 1;
+                foreach (var gta in iType.GetGenericArguments())
+                {
+                    sbJsonEncode.Append($"{((tn==1)?"":", ")}{{ \"Item{tn}\", () => {{");
+                    EncodeSingle(gta, sbJsonEncode, $"{varName}.Item{tn}", false, varCnt);
+                    sbJsonEncode.Append($"}}}}");
+                    tn++;
+                }
+
+                sbJsonEncode.Append($"}});");
+
+                ////Tuple comes here iType.GenericTypeArguments	{System.Type[3]}
+                //int tn = 1;
+                //sbJsonEncode.Append("(" + varName + " == null) ? new Dictionary<string,Action>() : new Dictionary<string, Action>(){");
+                //foreach (var gta in iType.GetGenericArguments())
+                //{
+                //    sbJsonEncode.Append(tmplEnc9.Replace("ITEMPROP", "Item" + tn.ToString()));//.Replace("PROP", name));                    
+                //    //EncodeSingle(gta, sbJsonEncode, varName + ".Item" + tn.ToString(), varCnt, true);
+                //    EncodeSingle(gta, sbJsonEncode, varName + ".Item" + tn.ToString(), false, varCnt);
+                //    sbJsonEncode.Append(tmplEnc9ending);
+                //    tn++;
+                //}
+                //sbJsonEncode.Append("}");
+                ////skip
+                //return; //!!!!!!!!!!
+            }
+            else
+            {
+                if(root)
+                {
+                    sbJsonEncode.Append($"\nencoder.Add(\"{varName}\", {varName});");
+                }
+                else
+                    sbJsonEncode.Append($"\nencoder.Add({varName});");
+
+            }
+
+        }
+
 
         /// <summary>
         /// 
@@ -428,7 +561,7 @@ namespace BiserObjectify
             return varCntTotal;
         }
 
-      
+
 
         /// <summary>
         /// 
@@ -438,7 +571,7 @@ namespace BiserObjectify
         /// <param name="varName"></param>
         /// <param name="nest"></param>
         /// <param name="tuple"></param>
-        void EncodeSingle(Type iType, StringBuilder sbJsonEncode, string varName, int nest = 0, bool tuple = false)
+        void EncodeSingle1(Type iType, StringBuilder sbJsonEncode, string varName, int nest = 0, bool tuple = false)
         {
             //int nest = 1;
             List<string> endings = new List<string>();
@@ -454,7 +587,16 @@ namespace BiserObjectify
                 //not implemented must be represented as -> e.g. int[] must be List<int>
                 //Multidemensional arrays are represented in BinaryBiser and not supported directly by javascript JSON
                 //so can be represented as List<List<List<
+                //if (iType.GetArrayRank() > 1)
+                //{
 
+                //}
+                //else
+                //{//one dimensional or jagged array
+                //    int[] j = null;
+                //    //j.ToList()
+                //    EncodeSingle(iType.GetElementType(), sbJsonEncode, "r" + nest, nest);
+                //}
 
                 /*
                   t6.P11 = new int[2][];
@@ -503,7 +645,7 @@ namespace BiserObjectify
                 {
                     iType = iType.GenericTypeArguments[0];
                     //EncodeSingle(iType, sbJsonEncode, "r" + (nest + 1), (nest + 1));
-                    EncodeSingle(iType, sbJsonEncode, "r" + nest, nest);
+                    EncodeSingle1(iType, sbJsonEncode, "r" + nest, nest);
 
                 }
                 else if (iType.GetInterface("IDictionary`2") != null)
@@ -511,7 +653,7 @@ namespace BiserObjectify
                     //sbJsonEncode.Append("r" + (nest + 1));
                     iType = iType.GenericTypeArguments[1];
                     //EncodeSingle(iType, sbJsonEncode, "r" + (nest + 1), (nest + 1));
-                    EncodeSingle(iType, sbJsonEncode, "r" + nest, nest);
+                    EncodeSingle1(iType, sbJsonEncode, "r" + nest, nest);
                 }
                 //else if (iType.GetInterface("ITuple") != null) //Special case 
                 //{
@@ -532,7 +674,7 @@ namespace BiserObjectify
                 {
                     sbJsonEncode.Append(tmplEnc9.Replace("ITEMPROP", "Item" + tn.ToString()));//.Replace("PROP", name));
                     //EncodeSingle(gta, sbJsonEncode, varName + ".Item" + tn.ToString(), (nest+1), true);                    
-                    EncodeSingle(gta, sbJsonEncode, varName + ".Item" + tn.ToString(), nest, true);
+                    EncodeSingle1(gta, sbJsonEncode, varName + ".Item" + tn.ToString(), nest, true);
                     sbJsonEncode.Append(tmplEnc9ending);
                     tn++;
                 }
