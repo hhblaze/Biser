@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+    <metadata>
+        <id>BiserObjectify</id>
+        <version>1.1.0</version>
+        <title>BiserObjectify is an object generator for Biser.NET</title>
+        <authors>Alex Solovyov</authors>
+        <owners>tiesky.com / Alex Solovyov</owners>
+        <licenseUrl>https://github.com/hhblaze/Biser/blob/master/LICENSE</licenseUrl>
+        <projectUrl>https://github.com/hhblaze/Biser</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>BiserObjectify is an object generator for Biser.NET</description>
+        <summary>...</summary>
+        <releaseNotes>release</releaseNotes>
+        <copyright>Copyright © 2019 tiesky.com / Alex Solovyov</copyright>
+        <language>es-US</language>
+        <tags>Biser protobuf JSON alternative dbreeze serializer binary serialization netcore netstandard net javascript framework</tags>
+    </metadata>
+    <files>
+        <file src="BiserObjectify\bin\Release\BiserObjectify.dll" target="lib\net45\BiserObjectify.dll" /> 
+        <file src="BiserObjectify_Standard\bin\Release\netstandard2.0\BiserObjectify.deps.json" target="lib\netstandard2.0\Biser.deps.json" />
+        <file src="BiserObjectify_Standard\bin\Release\netstandard2.0\BiserObjectify.dll" target="lib\netstandard2.0\BiserObjectify.dll" />        
+    </files>
+</package>

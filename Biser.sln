@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Benchmark", "Benchmark\Benc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BiserObjectify", "BiserObjectify\BiserObjectify.csproj", "{360475E5-CBB3-4400-AD5C-65AEEE6F1C9D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BiserObjectify_Standard", "BiserObjectify_Standard\BiserObjectify_Standard.csproj", "{BE208412-0E7D-452A-BC05-E59684979976}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{360475E5-CBB3-4400-AD5C-65AEEE6F1C9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{360475E5-CBB3-4400-AD5C-65AEEE6F1C9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{360475E5-CBB3-4400-AD5C-65AEEE6F1C9D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE208412-0E7D-452A-BC05-E59684979976}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE208412-0E7D-452A-BC05-E59684979976}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE208412-0E7D-452A-BC05-E59684979976}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE208412-0E7D-452A-BC05-E59684979976}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
