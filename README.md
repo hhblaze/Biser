@@ -19,7 +19,7 @@ Integrated part of [DBreeze database](https://github.com/hhblaze/DBreeze), used 
 
 ### Quick start
 
-- Grab from NuGet Biser (or DBreeze that contains Biser), grab from Nuget BiserObjectify.
+- Grab from NuGet **Biser** (or **DBreeze** that contains Biser), grab from Nuget **BiserObjectify**.
 - Let’s assume you have several objects to serialize. It is necessary to prepare them: 
 
 Call next line to create code for the serialzer:
