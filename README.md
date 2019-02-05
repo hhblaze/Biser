@@ -97,10 +97,13 @@ Usage:
  var restoredJsonObject= TS6.BiserJsonDecode(prettifiedJsonString, settings: jsonSettings);
 ```
 
+-------------
+For the deep understanding:
+
 - [Documentation binary Biser](https://docs.google.com/document/d/e/2PACX-1vQa3C506Esw3Fkroj4OA5erGOHEZpAtnXcQQ90R0w1wnFqO_16CH0dUfBJZt_ppB15ykoZWI9eR8KcG/pub)
 - [Documentation JSON Biser](https://docs.google.com/document/d/e/2PACX-1vQa3C506Esw3Fkroj4OA5erGOHEZpAtnXcQQ90R0w1wnFqO_16CH0dUfBJZt_ppB15ykoZWI9eR8KcG/pub#id.yqadcf2f2moz)
 
-- [Examples of encoders/decoders](https://github.com/hhblaze/Biser/blob/master/BiserTest_Net)
+- [Examples of manual encoders/decoders](https://github.com/hhblaze/Biser/blob/master/BiserTest_Net)
 -------------
 
 hhblaze@gmail.com
