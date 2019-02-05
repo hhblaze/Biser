@@ -44,7 +44,7 @@ resbof variable will contain the same information that in generated files also a
 ...
 ```
 
-Remove BiserObjectify from your project, it will not be necessary until next time.
+- Remove BiserObjectify from your project, it will not be necessary until next time.
 Usage:
 ```C#
  TS6 t6 = new TS6()
