@@ -31,7 +31,7 @@ Call next line to create code for the serialzer:
 First argument is the type of the root object to be serialized (it can contain other objects that also must be serialized).
 Second argument means that BiserObjectify must prepare serializer for all objects included into the root object.
 Third argument points to the folder where C# files per object will be created.
-The fourth and fifth arguments mean that we want to use and binary and JSON serializers
+The fourth and fifth arguments mean that we want to use both Binary and JSON serializers
 
 resbof variable will contain the same information that in generated files also as Dictionary.
 
