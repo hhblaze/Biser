@@ -5,8 +5,8 @@
         <version>1.1.0</version>
         <title>BiserObjectify is an object generator for Biser.NET</title>
         <authors>Alex Solovyov</authors>
-        <owners>tiesky.com / Alex Solovyov</owners>
-        <licenseUrl>https://github.com/hhblaze/Biser/blob/master/LICENSE</licenseUrl>
+        <owners>tiesky.com / Alex Solovyov</owners>       
+		<license type="file">LICENSE.txt</license>
         <projectUrl>https://github.com/hhblaze/Biser</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>BiserObjectify is an object generator for Biser.NET</description>
@@ -19,6 +19,7 @@
     <files>
         <file src="BiserObjectify\bin\Release\BiserObjectify.dll" target="lib\net45\BiserObjectify.dll" /> 
         <file src="BiserObjectify_Standard\bin\Release\netstandard2.0\BiserObjectify.deps.json" target="lib\netstandard2.0\Biser.deps.json" />
-        <file src="BiserObjectify_Standard\bin\Release\netstandard2.0\BiserObjectify.dll" target="lib\netstandard2.0\BiserObjectify.dll" />        
+        <file src="BiserObjectify_Standard\bin\Release\netstandard2.0\BiserObjectify.dll" target="lib\netstandard2.0\BiserObjectify.dll" /> 
+		<file src="licenses\LICENSE.txt" />
     </files>
 </package>
