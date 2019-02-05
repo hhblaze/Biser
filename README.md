@@ -94,7 +94,8 @@ Usage:
 #### JSON serialization:
 ```C#
  var jsonSettings = new Biser.JsonSettings { DateFormat = Biser.JsonSettings.DateTimeStyle.ISO };
- string prettifiedJsonString = new Biser.JsonEncoder(t6, jsonSet).GetJSON(Biser.JsonSettings.JsonStringStyle.Prettify);
+ string prettifiedJsonString = new Biser.JsonEncoder(t6, jsonSet)
+            .GetJSON(Biser.JsonSettings.JsonStringStyle.Prettify);
  var restoredJsonObject= TS6.BiserJsonDecode(prettifiedJsonString, settings: jsonSettings);
 ```
 
