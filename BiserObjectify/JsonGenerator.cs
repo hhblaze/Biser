@@ -161,19 +161,29 @@ namespace BiserObjectify
                 }
                 else
                 {
-                    //not implemented must be represented as -> e.g. int[] must be List<int>
-                    //Multidemensional arrays are represented in BinaryBiser and not supported directly by javascript JSON
-                    //so can be represented as List<List<List<
+                    //Encoding works good
+
+                    Console.WriteLine("-------------BiserObjectify: change one-dimesional or jagged array on List-------------");
+                    Debug.WriteLine("-------------BiserObjectify: change one-dimesional or jagged array on List-------------");
+
+                    ////not implemented must be represented as -> e.g. int[] must be List<int>
+                    ////Multidemensional arrays are represented in BinaryBiser and not supported directly by javascript JSON
+                    ////so can be represented as List<List<List<
                     //if (iType.GetArrayRank() > 1)
                     //{
 
                     //}
                     //else
-                    //{//one dimensional or jagged array
-                    //    int[] j = null;
-                    //    //j.ToList()
-                    //    EncodeSingle(iType.GetElementType(), sbJsonEncode, "r" + nest, nest);
-                    //}               
+                    //{//one dimensional or jagged array                     
+                    //    varCnt++;
+                    //    int pv = varCnt;
+                    //    StringBuilder msb = new StringBuilder();
+                    //    sbJsonEncode.Append($"\nvar r{varCnt}={varName}.ToList();");
+                    //    var listType = typeof(List<>).MakeGenericType(iType.GetElementType());                        
+                    //    EncodeSingle(listType, msb, $"r{pv}", root, varCnt);
+                    //    msb.Replace($"\"r{pv}\"", $"\"{varName}\"");
+                    //    sbJsonEncode.Append(msb.ToString());
+                    //}
 
                 }
 
@@ -200,12 +210,7 @@ namespace BiserObjectify
                     varCnt++;
 
                     sbJsonEncode.Append($", (r{varCnt}) => {{");
-                    EncodeSingle(iType.GenericTypeArguments[1], sbJsonEncode, "r" + varCnt + "", false, varCnt);
-                    //sbJsonEncode.Append($"\"");
-                    //EncodeSingle(iType.GenericTypeArguments[0], sbJsonEncode, "r" + varCnt + ".Key", false, varCnt);
-                    //sbJsonEncode.Append($"\":");
-                    //EncodeSingle(iType.GenericTypeArguments[1], sbJsonEncode, "r" + varCnt + ".Value", false, varCnt);
-                    // sbJsonEncode.Append($" encoder.Add(r{varCnt}); ");
+                    EncodeSingle(iType.GenericTypeArguments[1], sbJsonEncode, "r" + varCnt + "", false, varCnt);                 
                     sbJsonEncode.Append($"}});");
                 }
 
@@ -299,9 +304,55 @@ namespace BiserObjectify
             }
             else if (iType.IsArray)
             {
-                // throw new NotSupportedException();
+                if (iType.GetArrayRank() > 1)
+                {
 
-                //not implemented must be represented as -> e.g. int[] must be List<int>
+                }
+                else
+                {//one dimensional or jagged array                     
+
+                    Console.WriteLine("-------------BiserObjectify: change one-dimesional or jagged array on List-------------");
+                    Debug.WriteLine("-------------BiserObjectify: change one-dimesional or jagged array on List-------------");
+
+                    //StringBuilder msb = new StringBuilder();
+                    //var myMapper = new MapperContent { };
+
+                    //var listType = typeof(List<>).MakeGenericType(iType.GetElementType());
+
+                    //string iVarName = varName;
+                    //int pv = 0;
+                    //if (mapper == null)
+                    //{
+                    //  varCnt++;
+                    //  varCntTotal++;
+                    // // UsedVars.Add($"arvar{varCnt}");
+                    //  iVarName = $"arvar{varCnt}";
+                    //  pv = varCnt;
+                    //  //msb.Append($"\n{{@4587984684567}} arvar{varCnt} = null;");
+                    //}
+
+                    //DecodeSingle(listType, msb, $"{iVarName}", varCnt, ref varCntTotal, myMapper);
+
+                    ////msb.Replace("{@4587984684567}", myMapper.PrepareContent());
+                    //sbJsonDecode.Append(msb.ToString());
+
+                    //if (mapper != null)
+                    //{
+                    //    mapper.Lst.Add(myMapper.PrepareContent());
+                    //}
+                    //else
+                    //{
+                    //    var interType = iType;
+                    //    int arDim = 0;
+                    //    while (interType.IsArray)
+                    //    {
+                    //        arDim++;
+                    //        interType = interType.GetElementType();
+                    //    }
+                    //    sbJsonDecode.Append($"\n//{varName} = new {myMapper.PrepareContent()}");
+                    //    //sbJsonDecode.Append($"\n
+                    //}
+                }
             }
             else if (iType.GetInterface("ICollection`1") != null)
             {

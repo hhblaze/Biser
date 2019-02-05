@@ -20,13 +20,13 @@ namespace BiserTest_Net
     {
         static void Main(string[] args)
         {
-            //var resbof = BiserObjectify.Generator.Run(typeof(TS6),
-            //    true,
-            //    @"D:\Temp\1\",
-            //    forBiserBinary: false,
-            //    forBiserJson: true);
+            var resbof = BiserObjectify.Generator.Run(typeof(TS6),
+                true,
+                @"D:\Temp\1\",
+                forBiserBinary: true,
+                forBiserJson: true);
 
-            //return;
+            return;
 
             TS6 t6 = new TS6()
             {
@@ -44,10 +44,10 @@ namespace BiserTest_Net
                 //            { DateTime.UtcNow.AddMinutes(-4), new Tuple<int, string>(15625,"pipfghec123") }
                 //        }
                 //    },
-                P5 = new Dictionary<int, Tuple<int, string>> {
-                     { 12, new Tuple<int, string>(478,"dsffdf") },
-                     { 178, new Tuple<int, string>(5687,"sdfsd") }
-                 },
+                //P5 = new Dictionary<int, Tuple<int, string>> {
+                //     { 12, new Tuple<int, string>(478,"dsffdf") },
+                //     { 178, new Tuple<int, string>(5687,"sdfsd") }
+                // },
                 //P6 = new Tuple<int, string, Tuple<List<string>, DateTime>>(445, "dsfdfgfgfg", new Tuple<List<string>, DateTime>(new List<string> { "a1", "a2" }, DateTime.Now.AddDays(58))),
                 //P7 = new List<string> { "fgdfgrdfg", "dfgfdgdfg" },
                 //P8 = new Dictionary<int, List<string>> {
@@ -73,8 +73,13 @@ namespace BiserTest_Net
                 //    },
 
                 //P17 = new int[3] { 12,3545,7987}
+               
             };
 
+            //t6.P19 = new Dictionary<int, List<string>>[2][];
+            //t6.P19[0] = new Dictionary<int, List<string>>[3];
+            //t6.P19[1] = new Dictionary<int, List<string>>[5];
+            //t6.P19[0][0] = new Dictionary<int, List<string>> { { 1, new List<string> { "dsf", "dsfd" } }, { 3, new List<string> { "fdsf", "tzutr" } } };
 
             //t6.P11 = new int[2][];
             //t6.P11[0] = new int[3];
@@ -96,12 +101,12 @@ namespace BiserTest_Net
             //Json test
 
 
-            var njSer = NetJSON.NetJSON.Serialize(t6, new NetJSON.NetJSONSettings { DateFormat = NetJSON.NetJSONDateFormat.ISO });
+            //var njSer = NetJSON.NetJSON.Serialize(t6, new NetJSON.NetJSONSettings { DateFormat = NetJSON.NetJSONDateFormat.ISO });
 
-            var jsonSet = new Biser.JsonSettings { DateFormat = Biser.JsonSettings.DateTimeStyle.ISO };
-            Biser.JsonEncoder enc = new Biser.JsonEncoder(t6, jsonSet);
-            string es = enc.GetJSON(Biser.JsonSettings.JsonStringStyle.Prettify);
-            var ot2 = TS6.BiserJsonDecode(es, settings: jsonSet);
+            //var jsonSet = new Biser.JsonSettings { DateFormat = Biser.JsonSettings.DateTimeStyle.ISO };
+            //Biser.JsonEncoder enc = new Biser.JsonEncoder(t6, jsonSet);
+            //string es = enc.GetJSON(Biser.JsonSettings.JsonStringStyle.Prettify);
+            //var ot2 = TS6.BiserJsonDecode(es, settings: jsonSet);
             ////var ot2 = TS6.BiserJsonDecode(njSer, settings: jsonSet);
 
 

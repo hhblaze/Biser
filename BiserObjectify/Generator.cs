@@ -52,7 +52,7 @@ namespace BiserObjectify
                 {
 
                     tmplIfcJson = "Biser.IJsonEncoder";
-                    contentJson = jg.Run(incomingType);
+                    contentJson = jg.Run(toProcess);
                     foreach (var el in jg.UsedObjects)
                         typesToProcess.Add(el);
                 }
@@ -60,7 +60,7 @@ namespace BiserObjectify
                 if (forBiserBinary)
                 {
                     tmplIfcBinary = " Biser.IEncoder";
-                    contentBinary = bg.Run(incomingType);                    
+                    contentBinary = bg.Run(toProcess);                    
                     foreach (var el in bg.UsedObjects)
                         typesToProcess.Add(el);
                 }
@@ -68,12 +68,12 @@ namespace BiserObjectify
                 string tmplIfcComma1 = (forBiserJson && forBiserBinary) ? "," : "";
 
 
-                var nsLen = incomingType.FullName.Length - incomingType.Name.Length - 1;
+                var nsLen = toProcess.FullName.Length - toProcess.Name.Length - 1;
 
                 var ret = Resource1.tmplBiserContainer.ReplaceMultiple(
                     new Dictionary<string, string> {
-                    { "{@NamespaceName}", incomingType.FullName.Substring(0, nsLen) },
-                    { "{@ObjName}", incomingType.Name},
+                    { "{@NamespaceName}", toProcess.FullName.Substring(0, nsLen) },
+                    { "{@ObjName}", toProcess.Name},
                     { "{@IfcJson}", tmplIfcJson},
                     { "{@IfcBinary}", tmplIfcBinary},
                     { "{@IfcComma1}", tmplIfcComma1 },
@@ -83,12 +83,13 @@ namespace BiserObjectify
 
                 if (!String.IsNullOrEmpty(destinationFolder))
                 {
-                    System.IO.File.WriteAllText(System.IO.Path.Combine(destinationFolder, incomingType.FullName + "_Biser.cs"), ret);
+                    System.IO.File.WriteAllText(System.IO.Path.Combine(destinationFolder, toProcess.FullName + "_Biser.cs"), ret);
                     //System.IO.File.WriteAllText(@"D:\Temp\1\TS6_Biser.cs", ret);
                 }
 
 
-                retT.Add(incomingType.FullName + "_Biser.cs", ret);
+                //retT.Add(incomingType.FullName + "_Biser.cs", ret);
+                retT.Add(toProcess.FullName + "_Biser", ret);
 
 
                 typesProcessed.Add(toProcess);
