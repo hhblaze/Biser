@@ -22,29 +22,29 @@ namespace BiserTest_Net
 
         public Dictionary<int, List<string>> P8 { get; set; }
 
-        public object P9 { get; set; }
+        //public object P9 { get; set; }
 
-        public short? P10 { get; set; }
+        //public short? P10 { get; set; }
 
-        //public int[][] P11 { get; set; }
+        ////public int[][] P11 { get; set; }
 
-        public int[,,] P12 { get; set; }
+        //public int[,,] P12 { get; set; }
 
-        public List<List<int>> P13 { get; set; }
+        //public List<List<int>> P13 { get; set; }
 
-        public Dictionary<int, string> P14 { get; set; }
+        //public Dictionary<int, string> P14 { get; set; }
 
-        public Tuple<int, string, DateTime, byte[]> P15 { get; set; }
+        //public Tuple<int, string, DateTime, byte[]> P15 { get; set; }
 
-        public List<Dictionary<int, Tuple<int, string>>> P16 { get; set; }
+        //public List<Dictionary<int, Tuple<int, string>>> P16 { get; set; }
 
-        //public int[] P17 { get; set; }
+        ////public int[] P17 { get; set; }
 
-        public List<int>[,,] P18 { get; set; }
-        //public Dictionary<int, List<string>>[][][] P19 { get; set; }
-        //public List<int[]> P20 { get; set; }
+        //public List<int>[,,] P18 { get; set; }
+        ////public Dictionary<int, List<string>>[][][] P19 { get; set; }
+        ////public List<int[]> P20 { get; set; }
 
-        public TS2 P21 { get; set; }
+        //public TS2 P21 { get; set; }
 
     }
 

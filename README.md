@@ -18,6 +18,56 @@ From the other side, needs a bit of effort to set up transformation map for obje
 
 Integrated part of [DBreeze database](https://github.com/hhblaze/DBreeze), used in [Raft.NET](https://github.com/hhblaze/Raft.Net)
 
+Quick start
+
+Grab from NuGet Biser (or DBreeze that contains Biser), grab from Nuget BiserObjectify.
+Let’s assume you have several objects to serialize. It is necessary to prepare them. 
+
+
+Call next line to create code for the serialzer:
+ var resbof = BiserObjectify.Generator.Run(typeof(TS6),true, @"D:\Temp\1\", forBiserBinary: true, forBiserJson: true);
+
+First argument is the type of the root object to be serialized (it can contain other objects that also must be serialized).
+Second argument means that BiserObjectify must be prepare serializer for all objects included into the root object.
+Third argument points us to the folder where C# files for the serialization of each object will be created.
+The fourth and fifth arguments mean that we want to use and binary and JSON serializers
+
+resbof variable will contain the same information that in generated files also as Dictionary.
+
+Copy generated files into your project and link them to the project. Try to recompile. 
+Probably you will need to make all objects to be serialized as partial class:
+
+
+ public partial class TS6
+    {
+        public string P1 { get; set; }
+...
+
+
+Remove BiserObjectify from your project, it will not be necessary until next time.
+Usage:
+ TS6 t6 = new TS6()
+            {
+                P1 = "dsfs",
+                P2 = 456,
+                P3 = DateTime.UtcNow,
+...
+}
+
+
+Binary serialization:
+
+ var serializedObjectAsByteArray = t6.BiserEncoder().Encode();
+ var retoredBinaryObject= TS6.BiserDecode(serializedObjectAsByteArray);
+
+
+JSON serialization:
+
+ var jsonSettings = new Biser.JsonSettings { DateFormat = Biser.JsonSettings.DateTimeStyle.ISO };
+ string prettifiedJsonString = new Biser.JsonEncoder(t6, jsonSet).GetJSON(Biser.JsonSettings.JsonStringStyle.Prettify);
+ var restoredJsonObject= TS6.BiserJsonDecode(prettifiedJsonString, settings: jsonSettings);
+
+
 - [Documentation binary Biser](https://docs.google.com/document/d/e/2PACX-1vQa3C506Esw3Fkroj4OA5erGOHEZpAtnXcQQ90R0w1wnFqO_16CH0dUfBJZt_ppB15ykoZWI9eR8KcG/pub)
 - [Documentation JSON Biser](https://docs.google.com/document/d/e/2PACX-1vQa3C506Esw3Fkroj4OA5erGOHEZpAtnXcQQ90R0w1wnFqO_16CH0dUfBJZt_ppB15ykoZWI9eR8KcG/pub#id.yqadcf2f2moz)
 
