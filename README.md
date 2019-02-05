@@ -13,7 +13,7 @@ From the other side, needs a bit of effort to set up transformation map for obje
 - Has custom encoding possibilities of any complexity.
 - Different encoding/decoding scenarios for one object are supported.
 - Thread safe. No need to "warm up" serializing/encoding entities.
-- Experimantally serialized binary objects can be exchanged with javascript ([documentation](https://docs.google.com/document/d/e/2PACX-1vQa3C506Esw3Fkroj4OA5erGOHEZpAtnXcQQ90R0w1wnFqO_16CH0dUfBJZt_ppB15ykoZWI9eR8KcG/pub#id.8cf9hq1iypk9)).
+
 
 Integrated part of [DBreeze database](https://github.com/hhblaze/DBreeze), used in [Raft.NET](https://github.com/hhblaze/Raft.Net)
 
@@ -34,8 +34,8 @@ The fourth and fifth arguments mean that we want to use and binary and JSON seri
 
 resbof variable will contain the same information that in generated files also as Dictionary.
 
-- Copy generated files into your project and link them to the project. Try to recompile. 
-- Probably you will need to make all objects to be serialized as partial class:
+- Copy generated files into your project and embed/link them to the project. Try to recompile. 
+- Probably, it will be necessary to add “partial” keyword to objects that must be serialized:
 
 ```C#
  public partial class TS6
