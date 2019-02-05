@@ -8,7 +8,6 @@ Cross-platform BINARY and JSON serializer for .NET dotnet.
 
 - Doesn't use reflection inside, only managed code, perfectly works in [MONO WASM](https://github.com/aspnet/Blazor) and [CoreRT](https://github.com/dotnet/corert) where AOT compilers are used,
 that makes it a possible alternative to [protobuf-net](https://github.com/mgravell/protobuf-net), [MessagePack](https://github.com/neuecc/MessagePack-CSharp),  [NetJSON](https://github.com/rpgmaker/NetJSON), [JSON.NET](https://www.newtonsoft.com/json).
-From the other side, needs a bit of effort to set up transformation map for objects encoding and decoding.
 - Has the same [operational speed (Benchmark)](https://github.com/hhblaze/Biser/blob/master/Benchmark/Program.cs) as protobuf-net and NetJSON, smaller payload and a tiny source code.
 - Has custom encoding possibilities of any complexity.
 - Different encoding/decoding scenarios for one object are supported.
