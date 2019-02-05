@@ -18,14 +18,15 @@ From the other side, needs a bit of effort to set up transformation map for obje
 
 Integrated part of [DBreeze database](https://github.com/hhblaze/DBreeze), used in [Raft.NET](https://github.com/hhblaze/Raft.Net)
 
-Quick start
+### Quick start
 
-Grab from NuGet Biser (or DBreeze that contains Biser), grab from Nuget BiserObjectify.
-Let’s assume you have several objects to serialize. It is necessary to prepare them. 
-
+- Grab from NuGet Biser (or DBreeze that contains Biser), grab from Nuget BiserObjectify.
+- Let’s assume you have several objects to serialize. It is necessary to prepare them. 
 
 Call next line to create code for the serialzer:
+```C#
  var resbof = BiserObjectify.Generator.Run(typeof(TS6),true, @"D:\Temp\1\", forBiserBinary: true, forBiserJson: true);
+```
 
 First argument is the type of the root object to be serialized (it can contain other objects that also must be serialized).
 Second argument means that BiserObjectify must be prepare serializer for all objects included into the root object.
@@ -34,39 +35,68 @@ The fourth and fifth arguments mean that we want to use and binary and JSON seri
 
 resbof variable will contain the same information that in generated files also as Dictionary.
 
-Copy generated files into your project and link them to the project. Try to recompile. 
-Probably you will need to make all objects to be serialized as partial class:
+- Copy generated files into your project and link them to the project. Try to recompile. 
+- Probably you will need to make all objects to be serialized as partial class:
 
-
+```C#
  public partial class TS6
     {
         public string P1 { get; set; }
 ...
-
+```
 
 Remove BiserObjectify from your project, it will not be necessary until next time.
 Usage:
+```C#
  TS6 t6 = new TS6()
             {
                 P1 = "dsfs",
                 P2 = 456,
                 P3 = DateTime.UtcNow,
+                P1 = "dsfs",
+                P2 = 456,
+                P3 = DateTime.UtcNow,
+                P4 = new List<Dictionary<DateTime, Tuple<int, string>>>
+                    {
+                        new Dictionary<DateTime, Tuple<int, string>>{
+                            { DateTime.UtcNow.AddMinutes(-1), new Tuple<int, string>(12,"testvar") },
+                            { DateTime.UtcNow.AddMinutes(-2), new Tuple<int, string>(125,"testvar123") }
+                        },
+                        new Dictionary<DateTime, Tuple<int, string>>{
+                            { DateTime.UtcNow.AddMinutes(-3), new Tuple<int, string>(17,"dsfsdtestvar") },
+                            { DateTime.UtcNow.AddMinutes(-4), new Tuple<int, string>(15625,"sdfsdtestvar") }
+                        }
+                    },
+                P5 = new Dictionary<int, Tuple<int, string>> {
+                     { 12, new Tuple<int, string>(478,"dsffdf") },
+                     { 178, new Tuple<int, string>(5687,"sdfsd") }
+                 },
+                P6 = new Tuple<int, string, Tuple<List<string>, DateTime>>(445, "dsfdfgfgfg", 
+                new Tuple<List<string>, DateTime>(new List<string> { "a1", "a2" }, DateTime.Now.AddDays(58))),
+                P7 = new List<string> { "fgdfgrdfg", "dfgfdgdfg" },
+                P8 = new Dictionary<int, List<string>> {
+                        { 34,new List<string> { "drtttz","ghhtht"} },
+                        { 4534,new List<string> { "dfgfghfgz","6546ghhtht"} }
+                    },
+
 ...
 }
 
+```
 
-Binary serialization:
 
+#### Binary serialization:
+```C#
  var serializedObjectAsByteArray = t6.BiserEncoder().Encode();
  var retoredBinaryObject= TS6.BiserDecode(serializedObjectAsByteArray);
+```
 
-
-JSON serialization:
-
+#### JSON serialization:
+```C#
  var jsonSettings = new Biser.JsonSettings { DateFormat = Biser.JsonSettings.DateTimeStyle.ISO };
  string prettifiedJsonString = new Biser.JsonEncoder(t6, jsonSet).GetJSON(Biser.JsonSettings.JsonStringStyle.Prettify);
  var restoredJsonObject= TS6.BiserJsonDecode(prettifiedJsonString, settings: jsonSettings);
-
+```
 
 - [Documentation binary Biser](https://docs.google.com/document/d/e/2PACX-1vQa3C506Esw3Fkroj4OA5erGOHEZpAtnXcQQ90R0w1wnFqO_16CH0dUfBJZt_ppB15ykoZWI9eR8KcG/pub)
 - [Documentation JSON Biser](https://docs.google.com/document/d/e/2PACX-1vQa3C506Esw3Fkroj4OA5erGOHEZpAtnXcQQ90R0w1wnFqO_16CH0dUfBJZt_ppB15ykoZWI9eR8KcG/pub#id.yqadcf2f2moz)
