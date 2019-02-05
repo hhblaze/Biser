@@ -24,7 +24,8 @@ Integrated part of [DBreeze database](https://github.com/hhblaze/DBreeze), used 
 
 Call next line to create code for the serialzer:
 ```C#
- var resbof = BiserObjectify.Generator.Run(typeof(TS6),true, @"D:\Temp\1\", forBiserBinary: true, forBiserJson: true);
+ var resbof = BiserObjectify.Generator.Run(typeof(TS6),true, 
+      @"D:\Temp\1\", forBiserBinary: true, forBiserJson: true);
 ```
 
 First argument is the type of the root object to be serialized (it can contain other objects that also must be serialized).
