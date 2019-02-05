@@ -48,7 +48,8 @@ namespace BiserTest_Net
                      { 12, new Tuple<int, string>(478,"dsffdf") },
                      { 178, new Tuple<int, string>(5687,"sdfsd") }
                  },
-                P6 = new Tuple<int, string, Tuple<List<string>, DateTime>>(445, "dsfdfgfgfg", new Tuple<List<string>, DateTime>(new List<string> { "a1", "a2" }, DateTime.Now.AddDays(58))),
+                P6 = new Tuple<int, string, Tuple<List<string>, DateTime>>(445, "dsfdfgfgfg", 
+                new Tuple<List<string>, DateTime>(new List<string> { "a1", "a2" }, DateTime.Now.AddDays(58))),
                 P7 = new List<string> { "fgdfgrdfg", "dfgfdgdfg" },
                 P8 = new Dictionary<int, List<string>> {
                         { 34,new List<string> { "drtttz","ghhtht"} },
