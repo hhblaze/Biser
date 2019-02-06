@@ -2,6 +2,7 @@
 [![Image of Build](https://img.shields.io/badge/License-BSD%203,%20FOSS-FC0574.svg)](https://github.com/hhblaze/Biser/blob/master/LICENSE)
 ![Image of Build](https://img.shields.io/badge/Roadmap-completed-33CC33.svg)
 [![NuGet Badge](https://buildstats.info/nuget/Biser)](https://www.nuget.org/packages/Biser/)
+[![NuGet Badge](https://buildstats.info/nuget/BiserObjectify)](https://www.nuget.org/packages/BiserObjectify/)
 [![Image of Build](https://img.shields.io/badge/Powered%20by-tiesky.com-1883F5.svg)](http://tiesky.com)
 
 Cross-platform BINARY and JSON serializer for .NET dotnet.
