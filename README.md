@@ -33,7 +33,7 @@ Second argument means that BiserObjectify must prepare serializer for all object
 Third argument points to the folder where C# files per object will be created.
 The fourth and fifth arguments mean that we want to use both Binary and JSON serializers
 
-resbof variable will contain the same information that in generated files also as Dictionary.
+resbof variable will contain the same information that in generated files also as a Dictionary.
 
 - Copy generated files into your project and embed/link them to the project. Try to recompile. 
 - Probably, it will be necessary to add “partial” keyword to objects that must be serialized:
@@ -49,10 +49,7 @@ resbof variable will contain the same information that in generated files also a
 Usage:
 ```C#
  TS6 t6 = new TS6()
-            {
-                P1 = "dsfs",
-                P2 = 456,
-                P3 = DateTime.UtcNow,
+            {                
                 P1 = "dsfs",
                 P2 = 456,
                 P3 = DateTime.UtcNow,
