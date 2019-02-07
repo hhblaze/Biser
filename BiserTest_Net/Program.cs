@@ -48,7 +48,7 @@ namespace BiserTest_Net
                 //     { 12, new Tuple<int, string>(478,"dsffdf") },
                 //     { 178, new Tuple<int, string>(5687,"sdfsd") }
                 // },
-                //P6 = new Tuple<int, string, Tuple<List<string>, DateTime>>(445, "dsfdfgfgfg", 
+                //P6 = new Tuple<int, string, Tuple<List<string>, DateTime>>(445, "dsfdfgfgfg",
                 //new Tuple<List<string>, DateTime>(new List<string> { "a1", "a2" }, DateTime.Now.AddDays(58))),
                 //P7 = new List<string> { "fgdfgrdfg", "dfgfdgdfg" },
                 //P8 = new Dictionary<int, List<string>> {
@@ -59,7 +59,7 @@ namespace BiserTest_Net
 
                 //P13 = new List<List<int>> { new List<int> { 12, 43, 54 }, new List<int> { 12, 43, 54 } },
 
-                //P15 = new Tuple<int, string, DateTime, byte[]>(147,"sdffgfdsg", DateTime.UtcNow, new byte[] {45,78,95 }),
+                //P15 = new Tuple<int, string, DateTime, byte[]>(147, "sdffgfdsg", DateTime.UtcNow, new byte[] { 45, 78, 95 }),
 
                 //P16 = new List<Dictionary<int, Tuple<int, string>>>
                 //    {
@@ -73,7 +73,7 @@ namespace BiserTest_Net
                 //        }
                 //    },
 
-               // P17 = new int[3] { 12,3545,7987}
+                //P17 = new int[3] { 12, 3545, 7987 }
 
             };
 

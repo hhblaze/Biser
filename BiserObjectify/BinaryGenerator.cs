@@ -60,11 +60,9 @@ namespace BiserObjectify
                 if (iType == typeof(object))
                     continue;
 
-                //sbDecode.Append($"\n\t\t\t\tcase \"{name.ToLower()}\":");
                 UsedVars.Add($"m.{name}");
-                DecodeSingle(iType, sbDecode, $"m.{name}", varCnt, ref varCntTotal, null);
+                DecodeSingle(iType, sbDecode, $"m.{name}", varCnt, ref varCntTotal);
                 varCnt = varCntTotal;
-                //sbDecode.Append("\n\t\t\t\t\tbreak;");
                
             }
 
@@ -80,9 +78,6 @@ namespace BiserObjectify
 
             var res = sb.ToString();
 
-           // System.IO.File.WriteAllText(@"D:\Temp\1\TS6_Biser.cs", res);
-            //Debug.WriteLine(res);
-            //Console.WriteLine(res);
             return res;
         }
 
@@ -95,19 +90,12 @@ namespace BiserObjectify
        /// <param name="varName"></param>
        /// <param name="varCnt"></param>
         void EncodeSingle(Type iType, StringBuilder sbEncode, string varName, int varCnt)
-        {
-            //if (iType == typeof(byte[]))
-            //{
-            //    sbEncode.Append($"\nencoder.Add({varName});");
-                
-            //}
-            //else 
+        {           
             if (iType.IsArray)
             {
                 if (iType == typeof(byte[]))
                 {
                     sbEncode.Append($"\nencoder.Add({varName});");
-
                 }
                 else
                 {
@@ -115,31 +103,15 @@ namespace BiserObjectify
                     int lv = varCnt;
                     sbEncode.Append($"\nif({varName} == null) \nencoder.Add((byte)1);\nelse {{ \nencoder.Add((byte)0);");
 
-                    if(iType.GetArrayRank() > 0)
-                    {
+                    //if(iType.GetArrayRank() > 0)
+                    //{
                         sbEncode.Append($"\nfor(int it{lv}=0; it{lv} < {varName}.Rank; it{lv}++)");
                         sbEncode.Append($"\nencoder.Add({varName}.GetLength(it{lv}));");
                         varCnt++;
                         sbEncode.Append($"\nforeach(var el{varCnt} in {varName})");
                         EncodeSingle(iType.GetElementType(), sbEncode, $"el{varCnt}", varCnt);
-                    }
-                    else
-                    { //else rank == 1 (jagged)
-
-
-                        //not implemented must be represented as -> e.g. int[] must be List<int>
-                        //int[][] can be represented as //so can be represented as List<List<List<
-
-                        //implementation for list, but without initial count
-                        //varCnt++;
-                        //sbEncode.Append($"\nencoder.Add({varName}, (r{varCnt}) => {{");
-                        //EncodeSingle(iType.GetElementType(), sbEncode, "r" + varCnt, varCnt);
-                        //sbEncode.Append($"}});");
-
-                        Console.WriteLine("-------------BiserObjectify: change one-dimesional or jagged array on List-------------");
-                        Debug.WriteLine("-------------BiserObjectify: change one-dimesional or jagged array on List-------------");
-                    }
-
+                    //}
+                    
                     sbEncode.Append($"\n}}"); //eo if
                 }
             }
@@ -147,16 +119,14 @@ namespace BiserObjectify
             {              
                 if (iType.GetInterface("ISet`1") != null || iType.GetInterface("IList`1") != null)
                 {
-                    varCnt++;
-                  
+                    varCnt++;                  
                     sbEncode.Append($"\nencoder.Add({varName}, (r{varCnt}) => {{");
                     EncodeSingle(iType.GenericTypeArguments[0], sbEncode, "r" + varCnt, varCnt);
                     sbEncode.Append($"}});");
                 }
                 else if (iType.GetInterface("IDictionary`2") != null)
                 {
-                    varCnt++;
-                   
+                    varCnt++;                   
                     sbEncode.Append($"\nencoder.Add({varName}, (r{varCnt}) => {{");
                     EncodeSingle(iType.GenericTypeArguments[0], sbEncode, "r" + varCnt+".Key", varCnt);                 
                     EncodeSingle(iType.GenericTypeArguments[1], sbEncode, "r" + varCnt + ".Value", varCnt);
@@ -188,19 +158,12 @@ namespace BiserObjectify
         /// <param name="sbDecode"></param>
         /// <param name="varName"></param>
         /// <param name="varCnt"></param>
-        /// <param name="mapper"></param>
-        int DecodeSingle(Type iType, StringBuilder sbDecode, string varName, int varCnt, ref int varCntTotal, MapperContent mapper)
+        int DecodeSingle(Type iType, StringBuilder sbDecode, string varName, int varCnt, ref int varCntTotal)
         {
             
             if (iType == typeof(byte[]))
             {
-                if (mapper != null)
-                {
-                    mapper.Lst.Add(StandardTypes.GetFriendlyName(iType));
-                }
-
-                //if (mapper != null)
-                //    sbJsonDecode.Append("var ");
+                
                 if (!UsedVars.Contains(varName))
                 {
                     UsedVars.Add(varName);
@@ -222,16 +185,7 @@ namespace BiserObjectify
                 StringBuilder msb1 = new StringBuilder();
                 StringBuilder msb2 = new StringBuilder();
                 StringBuilder msb3 = new StringBuilder();
-
-                var myMapper = new MapperContent { };
-               
-                if (mapper != null)
-                {
-                    mapper.Lst.Add(StandardTypes.GetFriendlyName(iType));                   
-                    //mapper.Lst.Add(StandardTypes.GetFriendlyName(iType));
-                }
-               
-
+             
                 if (!UsedVars.Contains(varName))
                 {
                     UsedVars.Add(varName);
@@ -261,17 +215,15 @@ namespace BiserObjectify
                         varCnt++;
                         varCntTotal++;
                         UsedVars.Add($"{varName}[{msb3.ToString()}]");
-                        DecodeSingle(iType.GetElementType(), msb2, $"{varName}[{msb3.ToString()}]", varCnt, ref varCntTotal, myMapper);
+                        DecodeSingle(iType.GetElementType(), msb2, $"{varName}[{msb3.ToString()}]", varCnt, ref varCntTotal);
                         msb2.Append($"\n}}");
                     }
                     else
-                    {
                         msb2.Append($"\nfor(int ard{ardpv}_{i} = 0; ard{ardpv}_{i} < {varName}.GetLength({i}); ard{ardpv}_{i}++)");
-                    }
                 }
 
                 int iof = 0;
-                string strf = StandardTypes.GetFriendlyName(iType);// myMapper.PrepareContent();
+                string strf = StandardTypes.GetFriendlyName(iType);
                 StringBuilder revArr = new StringBuilder();
                 for (int j = strf.Length - 1; j >= 0; j--)
                 {
@@ -292,20 +244,13 @@ namespace BiserObjectify
                 var revArrStr = revArr.ToString();
                 revArrStr = revArrStr.Substring(revArrStr.IndexOf("]")+1);
 
-                if (iof > 0)
-                    //strf = $"{strf.Substring(0, strf.Length - iof)}[{msb1.ToString()}]";
-                    strf = $"{strf.Substring(0, strf.Length - iof)}[{msb1.ToString()}]{revArrStr.ToString()}";
-                //strf = $"{strf.Substring(0, strf.Length - iof)}[{msb1.ToString()}]{strf}";
+                if (iof > 0)                    
+                    strf = $"{strf.Substring(0, strf.Length - iof)}[{msb1.ToString()}]{revArrStr.ToString()}";                
                 else
                     strf = $"{strf}[{msb1.ToString()}]";
-
-                //strf += $"{msb1.ToString()}";
-                sbDecode.Append($"{varName} = decoder.CheckNull() ? null : new {strf};");
-                //sbDecode.Append($" //  {StandardTypes.GetCSharpTypeName(iType, out var array222)}");
-                //sbDecode.Append($"{varName} = decoder.CheckNull() ? null : new {StandardTypes.GetCSharpTypeName(iType)};");
-
+                
+                sbDecode.Append($"{varName} = decoder.CheckNull() ? null : new {strf};"); 
                 sbDecode.Append($"\n{msb2.ToString()}");
-
             }
             else if (iType.GetInterface("ICollection`1") != null)
             {
@@ -313,14 +258,6 @@ namespace BiserObjectify
 
                 if (iType.GetInterface("ISet`1") != null || iType.GetInterface("IList`1") != null)
                 {
-                    //Generating newGuid                   
-                    var myMapper = new MapperContent { };
-
-                    //myMapper.Lst.Add(StandardTypes.GetCSharpTypeName(iType));
-                    //myMapper.Lst.Add("<");
-
-                    
-                   
                     if (!UsedVars.Contains(varName))
                     {
                         UsedVars.Add(varName);
@@ -328,14 +265,9 @@ namespace BiserObjectify
                     }
                     else
                         msb.Append("\n");
-
-                    //msb.Append($"{varName} = decoder.CheckNull() ? null : new {{@45879846845}}();");
+                    
                     msb.Append($"{varName} = decoder.CheckNull() ? null : new {StandardTypes.GetFriendlyName(iType)}();");
                     msb.Append($"\nif({varName} != null){{");
-
-                    //varCnt++;
-                    //varCntTotal++;                  
-
                     msb.Append($"\n\tdecoder.GetCollection(() => {{");
 
                     StringBuilder sbi = new StringBuilder();
@@ -343,45 +275,18 @@ namespace BiserObjectify
                     varCntTotal++;
                     int pv2 = varCnt;                  
 
-                    DecodeSingle(iType.GenericTypeArguments[0], sbi, $"pvar{pv2}", varCnt, ref varCntTotal, myMapper);
+                    DecodeSingle(iType.GenericTypeArguments[0], sbi, $"pvar{pv2}", varCnt, ref varCntTotal);
                     msb.Append(sbi.ToString());
 
-                    //msb.Append($"\n\t\t{varName}.Add(pvar{pv2});"); //****
-                    msb.Append($"\n\t\treturn pvar{pv2};"); //****
+                    msb.Append($"\n\t\treturn pvar{pv2};");
                     msb.Append($"\n\t}}, {varName}, true);");
 
-                    msb.Append($"\n}}"); //eof if varname != null
+                    msb.Append($"\n}}"); 
 
-                    //myMapper.Lst.Add(">");
-
-                    //msb.Replace("{@45879846845}", myMapper.PrepareContent());
-
-                    sbDecode.Append(msb.ToString());
-                    //if (mapper != null)
-                    //    mapper.Lst.Add(myMapper.PrepareContent());
-                    //mapper.Lst.AddRange(myMapper.Lst);
+                    sbDecode.Append(msb.ToString());                   
                 }
                 else if (iType.GetInterface("IDictionary`2") != null)
                 {
-
-                    ////    iType = iType.GenericTypeArguments[1];
-
-                    //Generating newGuid
-                    var myMapper = new MapperContent { };
-
-                    myMapper.Lst.Add(StandardTypes.GetFriendlyName(iType));
-                    myMapper.Lst.Add("<");
-
-                    //var kT = iType.GenericTypeArguments[0];
-                    //var vT = iType.GenericTypeArguments[1];
-
-                    myMapper.Lst.Add(StandardTypes.GetFriendlyName(iType.GenericTypeArguments[0]));  //Key should be simple !!!!!!!!
-                    myMapper.Lst.Add(", ");
-
-                    //iType = iType.GenericTypeArguments[1];
-
-                    //if (mapper != null)
-                    //    msb.Append("var ");
                     if (!UsedVars.Contains(varName))
                     {
                         UsedVars.Add(varName);
@@ -393,10 +298,6 @@ namespace BiserObjectify
                     msb.Append($"{varName} = decoder.CheckNull() ? null : new {StandardTypes.GetFriendlyName(iType)}();");
                     msb.Append($"\nif({varName} != null){{");
 
-                    //varCnt++;
-                    //varCntTotal++;
-                    //int pv1 = varCnt;
-                    //msb.Append($"\n\tforeach(var el{pv1} in decoder.GetDictionary<{kT}>()) {{");
                     msb.Append($"\n\tdecoder.GetCollection(() => {{");
 
                     StringBuilder sbi = new StringBuilder();
@@ -404,7 +305,7 @@ namespace BiserObjectify
                     varCnt++;
                     varCntTotal++;
                     int pv2 = varCnt;
-                    DecodeSingle(iType.GenericTypeArguments[0], sbi, $"pvar{pv2}", varCnt, ref varCntTotal, null);
+                    DecodeSingle(iType.GenericTypeArguments[0], sbi, $"pvar{pv2}", varCnt, ref varCntTotal);
                     msb.Append(sbi.ToString());
                     msb.Append($"\n\t\treturn pvar{pv2};"); 
                     msb.Append($"\n}},");
@@ -414,90 +315,58 @@ namespace BiserObjectify
                     varCnt++;
                     varCntTotal++;
                     int pv3 = varCnt;
-                    DecodeSingle(iType.GenericTypeArguments[1], sbi, $"pvar{pv3}", varCnt, ref varCntTotal, myMapper);
+                    DecodeSingle(iType.GenericTypeArguments[1], sbi, $"pvar{pv3}", varCnt, ref varCntTotal);
 
                     msb.Append(sbi.ToString());
-
                     msb.Append($"\n\t\treturn pvar{pv3};");
-                    //msb.Append($"\n\t\t{varName}.Add(el{pv1}, pvar{pv2});"); //****
-
                     msb.Append($"\n\t}}, {varName}, true);");
-
-                    msb.Append($"\n}}"); //eof if varname != null
-
-                    myMapper.Lst.Add(">");
-
-                   // msb.Replace("{@45879846845}", myMapper.PrepareContent());
-
-
-                    sbDecode.Append(msb.ToString());
-                    if (mapper != null)
-                        mapper.Lst.Add(myMapper.PrepareContent());
+                    msb.Append($"\n}}"); 
+                                       
+                    sbDecode.Append(msb.ToString());                   
                 }
-
-
             }
             else if (iType.GetInterface("ITuple") != null)
             {
                 Dictionary<int, Type> dTuple = new Dictionary<int, Type>();
-                StringBuilder sbi = new StringBuilder();
-                MapperContent myMapper = null;
+                StringBuilder sbi = new StringBuilder();              
                 StringBuilder msb = new StringBuilder();
                 bool first = true;
                 StringBuilder tupleType = new StringBuilder();
 
                 List<string> tuplSbi = new List<string>();
                 foreach (var gta in iType.GetGenericArguments())
-                {
-                    myMapper = new MapperContent { };
+                {                   
                     sbi.Clear();
                     varCnt++;
                     varCntTotal++;
                     dTuple.Add(varCnt, gta);
-
-
                     UsedVars.Add($"pvar{varCnt}");
-
-                    int varCntNew = DecodeSingle(gta, sbi, $"pvar{varCnt}", varCnt, ref varCntTotal, myMapper);
+                    int varCntNew = DecodeSingle(gta, sbi, $"pvar{varCnt}", varCnt, ref varCntTotal);
 
                     if (first)
                         first = false;
                     else
                         tupleType.Append(", ");
-                    tupleType.Append(myMapper.PrepareContent());
+                    
+                    tupleType.Append(StandardTypes.GetFriendlyName(gta));
 
                     var defaultValue = StandardTypes.GetDefaultValue(gta);
                     if (defaultValue == null)
                         defaultValue = $"default({StandardTypes.GetFriendlyName(gta)})";
-                    //defaultValue = $"default({myMapper.PrepareContent()})";
-                    //msb.Append($"\n{myMapper.PrepareContent()} pvar{varCnt} = {defaultValue};");
+                    
                     msb.Append($"\n{StandardTypes.GetFriendlyName(gta)} pvar{varCnt} = {defaultValue};");
                     varCnt = varCntNew;
-                    // tuplSbi.Add(sbi.ToString().Substring(4)); //cutting 'var '
-
-                    ////////cutting 'var '  workaround
-                    //////var sbis = sbi.ToString();
-                    //////if (sbis.StartsWith("var "))
-                    //////    sbis = sbis.Substring(4);
-                    //////tuplSbi.Add(sbis);
+                    
                     tuplSbi.Add(sbi.ToString());
-
                 }
-
-                //varCnt++;
-                //varCntTotal++;
-                //msb.Append($"\nfor(int tupleProps{varCnt} = 1;tupleProps{varCnt} <= {iType.GetGenericArguments().Length};tupleProps{varCnt}++){{");
-
-
+                
                 int elcnt = 0;
                 foreach (var el in tuplSbi)
                 {
                     elcnt++;                
-                    msb.Append(el);
-                
+                    msb.Append(el);                
                 }
-                //msb.Append("\n}");
-                                               
+                                                               
                 if (!UsedVars.Contains(varName))
                 {
                     UsedVars.Add(varName);
@@ -519,22 +388,10 @@ namespace BiserObjectify
                 }
                 msb.Append(");");
 
-
                 sbDecode.Append(msb.ToString());
-
-                if (mapper != null)
-                    mapper.Lst.Add($"Tuple<{tupleType.ToString()}>");
             }
             else
             {
-                ////or simple type
-                if (mapper != null)
-                {
-                    mapper.Lst.Add(StandardTypes.GetFriendlyName(iType));
-
-                    //sbJsonDecode.Append("var ");
-                }
-
                 if (!UsedVars.Contains(varName))
                 {
                     UsedVars.Add(varName);
@@ -544,8 +401,7 @@ namespace BiserObjectify
                     sbDecode.Append("\n");
 
                 sbDecode.Append($"{varName} = ");
-                //sbJsonDecode.Append($"var {varName} = ");
-
+              
                 if (StandardTypes.STypes.TryGetValue(iType, out var tf))
                 {
                     sbDecode.Append(tf.FGet);
@@ -555,15 +411,10 @@ namespace BiserObjectify
                     if (iType == myType)
                         throw new Exception("Cross-Reference exception. Object can't contain itself as a property");
 
-                    //adding object to UsedObjects list
                     UsedObjects.Add(iType);
-
                     sbDecode.Append(StandardTypes.GetFriendlyName(iType) + ".BiserDecode(null, decoder)");
                 }
-
-
                 sbDecode.Append(";");
-
             }
 
             return varCntTotal;
