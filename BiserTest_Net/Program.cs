@@ -20,13 +20,13 @@ namespace BiserTest_Net
     {
         static void Main(string[] args)
         {
-            var resbof = BiserObjectify.Generator.Run(typeof(TS6),
-                true,
-                @"D:\Temp\1\",
-                forBiserBinary: true,
-                forBiserJson: false);
+            //var resbof = BiserObjectify.Generator.Run(typeof(TS6),
+            //    true,
+            //    @"D:\Temp\1\",
+            //    forBiserBinary: true,
+            //    forBiserJson: false);
 
-            return;
+            //return;
 
             TS6 t6 = new TS6()
             {
@@ -131,8 +131,10 @@ namespace BiserTest_Net
 
             //Json test
 
+            t6.P25 = new System.Collections.Generic.Dictionary<System.Int32, System.Collections.Generic.List<System.String[,][][,,]>>
+                [2, 3, 4, 8][][,,];
 
-            //var njSer = NetJSON.NetJSON.Serialize(t6, new NetJSON.NetJSONSettings { DateFormat = NetJSON.NetJSONDateFormat.ISO });
+            var njSer = NetJSON.NetJSON.Serialize(t6, new NetJSON.NetJSONSettings { DateFormat = NetJSON.NetJSONDateFormat.ISO });
 
             //var jsonSet = new Biser.JsonSettings { DateFormat = Biser.JsonSettings.DateTimeStyle.ISO };
             //Biser.JsonEncoder enc = new Biser.JsonEncoder(t6, jsonSet);
@@ -146,8 +148,8 @@ namespace BiserTest_Net
 
 
 
-            //var encb = t6.BiserEncoder().Encode();
-            //var t6n = TS6.BiserDecode(encb);
+            var encb = t6.BiserEncoder().Encode();
+            var t6n = TS6.BiserDecode(encb);
 
             return;
             TestDecodeV1();

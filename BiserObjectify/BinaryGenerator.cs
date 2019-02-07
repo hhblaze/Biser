@@ -249,8 +249,10 @@ namespace BiserObjectify
                 else
                     strf = $"{strf}[{msb1.ToString()}]";
                 
-                sbDecode.Append($"{varName} = decoder.CheckNull() ? null : new {strf};"); 
+                sbDecode.Append($"{varName} = decoder.CheckNull() ? null : new {strf};");
+                sbDecode.Append($"\nif({varName} != null){{");
                 sbDecode.Append($"\n{msb2.ToString()}");
+                sbDecode.Append($"\n}}");
             }
             else if (iType.GetInterface("ICollection`1") != null)
             {
