@@ -196,7 +196,7 @@ namespace BiserObjectify
             {
                 if (mapper != null)
                 {
-                    mapper.Lst.Add(StandardTypes.GetCSharpTypeName(iType));
+                    mapper.Lst.Add(StandardTypes.GetFriendlyName(iType));
                 }
 
                 //if (mapper != null)
@@ -227,7 +227,8 @@ namespace BiserObjectify
                
                 if (mapper != null)
                 {
-                    mapper.Lst.Add(StandardTypes.GetCSharpTypeName(iType));                   
+                    mapper.Lst.Add(StandardTypes.GetFriendlyName(iType));                   
+                    //mapper.Lst.Add(StandardTypes.GetFriendlyName(iType));
                 }
                
 
@@ -270,7 +271,7 @@ namespace BiserObjectify
                 }
 
                 int iof = 0;
-                string strf = myMapper.PrepareContent();
+                string strf = StandardTypes.GetFriendlyName(iType);// myMapper.PrepareContent();
                 StringBuilder revArr = new StringBuilder();
                 for (int j = strf.Length - 1; j >= 0; j--)
                 {
@@ -288,12 +289,20 @@ namespace BiserObjectify
                         break;
                 }
 
+                var revArrStr = revArr.ToString();
+                revArrStr = revArrStr.Substring(revArrStr.IndexOf("]")+1);
+
                 if (iof > 0)
-                    strf = $"{strf.Substring(0, strf.Length - iof)}[{msb1.ToString()}]{revArr.ToString()}";
+                    //strf = $"{strf.Substring(0, strf.Length - iof)}[{msb1.ToString()}]";
+                    strf = $"{strf.Substring(0, strf.Length - iof)}[{msb1.ToString()}]{revArrStr.ToString()}";
+                //strf = $"{strf.Substring(0, strf.Length - iof)}[{msb1.ToString()}]{strf}";
                 else
                     strf = $"{strf}[{msb1.ToString()}]";
 
+                //strf += $"{msb1.ToString()}";
                 sbDecode.Append($"{varName} = decoder.CheckNull() ? null : new {strf};");
+                //sbDecode.Append($" //  {StandardTypes.GetCSharpTypeName(iType, out var array222)}");
+                //sbDecode.Append($"{varName} = decoder.CheckNull() ? null : new {StandardTypes.GetCSharpTypeName(iType)};");
 
                 sbDecode.Append($"\n{msb2.ToString()}");
 
@@ -307,10 +316,10 @@ namespace BiserObjectify
                     //Generating newGuid                   
                     var myMapper = new MapperContent { };
 
-                    myMapper.Lst.Add(StandardTypes.GetCSharpTypeName(iType));
-                    myMapper.Lst.Add("<");
+                    //myMapper.Lst.Add(StandardTypes.GetCSharpTypeName(iType));
+                    //myMapper.Lst.Add("<");
 
-                    iType = iType.GenericTypeArguments[0];
+                    
                    
                     if (!UsedVars.Contains(varName))
                     {
@@ -320,7 +329,8 @@ namespace BiserObjectify
                     else
                         msb.Append("\n");
 
-                    msb.Append($"{varName} = decoder.CheckNull() ? null : new {{@45879846845}}();");
+                    //msb.Append($"{varName} = decoder.CheckNull() ? null : new {{@45879846845}}();");
+                    msb.Append($"{varName} = decoder.CheckNull() ? null : new {StandardTypes.GetFriendlyName(iType)}();");
                     msb.Append($"\nif({varName} != null){{");
 
                     //varCnt++;
@@ -331,8 +341,9 @@ namespace BiserObjectify
                     StringBuilder sbi = new StringBuilder();
                     varCnt++;
                     varCntTotal++;
-                    int pv2 = varCnt;
-                    DecodeSingle(iType, sbi, $"pvar{pv2}", varCnt, ref varCntTotal, myMapper);
+                    int pv2 = varCnt;                  
+
+                    DecodeSingle(iType.GenericTypeArguments[0], sbi, $"pvar{pv2}", varCnt, ref varCntTotal, myMapper);
                     msb.Append(sbi.ToString());
 
                     //msb.Append($"\n\t\t{varName}.Add(pvar{pv2});"); //****
@@ -341,13 +352,13 @@ namespace BiserObjectify
 
                     msb.Append($"\n}}"); //eof if varname != null
 
-                    myMapper.Lst.Add(">");
+                    //myMapper.Lst.Add(">");
 
-                    msb.Replace("{@45879846845}", myMapper.PrepareContent());
+                    //msb.Replace("{@45879846845}", myMapper.PrepareContent());
 
                     sbDecode.Append(msb.ToString());
-                    if (mapper != null)
-                        mapper.Lst.Add(myMapper.PrepareContent());
+                    //if (mapper != null)
+                    //    mapper.Lst.Add(myMapper.PrepareContent());
                     //mapper.Lst.AddRange(myMapper.Lst);
                 }
                 else if (iType.GetInterface("IDictionary`2") != null)
@@ -358,13 +369,13 @@ namespace BiserObjectify
                     //Generating newGuid
                     var myMapper = new MapperContent { };
 
-                    myMapper.Lst.Add(StandardTypes.GetCSharpTypeName(iType));
+                    myMapper.Lst.Add(StandardTypes.GetFriendlyName(iType));
                     myMapper.Lst.Add("<");
 
                     //var kT = iType.GenericTypeArguments[0];
                     //var vT = iType.GenericTypeArguments[1];
 
-                    myMapper.Lst.Add(StandardTypes.GetCSharpTypeName(iType.GenericTypeArguments[0]));  //Key should be simple !!!!!!!!
+                    myMapper.Lst.Add(StandardTypes.GetFriendlyName(iType.GenericTypeArguments[0]));  //Key should be simple !!!!!!!!
                     myMapper.Lst.Add(", ");
 
                     //iType = iType.GenericTypeArguments[1];
@@ -379,7 +390,7 @@ namespace BiserObjectify
                     else
                         msb.Append("\n");
 
-                    msb.Append($"{varName} = decoder.CheckNull() ? null : new {{@45879846845}}();");
+                    msb.Append($"{varName} = decoder.CheckNull() ? null : new {StandardTypes.GetFriendlyName(iType)}();");
                     msb.Append($"\nif({varName} != null){{");
 
                     //varCnt++;
@@ -416,7 +427,7 @@ namespace BiserObjectify
 
                     myMapper.Lst.Add(">");
 
-                    msb.Replace("{@45879846845}", myMapper.PrepareContent());
+                   // msb.Replace("{@45879846845}", myMapper.PrepareContent());
 
 
                     sbDecode.Append(msb.ToString());
@@ -457,8 +468,10 @@ namespace BiserObjectify
 
                     var defaultValue = StandardTypes.GetDefaultValue(gta);
                     if (defaultValue == null)
-                        defaultValue = $"default({myMapper.PrepareContent()})";
-                    msb.Append($"\n{myMapper.PrepareContent()} pvar{varCnt} = {defaultValue};");
+                        defaultValue = $"default({StandardTypes.GetFriendlyName(gta)})";
+                    //defaultValue = $"default({myMapper.PrepareContent()})";
+                    //msb.Append($"\n{myMapper.PrepareContent()} pvar{varCnt} = {defaultValue};");
+                    msb.Append($"\n{StandardTypes.GetFriendlyName(gta)} pvar{varCnt} = {defaultValue};");
                     varCnt = varCntNew;
                     // tuplSbi.Add(sbi.ToString().Substring(4)); //cutting 'var '
 
@@ -517,7 +530,7 @@ namespace BiserObjectify
                 ////or simple type
                 if (mapper != null)
                 {
-                    mapper.Lst.Add(StandardTypes.GetCSharpTypeName(iType));
+                    mapper.Lst.Add(StandardTypes.GetFriendlyName(iType));
 
                     //sbJsonDecode.Append("var ");
                 }
@@ -545,7 +558,7 @@ namespace BiserObjectify
                     //adding object to UsedObjects list
                     UsedObjects.Add(iType);
 
-                    sbDecode.Append(StandardTypes.GetCSharpTypeName(iType) + ".BiserDecode(null, decoder)");
+                    sbDecode.Append(StandardTypes.GetFriendlyName(iType) + ".BiserDecode(null, decoder)");
                 }
 
 

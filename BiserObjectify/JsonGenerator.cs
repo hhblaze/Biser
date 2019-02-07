@@ -281,7 +281,7 @@ namespace BiserObjectify
             {
                 if (mapper != null)
                 {
-                    mapper.Lst.Add(StandardTypes.GetCSharpTypeName(iType));
+                    mapper.Lst.Add(StandardTypes.GetFriendlyName(iType));
                 }
 
                 //if (mapper != null)
@@ -363,7 +363,7 @@ namespace BiserObjectify
                     //Generating newGuid                   
                     var myMapper = new MapperContent { };
 
-                    myMapper.Lst.Add(StandardTypes.GetCSharpTypeName(iType));
+                    myMapper.Lst.Add(StandardTypes.GetFriendlyName(iType));
                     myMapper.Lst.Add("<");
 
                     iType = iType.GenericTypeArguments[0];
@@ -415,13 +415,13 @@ namespace BiserObjectify
                     //Generating newGuid
                     var myMapper = new MapperContent { };
 
-                    myMapper.Lst.Add(StandardTypes.GetCSharpTypeName(iType));
+                    myMapper.Lst.Add(StandardTypes.GetFriendlyName(iType));
                     myMapper.Lst.Add("<");
 
                     var kT = iType.GenericTypeArguments[0];
                     //var vT = iType.GenericTypeArguments[1];
 
-                    myMapper.Lst.Add(StandardTypes.GetCSharpTypeName(kT));  //Key should be simple !!!!!!!!
+                    myMapper.Lst.Add(StandardTypes.GetFriendlyName(kT));  //Key should be simple !!!!!!!!
                     myMapper.Lst.Add(", ");
 
                     iType = iType.GenericTypeArguments[1];
@@ -572,7 +572,7 @@ namespace BiserObjectify
                 //or simple type
                 if (mapper != null)
                 {
-                    mapper.Lst.Add(StandardTypes.GetCSharpTypeName(iType));
+                    mapper.Lst.Add(StandardTypes.GetFriendlyName(iType));
 
                     //sbJsonDecode.Append("var ");
                 }
@@ -601,7 +601,7 @@ namespace BiserObjectify
                     UsedObjects.Add(iType);
 
 
-                    sbJsonDecode.Append(StandardTypes.GetCSharpTypeName(iType) + ".BiserJsonDecode(null, decoder)");
+                    sbJsonDecode.Append(StandardTypes.GetFriendlyName(iType) + ".BiserJsonDecode(null, decoder)");
                 }
 
 

@@ -75,23 +75,139 @@ namespace BiserObjectify
         //    return type.FullName;
         //}
 
-        public static string GetCSharpTypeName(Type type)
-        {
-            int idx = Int32.MaxValue;
-            int io = type.FullName.IndexOf("`");
-            if (io > 0 && idx > io)
-                idx = io;
-            io = type.FullName.IndexOf("[");
-            if (io > 0 && idx > io)
-                idx = io;
-            //var rio = type.FullName.IndexOf("?"); //-1
+        //public static string GetFriendlyName(Type type)
+        //{
+        //    return GetFriendlyName(type);
+
+        //    int idx = Int32.MaxValue;
+        //    int io = type.FullName.IndexOf("`");
+        //    if (io > 0 && idx > io)
+        //        idx = io;
+        //    io = type.FullName.IndexOf("[");
+        //    if (io > 0 && idx > io)
+        //        idx = io;
+        //    //var rio = type.FullName.IndexOf("?"); //-1
+
+        //    if (type.IsArray)
+        //    {
+        //        //return type.FullName.Substring(0, idx);
+        //        return type.FullName;
+        //    }
+        //    else if (idx == Int32.MaxValue)
+        //        return type.FullName;
+        //    else
+        //        return type.FullName.Substring(0, idx);
+        //}
+
+
+        //    private static readonly Dictionary<Type, string> _typeToFriendlyName = new Dictionary<Type, string>
+        //{
+        //    { typeof(string), "string" },
+        //    { typeof(object), "object" },
+        //    { typeof(bool), "bool" },
+        //    { typeof(byte), "byte" },
+        //    { typeof(char), "char" },
+        //    { typeof(decimal), "decimal" },
+        //    { typeof(double), "double" },
+        //    { typeof(short), "short" },
+        //    { typeof(int), "int" },
+        //    { typeof(long), "long" },
+        //    { typeof(sbyte), "sbyte" },
+        //    { typeof(float), "float" },
+        //    { typeof(ushort), "ushort" },
+        //    { typeof(uint), "uint" },
+        //    { typeof(ulong), "ulong" },
+        //    { typeof(void), "void" }
+        //};
+
+        //public static string GetFriendlyName(Type type)
+        public static string GetFriendlyName(Type type)
+        {            
+            string friendlyName;
+            //if (_typeToFriendlyName.TryGetValue(type, out friendlyName))
+            //{
+            //    return friendlyName;
+            //}
+
+            //friendlyName = type.Name;
+            friendlyName = type.FullName;
+            if (type.IsGenericType)
+            {
+                int backtick = friendlyName.IndexOf('`');
+                if (backtick > 0)
+                {
+                    friendlyName = friendlyName.Remove(backtick);
+                }
+                friendlyName += "<";
+                Type[] typeParameters = type.GetGenericArguments();
+                for (int i = 0; i < typeParameters.Length; i++)
+                {
+                    string typeParamName = GetFriendlyName(typeParameters[i]);
+                    if(typeParameters[i].IsArray)
+                    {
+                        //Reversing array
+                        typeParamName = ReverseArrayDefinition(typeParamName);
+                    }
+                    friendlyName += (i == 0 ? typeParamName : ", " + typeParamName);
+                }
+                friendlyName += ">";
+            }
 
             if (type.IsArray)
-                return type.FullName;
-            else if (idx == Int32.MaxValue)
-                return type.FullName;
-            else
-                return type.FullName.Substring(0, idx);
+            {
+                int iof = 0;
+                StringBuilder revArr = new StringBuilder();
+                StringBuilder revCut = new StringBuilder();
+                for (int j = type.Name.Length - 1; j >= 0; j--)
+                {
+                    var l = type.Name[j];
+                    if (l == '[' || l == ']' || l == ',')
+                    {
+                        iof++;
+                        if (l == '[')
+                            l = ']';
+                        else if (l == ']')
+                            l = '[';
+                        revArr.Append(l);
+                    }
+                    else
+                        break;
+                }
+             
+                foreach (var el in revArr.ToString())
+                {
+                    revCut.Append(el);
+                    if (el == ']')
+                        break;
+                }
+
+                return GetFriendlyName(type.GetElementType()) + revCut.ToString();               
+            }
+
+            return friendlyName;
         }
+
+        static string ReverseArrayDefinition(string typeName)
+        {
+            int iof = 0;
+            StringBuilder revArr = new StringBuilder();
+            for (int j = typeName.Length - 1; j >= 0; j--)
+            {
+                var l = typeName[j];
+                if (l == '[' || l == ']' || l == ',')
+                {
+                    iof++;
+                    if (l == '[')
+                        l = ']';
+                    else if (l == ']')
+                        l = '[';
+                    revArr.Append(l);
+                }
+                else
+                    break;
+            }
+            return typeName.Substring(0, typeName.Length - iof) + revArr.ToString();
+        }
+
     }
 }
