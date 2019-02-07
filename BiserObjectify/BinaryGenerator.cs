@@ -113,9 +113,9 @@ namespace BiserObjectify
                 {
                     varCnt++;
                     int lv = varCnt;
-                    sbEncode.Append($"\nif({varName} == null) \nencoder.Add((byte)1);\nelse {{");
+                    sbEncode.Append($"\nif({varName} == null) \nencoder.Add((byte)1);\nelse {{ \nencoder.Add((byte)0);");
 
-                    if(iType.GetArrayRank() > 1)
+                    if(iType.GetArrayRank() > 0)
                     {
                         sbEncode.Append($"\nfor(int it{lv}=0; it{lv} < {varName}.Rank; it{lv}++)");
                         sbEncode.Append($"\nencoder.Add({varName}.GetLength(it{lv}));");
@@ -224,11 +224,13 @@ namespace BiserObjectify
                 StringBuilder msb3 = new StringBuilder();
 
                 var myMapper = new MapperContent { };
-
+               
                 if (mapper != null)
                 {
                     mapper.Lst.Add(StandardTypes.GetCSharpTypeName(iType));
+                   
                 }
+               
 
                 if (!UsedVars.Contains(varName))
                 {
@@ -236,12 +238,9 @@ namespace BiserObjectify
                     sbDecode.Append("\nvar ");
                 }
                 else
-                    sbDecode.Append("\n");
-                sbDecode.Append($"{varName} = null;");
+                    sbDecode.Append("\n");               
 
-                sbDecode.Append($"\nif(!decoder.CheckNull()) {{");
-
-                if (iType.GetArrayRank() > 1)
+                if (iType.GetArrayRank() > 0)
                 {                  
                     for (int i = 0; i < iType.GetArrayRank(); i++)
                     {
@@ -251,12 +250,16 @@ namespace BiserObjectify
                             msb3.Append(", ");
                         }
 
-                        msb1.Append("decoder.GetInt()");
-                        msb3.Append($"ard{i}");
+                        varCnt++;
+                        varCntTotal++;
+                        int ardpv = varCnt;
+
+                        msb1.Append("decoder.GetInt()");                        
+                        msb3.Append($"ard{ardpv}_{i}");
                         //---
                         if (i == iType.GetArrayRank() - 1)
                         {//last element
-                            msb2.Append($"\nfor(int ard{i} = 0; ard{i} < {varName}.GetLength({i}); ard{i}++) {{");
+                            msb2.Append($"\nfor(int ard{ardpv}_{i} = 0; ard{ardpv}_{i} < {varName}.GetLength({i}); ard{ardpv}_{i}++) {{");
                             varCnt++;
                             varCntTotal++;
                             UsedVars.Add($"{varName}[{msb3.ToString()}]");
@@ -265,30 +268,70 @@ namespace BiserObjectify
                         }
                         else
                         {
-                            msb2.Append($"\nfor(int ard{i} = 0; ard{i} < {varName}.GetLength({i}); ard{i}++)");
+                            msb2.Append($"\nfor(int ard{ardpv}_{i} = 0; ard{ardpv}_{i} < {varName}.GetLength({i}); ard{ardpv}_{i}++)");
                         }
                     }
-                    sbDecode.Append($"\n{varName} = new {myMapper.PrepareContent()}[");
-                    sbDecode.Append(msb1.ToString());
+
+                    //string tpn = StandardTypes.GetCSharpTypeName(iType);
+                    //var tpn1 = StandardTypes.GetCSharpTypeName(iType.GetElementType());
+                   // Debug.WriteLine(myMapper.PrepareContent());
+                    int iof = 0;
+                    string strf = myMapper.PrepareContent();
+                    StringBuilder revArr = new StringBuilder();
+                    for(int j = strf.Length-1; j>=0; j--)
+                    {
+                        var l = strf[j];
+                        if (l == '[' || l == ']' || l == ',')
+                        {
+                            iof++;
+                            if (l == '[')
+                                l = ']';
+                            else if (l == ']')
+                                l = '[';
+                            revArr.Append(l);
+                        }
+                        else
+                            break;
+                    }
+
+                    if(iof>0)
+                        strf = $"{strf.Substring(0, strf.Length - iof)}[{msb1.ToString()}]{revArr.ToString()}";
+                    else
+                        strf = $"{strf}[{msb1.ToString()}]";
+
+                    //if (mapper != null)
+                    //    tpn = myMapper.PrepareContent();                    
+                    //else
+                    //    tpn = StandardTypes.GetCSharpTypeName(iType);                    
+                    //var fiofb = tpn.IndexOf('[');
+                    //var ardef = tpn.Substring(fiofb);
+                    //ardef = ardef.Substring(ardef.LastIndexOf('[')).Reverse();
+                    //if (fiofb > 0)
+                    //{
+                    //    strf = $"{tpn.Substring(0, fiofb)}[{msb1.ToString()}]{tpn.Substring(fiofb)}";
+                    //}
+                    //else
+                    //{
+                    //    strf = $"{tpn}[{msb1.ToString()}]";
+                    //}
+
+                    sbDecode.Append($"{varName} = decoder.CheckNull() ? null : new {strf};");
+                    //sbDecode.Append($"{varName} = decoder.CheckNull() ? null : new {myMapper.PrepareContent()}[");                    
+                    //sbDecode.Append(msb1.ToString());
                     msb1.Clear();
-                    sbDecode.Append($"];");
+                    //sbDecode.Append($"];");
 
-                    sbDecode.Append($"\n{msb2.ToString()}");
-                    //msb2.Append($"\n");
-                    //sbDecode.Append($"\n");
-                    //sbDecode.Append($"\n");
+                    sbDecode.Append($"\n{msb2.ToString()}");                  
                 }
-                else
-                {//jagged array
+                //else
+                //{//jagged array
 
-                    //not implemented must be represented as -> e.g. int[] must be List<int>
-                    //int[][] can be represented as //so can be represented as List<List<List<
+                //    //not implemented must be represented as -> e.g. int[] must be List<int>
+                //    //int[][] can be represented as //so can be represented as List<List<List<
 
-                    Console.WriteLine("-------------BiserObjectify: change one-dimesional or jagged array on List-------------");
-                    Debug.WriteLine("-------------BiserObjectify: change one-dimesional or jagged array on List-------------");
-                }
-
-                sbDecode.Append($"\n}}"); //eof decoder check NULL
+                //    Console.WriteLine("-------------BiserObjectify: change one-dimesional or jagged array on List-------------");
+                //    Debug.WriteLine("-------------BiserObjectify: change one-dimesional or jagged array on List-------------");
+                //}
 
             }
             else if (iType.GetInterface("ICollection`1") != null)

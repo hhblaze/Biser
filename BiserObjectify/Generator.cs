@@ -83,7 +83,8 @@ namespace BiserObjectify
 
                 if (!String.IsNullOrEmpty(destinationFolder))
                 {
-                    System.IO.File.WriteAllText(System.IO.Path.Combine(destinationFolder, toProcess.FullName + "_Biser.cs"), ret);
+                    //System.IO.File.WriteAllText(System.IO.Path.Combine(destinationFolder, toProcess.FullName + "_Biser.cs"), ret);
+                    System.IO.File.WriteAllText(System.IO.Path.Combine(destinationFolder, toProcess.Name + "_Biser.cs"), ret);
                     //System.IO.File.WriteAllText(@"D:\Temp\1\TS6_Biser.cs", ret);
                 }
 

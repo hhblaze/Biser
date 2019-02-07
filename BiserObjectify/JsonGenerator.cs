@@ -166,24 +166,24 @@ namespace BiserObjectify
                     Console.WriteLine("-------------BiserObjectify: change one-dimesional or jagged array on List-------------");
                     Debug.WriteLine("-------------BiserObjectify: change one-dimesional or jagged array on List-------------");
 
-                    ////not implemented must be represented as -> e.g. int[] must be List<int>
-                    ////Multidemensional arrays are represented in BinaryBiser and not supported directly by javascript JSON
-                    ////so can be represented as List<List<List<
-                    //if (iType.GetArrayRank() > 1)
-                    //{
+                    //not implemented must be represented as -> e.g. int[] must be List<int>
+                    //Multidemensional arrays are represented in BinaryBiser and not supported directly by javascript JSON
+                    //so can be represented as List<List<List<
+                    if (iType.GetArrayRank() > 1)
+                    {
 
-                    //}
-                    //else
-                    //{//one dimensional or jagged array                     
-                    //    varCnt++;
-                    //    int pv = varCnt;
-                    //    StringBuilder msb = new StringBuilder();
-                    //    sbJsonEncode.Append($"\nvar r{varCnt}={varName}.ToList();");
-                    //    var listType = typeof(List<>).MakeGenericType(iType.GetElementType());                        
-                    //    EncodeSingle(listType, msb, $"r{pv}", root, varCnt);
-                    //    msb.Replace($"\"r{pv}\"", $"\"{varName}\"");
-                    //    sbJsonEncode.Append(msb.ToString());
-                    //}
+                    }
+                    else
+                    {//one dimensional or jagged array                     
+                        varCnt++;
+                        int pv = varCnt;
+                        StringBuilder msb = new StringBuilder();
+                        sbJsonEncode.Append($"\nvar r{varCnt}={varName}.ToList();");
+                        var listType = typeof(List<>).MakeGenericType(iType.GetElementType());
+                        EncodeSingle(listType, msb, $"r{pv}", root, varCnt);
+                        msb.Replace($"\"r{pv}\"", $"\"{varName}\"");
+                        sbJsonEncode.Append(msb.ToString());
+                    }
 
                 }
 
