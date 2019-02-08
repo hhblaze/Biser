@@ -17,7 +17,7 @@ namespace BiserObjectify
 
         int varCntTotal = 0;
 
-        public string Run(Type incomingType)
+        public string Run(Type incomingType, HashSet<string> exclusions)
         {
             var tf = incomingType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
             myType = incomingType;
@@ -37,11 +37,21 @@ namespace BiserObjectify
             varCntTotal = 0;
 
             foreach (var f in tf)
-            {              
+            {                
+
                 var name = f.Name;
-                iType = f.PropertyType;//.FieldType;       
+                iType = f.PropertyType;//.FieldType;    
+
+                if (!(f.GetSetMethod()?.IsPublic ?? false)) //skipping without setter
+                    continue;
+
+                if (!(f.GetGetMethod()?.IsPublic ?? false)) //skipping without getter
+                    continue;
 
                 if (iType == typeof(object))
+                    continue;
+
+                if (exclusions.Contains(f.Name))
                     continue;
 
                 EncodeSingle(iType, sbEncode, name);
@@ -57,7 +67,16 @@ namespace BiserObjectify
                 var name = f.Name;
                 iType = f.PropertyType;//.FieldType;
 
+                if (!(f.GetSetMethod()?.IsPublic ?? false)) //skipping without setter
+                    continue;
+
+                if (!(f.GetGetMethod()?.IsPublic ?? false)) //skipping without getter
+                    continue;
+
                 if (iType == typeof(object))
+                    continue;
+
+                if (exclusions.Contains(f.Name))
                     continue;
 
                 UsedVars.Add($"m.{name}");

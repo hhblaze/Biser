@@ -38,7 +38,7 @@ namespace BiserTest_Net
 
         public List<Dictionary<int, Tuple<int, string>>> P16 { get; set; }
 
-        //public int[] P17 { get; set; }
+        public int[] P17 { get; set; }
 
         //public List<int[,,][][,,]>[,,][][][][,,,,] P18 { get; set; }
 
@@ -50,10 +50,14 @@ namespace BiserTest_Net
 
         public TS3 P22 { get; set; }
 
+        public TS3 A1 { get; set; }
+
         //public int[][,,][][][,,,][][,] P23 { get; set; }
         //public List<int[][,,][]> P24 { get; set; }
 
         //public Dictionary<int, List<string[,][][,,]>>[,,,][][,,] P25 { get; set; }
+
+        public DateTime A2 { get;  }
     }
 
 }

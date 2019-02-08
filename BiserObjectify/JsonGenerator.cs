@@ -26,7 +26,7 @@ namespace BiserObjectify
 
         int varCntTotal = 0;
 
-        public string Run(Type incomingType)
+        public string Run(Type incomingType, HashSet<string> exclusions)
         {
             var tf = incomingType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
             myType = incomingType;
@@ -50,61 +50,26 @@ namespace BiserObjectify
             foreach (var f in tf)
             {
                 var name = f.Name;
-                iType = f.PropertyType;//.FieldType;       
+                iType = f.PropertyType;//.FieldType;    
+
+                if (!(f.GetSetMethod()?.IsPublic ?? false)) //skipping without setter
+                    continue;
+
+                if (!(f.GetGetMethod()?.IsPublic ?? false)) //skipping without getter
+                    continue;
 
                 if (iType == typeof(object))
+                    continue;
+
+                if (exclusions.Contains(f.Name))
                     continue;
 
                 EncodeSingle(iType, sbJsonEncode, name, true);
             }
 
-            //List<string> endings = new List<string>();
-
-            //foreach (var f in tf)
-            //{
-            //    var name = f.Name;
-            //    iType = f.PropertyType;//.FieldType;      
-
-            //    if (iType == typeof(object))
-            //        continue;
-
-            //    endings.Clear();
-
-            //    if (iType.GetInterface("ITuple") != null)
-            //    {
-
-            //        sbJsonEncode.Append(tmplEnc8.Replace("PROP", name));
-            //        int tn = 1;
-            //        foreach (var gta in iType.GetGenericArguments())
-            //        {
-            //            sbJsonEncode.Append(tmplEnc9.Replace("ITEMPROP", "Item" + tn.ToString()));//.Replace("PROP", name));                                      
-            //            EncodeSingle1(gta, sbJsonEncode, name + ".Item" + tn.ToString(), 0, true);
-            //            sbJsonEncode.Append(tmplEnc9ending);
-            //            tn++;
-            //        }
-
-            //        sbJsonEncode.Append(tmplEnc8ending);
-            //        continue;
-            //    }
-            //    else
-            //    {
-            //        sbJsonEncode.Append(tmplEnc6.Replace("PROP", name));
-            //        endings.Add(tmplEnc6ending);
-            //    }
-
-            //    //EncodeSingle(iType, sbJsonEncode, name);
-            //    EncodeSingle1(iType, sbJsonEncode, "");
-
-            //    for (int i = endings.Count - 1; i >= 0; i--)
-            //    {
-            //        sbJsonEncode.Append(endings[i]);
-            //    }
-            //}
-
-
 
             //JSON Decoder
-            //varCnt = 0;
+            
             varCntTotal = 0;
 
             foreach (var f in tf)
@@ -112,7 +77,16 @@ namespace BiserObjectify
                 var name = f.Name;
                 iType = f.PropertyType;//.FieldType;
 
+                if (!(f.GetSetMethod()?.IsPublic ?? false)) //skipping without setter
+                    continue;
+
+                if (!(f.GetGetMethod()?.IsPublic ?? false)) //skipping without getter
+                    continue;
+
                 if (iType == typeof(object))
+                    continue;
+
+                if (exclusions.Contains(f.Name))
                     continue;
 
                 sbJsonDecode.Append($"\n\t\t\t\tcase \"{name.ToLower()}\":");

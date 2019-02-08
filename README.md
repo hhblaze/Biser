@@ -25,13 +25,14 @@ Integrated part of [DBreeze database](https://github.com/hhblaze/DBreeze), used 
 Call next line to create code for the serialzer:
 ```C#
  var resbof = BiserObjectify.Generator.Run(typeof(TS6),true, 
-      @"D:\Temp\1\", forBiserBinary: true, forBiserJson: true);
+      @"D:\Temp\1\", forBiserBinary: true, forBiserJson: true, null);
 ```
 
 First argument is the type of the root object to be serialized (it can contain other objects that also must be serialized).
 Second argument means that BiserObjectify must prepare serializer for all objects included into the root object.
 Third argument points to the folder where C# files per object will be created.
-The fourth and fifth arguments mean that we want to use both Binary and JSON serializers
+The fourth and fifth arguments mean that we want to use both Binary and JSON serializers.
+The sixth argument is a HashSet (or null) with the property names that will not be serialized.
 
 resbof variable will contain the same information that in generated files also as a Dictionary.
 
@@ -75,6 +76,8 @@ Usage:
                         { 34,new List<string> { "drtttz","ghhtht"} },
                         { 4534,new List<string> { "dfgfghfgz","6546ghhtht"} }
                     },
+					
+				P25 = new Dictionary<int, List<string[,][][,,]>>[,,,][][,,]
 
 ...
 }
@@ -88,6 +91,10 @@ Usage:
  var retoredBinaryObject= TS6.BiserDecode(serializedObjectAsByteArray);
 ```
 
+#####NOTE (for Binary serializer only)
+ - To have consistent data, after first serialization and storing byte[] into database - never delete properties
+ - To have consistent data, after first serialization and storing byte[] into database - add new properties only to the end after all other properties
+
 #### JSON serialization:
 ```C#
  var jsonSettings = new Biser.JsonSettings { DateFormat = Biser.JsonSettings.DateTimeStyle.ISO };
@@ -95,6 +102,10 @@ Usage:
             .GetJSON(Biser.JsonSettings.JsonStringStyle.Prettify);
  var restoredJsonObject= TS6.BiserJsonDecode(prettifiedJsonString, settings: jsonSettings);
 ```
+
+#####NOTE (for JSON serializer only)
+ - Doesn’t work with multi-dimensional arrays like [,,]. Works with one dimensional and jagged arrays. 
+
 
 -------------
 For the deep understanding:

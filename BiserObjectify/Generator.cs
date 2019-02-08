@@ -9,7 +9,7 @@ namespace BiserObjectify
 {
     public static class Generator
     {
-       
+
         /// <summary>
         /// 
         /// </summary>
@@ -18,8 +18,9 @@ namespace BiserObjectify
         /// <param name="destinationFolder"></param>
         /// <param name="forBiserBinary"></param>
         /// <param name="forBiserJson"></param>
+        /// <param name="exclusions">excluded properties Names</param>
         /// <returns></returns>
-        public static Dictionary<string, string> Run(Type incomingType, bool generateIncludedTypes, string destinationFolder, bool forBiserBinary=true, bool forBiserJson = true)
+        public static Dictionary<string, string> Run(Type incomingType, bool generateIncludedTypes, string destinationFolder, bool forBiserBinary=true, bool forBiserJson = true, HashSet<string> exclusions = null)
         {
             Dictionary<string, string> retT = new Dictionary<string, string>();
             StandardTypes.InitDict();
@@ -31,6 +32,9 @@ namespace BiserObjectify
 
             typesToProcess.Add(incomingType);
             Type toProcess = null;
+
+            if (exclusions == null)
+                exclusions = new HashSet<string>();
 
             if (!String.IsNullOrEmpty(destinationFolder) && !System.IO.Directory.Exists(destinationFolder))
                 System.IO.Directory.CreateDirectory(destinationFolder);
@@ -52,7 +56,7 @@ namespace BiserObjectify
                 {
 
                     tmplIfcJson = "Biser.IJsonEncoder";
-                    contentJson = jg.Run(toProcess);
+                    contentJson = jg.Run(toProcess, exclusions);
                     foreach (var el in jg.UsedObjects)
                         typesToProcess.Add(el);
                 }
@@ -60,7 +64,7 @@ namespace BiserObjectify
                 if (forBiserBinary)
                 {
                     tmplIfcBinary = " Biser.IEncoder";
-                    contentBinary = bg.Run(toProcess);                    
+                    contentBinary = bg.Run(toProcess, exclusions);                    
                     foreach (var el in bg.UsedObjects)
                         typesToProcess.Add(el);
                 }
