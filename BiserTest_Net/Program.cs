@@ -23,8 +23,8 @@ namespace BiserTest_Net
             var resbof = BiserObjectify.Generator.Run(typeof(TS6),
                 true,
                 @"D:\Temp\1\",
-                forBiserBinary: false,
-                forBiserJson: true);
+                forBiserBinary: true,
+                forBiserJson: false);
 
             return;
 
@@ -83,13 +83,13 @@ namespace BiserTest_Net
             //t6.P19[1] = new Dictionary<int, List<string>>[5];
             //t6.P19[0][0] = new Dictionary<int, List<string>> { { 1, new List<string> { "dsf", "dsfd" } }, { 3, new List<string> { "fdsf", "tzutr" } } };
 
-            t6.P11 = new int[2][];
-            t6.P11[0] = new int[3];
-            t6.P11[1] = new int[3];
-            t6.P11[0][0] = 12;
-            t6.P11[0][1] = 14;
-            t6.P11[1][0] = 125;
-            t6.P11[1][2] = 19;
+            //t6.P11 = new int[2][];
+            //t6.P11[0] = new int[3];
+            //t6.P11[1] = new int[3];
+            //t6.P11[0][0] = 12;
+            //t6.P11[0][1] = 14;
+            //t6.P11[1][0] = 125;
+            //t6.P11[1][2] = 19;
 
             //t6.P18 = new List<int>[2, 3, 4];
             //t6.P18[0, 0, 0] = new List<int> { 1, 2 };

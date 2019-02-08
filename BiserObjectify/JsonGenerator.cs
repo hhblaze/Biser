@@ -170,6 +170,7 @@ namespace BiserObjectify
 
                         Console.WriteLine("BiserObjectify: multi-dimensional arrays are supported in Binary serializer only!");
                         Debug.WriteLine("BiserObjectify: multi-dimensional arrays are supported in Binary serializer only!");
+                        throw new Exception("BiserObjectify: multi-dimensional arrays are supported in Binary serializer only!");
                         return;
 
 
@@ -488,6 +489,7 @@ namespace BiserObjectify
                    
                     sbi.Clear();                    
                     varCntTotal++;
+                    int ka = varCntTotal;
                     dTuple.Add(varCntTotal, gta);
                    
                     UsedVars.Add($"pvar{varCntTotal}");
@@ -502,7 +504,7 @@ namespace BiserObjectify
                     var defaultValue = StandardTypes.GetDefaultValue(gta);
                     if (defaultValue == null)
                         defaultValue = $"default({StandardTypes.GetFriendlyName(gta)})";
-                    msb.Append($"\n{StandardTypes.GetFriendlyName(gta)} pvar{varCntTotal} = {defaultValue};");
+                    msb.Append($"\n{StandardTypes.GetFriendlyName(gta)} pvar{ka} = {defaultValue};");
                     //varCnt = varCntNew;
                    
                     tuplSbi.Add(sbi.ToString());
