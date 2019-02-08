@@ -5,7 +5,7 @@
 [![NuGet Badge](https://buildstats.info/nuget/BiserObjectify)](https://www.nuget.org/packages/BiserObjectify/)
 [![Image of Build](https://img.shields.io/badge/Powered%20by-tiesky.com-1883F5.svg)](http://tiesky.com)
 
-Cross-platform BINARY and JSON serializer for .NET dotnet.
+Cross-platform BINARY and JSON serializer for .NET dotnet. Made with C#
 
 - Doesn't use reflection inside, only managed code, perfectly works in [MONO WASM](https://github.com/aspnet/Blazor) and [CoreRT](https://github.com/dotnet/corert) where AOT compilers are used,
 that makes it a possible alternative to [protobuf-net](https://github.com/mgravell/protobuf-net), [MessagePack](https://github.com/neuecc/MessagePack-CSharp),  [NetJSON](https://github.com/rpgmaker/NetJSON), [JSON.NET](https://www.newtonsoft.com/json).
