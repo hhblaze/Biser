@@ -91,7 +91,7 @@ Usage:
  var retoredBinaryObject= TS6.BiserDecode(serializedObjectAsByteArray);
 ```
 
-#####NOTE (for Binary serializer only)
+###### NOTE (for Binary serializer only)
  - To have consistent data, after first serialization and storing byte[] into database - never delete properties
  - To have consistent data, after first serialization and storing byte[] into database - add new properties only to the end after all other properties
 
@@ -103,7 +103,7 @@ Usage:
  var restoredJsonObject= TS6.BiserJsonDecode(prettifiedJsonString, settings: jsonSettings);
 ```
 
-#####NOTE (for JSON serializer only)
+###### NOTE (for JSON serializer only)
  - Doesn’t work with multi-dimensional arrays like [,,]. Works with one dimensional and jagged arrays. 
 
 
