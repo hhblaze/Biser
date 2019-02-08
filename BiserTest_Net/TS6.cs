@@ -26,12 +26,9 @@ namespace BiserTest_Net
 
         //public short? P10 { get; set; }
 
-        //public int[][] P11 { get; set; }
+        public int[][] P11 { get; set; }
 
-
-
-
-        //public int[,,] P12 { get; set; }
+        public int[,,] P12 { get; set; }    
 
         //public List<List<int>> P13 { get; set; }
 
@@ -56,7 +53,7 @@ namespace BiserTest_Net
         //public int[][,,][][][,,,][][,] P23 { get; set; }
         //public List<int[][,,][]> P24 { get; set; }
 
-        public Dictionary<int, List<string[,][][,,]>>[,,,][][,,] P25 { get; set; }
+        //public Dictionary<int, List<string[,][][,,]>>[,,,][][,,] P25 { get; set; }
     }
 
 }

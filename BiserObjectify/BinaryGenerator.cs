@@ -251,7 +251,7 @@ namespace BiserObjectify
                 
                 sbDecode.Append($"{varName} = decoder.CheckNull() ? null : new {strf};");
                 sbDecode.Append($"\nif({varName} != null){{");
-                sbDecode.Append($"\n{msb2.ToString()}");
+                sbDecode.Append($"{msb2.ToString()}");
                 sbDecode.Append($"\n}}");
             }
             else if (iType.GetInterface("ICollection`1") != null)
@@ -427,23 +427,23 @@ namespace BiserObjectify
        
 
 
-        /// <summary>
-        /// 
-        /// </summary>
-        internal class MapperContent
-        {
-            public List<string> Lst = new List<string>();
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        //internal class MapperContent
+        //{
+        //    public List<string> Lst = new List<string>();
 
-            public string PrepareContent()
-            {
-                StringBuilder sb = new StringBuilder();
-                foreach (var el in Lst)
-                {
-                    sb.Append(el);
-                }
+        //    public string PrepareContent()
+        //    {
+        //        StringBuilder sb = new StringBuilder();
+        //        foreach (var el in Lst)
+        //        {
+        //            sb.Append(el);
+        //        }
 
-                return sb.ToString();
-            }
-        }
+        //        return sb.ToString();
+        //    }
+        //}
     }//eoc
 }
