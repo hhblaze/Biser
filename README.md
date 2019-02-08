@@ -104,7 +104,7 @@ Usage:
 ```
 
 ###### NOTE (for JSON serializer only)
- - Doesn’t work with multi-dimensional arrays like [,,]. Works with one dimensional and jagged arrays. 
+ - Doesn’t work with multi-dimensional arrays like [,,], but works with one dimensional and jagged arrays. 
 
 
 -------------
