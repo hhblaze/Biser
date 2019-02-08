@@ -92,8 +92,8 @@ Usage:
 ```
 
 ###### NOTE (for Binary serializer only)
- - To have consistent data, after first serialization and storing byte[] into database - never delete properties
- - To have consistent data, after first serialization and storing byte[] into database - add new properties only to the end of the object/class, after all other properties are listed
+ - To have consistent data, after first serialization and storing byte[] into database - never delete serialized object/class properties.
+ - To have consistent data, after first serialization and storing byte[] into database - add new properties only to the end of the object/class, after all other properties are listed.
 
 #### JSON serialization:
 ```C#
