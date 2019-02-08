@@ -93,7 +93,7 @@ Usage:
 
 ###### NOTE (for Binary serializer only)
  - To have consistent data, after first serialization and storing byte[] into database - never delete properties
- - To have consistent data, after first serialization and storing byte[] into database - add new properties only to the end after all other properties
+ - To have consistent data, after first serialization and storing byte[] into database - add new properties only to the end of the object/class, after all other properties are listed
 
 #### JSON serialization:
 ```C#
