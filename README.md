@@ -104,7 +104,7 @@ Usage:
 ```
 
 ###### NOTE (for JSON serializer only)
- - JSON serializer doesn’t work with multi-dimensional arrays like [,,] [,] [,,,] etc. (in progress), but works with one dimensional and jagged arrays. 
+ - BiserObjectify for JSON serializer doesn’t generate stub for multi-dimensional arrays like [,,] [,] [,,,] etc. (in progress), but does for one-dimensional and jagged arrays. 
 
 
 -------------
