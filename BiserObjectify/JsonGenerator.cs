@@ -315,8 +315,25 @@ namespace BiserObjectify
                         sbJsonDecode.Append("\n");
 
 
+                    //int iof = 0;
+                    //string strf = StandardTypes.GetFriendlyName(iType);
+                    //for (int j = strf.Length - 1; j >= 0; j--)
+                    //{
+                    //    var l = strf[j];
+                    //    if (l == '[' || l == ']' || l == ',')
+                    //    {
+                    //        iof++;
+                    //        if (l == '[')
+                    //            break;
+                    //    }
+                    //    else
+                    //        break;
+                    //}
+                    //sbJsonDecode.Append($"{varName} = new {strf.Substring(0, strf.Length - iof)}[{msb1.ToString()}];");
+
                     int iof = 0;
                     string strf = StandardTypes.GetFriendlyName(iType);
+                    StringBuilder revArr = new StringBuilder();
                     for (int j = strf.Length - 1; j >= 0; j--)
                     {
                         var l = strf[j];
@@ -324,13 +341,25 @@ namespace BiserObjectify
                         {
                             iof++;
                             if (l == '[')
-                                break;
+                                l = ']';
+                            else if (l == ']')
+                                l = '[';
+                            revArr.Append(l);
                         }
                         else
                             break;
                     }
-                    
-                    sbJsonDecode.Append($"{varName} = new {strf.Substring(0, strf.Length - iof)}[{msb1.ToString()}];");
+
+                    var revArrStr = revArr.ToString();
+                    revArrStr = revArrStr.Substring(revArrStr.IndexOf("]") + 1);
+
+                    if (iof > 0)
+                        strf = $"{strf.Substring(0, strf.Length - iof)}[{msb1.ToString()}]{revArrStr.ToString()}";
+                    else
+                        strf = $"{strf}[{msb1.ToString()}]";
+
+                  
+                    sbJsonDecode.Append($"{varName} = new {strf};");
 
                     varCntTotal++;
                     int arenm = varCntTotal;
