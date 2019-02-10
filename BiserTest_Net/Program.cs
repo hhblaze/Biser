@@ -20,13 +20,13 @@ namespace BiserTest_Net
     {
         static void Main(string[] args)
         {
-            var resbof = BiserObjectify.Generator.Run(typeof(TS6),
-                true,
-                @"D:\Temp\1\",
-                forBiserBinary: true,
-                forBiserJson: false);
+            //var resbof = BiserObjectify.Generator.Run(typeof(TS6),
+            //    true,
+            //    @"D:\Temp\1\",
+            //    forBiserBinary: false,
+            //    forBiserJson: true);
 
-            return;
+            //return;
 
             TS6 t6 = new TS6()
             {
@@ -99,13 +99,13 @@ namespace BiserTest_Net
             //t6.P18[1, 0, 0] = new List<int> { 4, 17, 9, 9, 9, 6 };
             //t6.P18[1, 0, 1] = new List<int> { 2, 12, 5, 0 };
 
-            //t6.P12 = new int[2, 3, 4];
-            //t6.P12[0, 0, 0] = 12;
-            //t6.P12[0, 0, 1] = 13;
-            //t6.P12[0, 1, 0] = 14;
-            //t6.P12[0, 1, 1] = 15;
-            //t6.P12[1, 0, 0] = 16;
-            //t6.P12[1, 0, 1] = 17;
+            t6.P12 = new int[2, 3, 4];
+            t6.P12[0, 0, 0] = 12;
+            t6.P12[0, 0, 1] = 13;
+            t6.P12[0, 1, 0] = 14;
+            t6.P12[0, 1, 1] = 15;
+            t6.P12[1, 0, 0] = 16;
+            t6.P12[1, 0, 1] = 17;
 
 
             //t6.P121 = new string[2, 3, 4];
@@ -145,10 +145,10 @@ namespace BiserTest_Net
 
             //var njSer = NetJSON.NetJSON.Serialize(t6, new NetJSON.NetJSONSettings { DateFormat = NetJSON.NetJSONDateFormat.ISO });
 
-            //var jsonSet = new Biser.JsonSettings { DateFormat = Biser.JsonSettings.DateTimeStyle.ISO };
-            //Biser.JsonEncoder enc = new Biser.JsonEncoder(t6, jsonSet);
-            //string es = enc.GetJSON(Biser.JsonSettings.JsonStringStyle.Prettify);
-            //var ot2 = TS6.BiserJsonDecode(es, settings: jsonSet);
+            var jsonSet = new Biser.JsonSettings { DateFormat = Biser.JsonSettings.DateTimeStyle.ISO };
+            Biser.JsonEncoder enc = new Biser.JsonEncoder(t6, jsonSet);
+            string es = enc.GetJSON(Biser.JsonSettings.JsonStringStyle.Prettify);
+            var ot2 = TS6.BiserJsonDecode(es, settings: jsonSet);
 
             ////var ot2 = TS6.BiserJsonDecode(njSer, settings: jsonSet);
 

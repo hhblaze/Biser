@@ -137,41 +137,38 @@ namespace BiserObjectify
                 }
                 else
                 {
-
+                    sbJsonEncode.Append($"if({varName} != null) {{");
                     if (iType.GetArrayRank() > 1)
                     {
-                        //We can't encode array dimensions (that are ints or longs) in standard JSON together with ArrayType
 
-                        Console.WriteLine("BiserObjectify: multi-dimensional arrays are supported in Binary serializer only!");
-                        Debug.WriteLine("BiserObjectify: multi-dimensional arrays are supported in Binary serializer only!");
-                        throw new Exception("BiserObjectify: multi-dimensional arrays are supported in Binary serializer only!");
-                        return;
+                        //Multi-dimensional arrays will be represented as a Tuple, where first element is a List<int> containing dimensions
+                        //and second element is a sequence of an array elements.
 
+                        //--------------check array null conditions
 
-                        ////Code itself is working generating first array of Dimensions, then arraay of values
-                        ///
-                        //varCntTotal++;
+                        varCntTotal++;
+                        int pvard = varCntTotal;
+                        sbJsonEncode.Append($"\nvar arrdim{pvard}=new System.Collections.Generic.List<int>();");
+                        for (int i = 0; i < iType.GetArrayRank(); i++)
+                            sbJsonEncode.Append($"\narrdim{pvard}.Add({varName}.GetLength({i}));");
 
-                        //sbJsonEncode.Append($"\nvar arrdim{varCntTotal}=new List<int>();");
-                        //for (int i = 0; i < iType.GetArrayRank(); i++)
-                        //{
-                        //    sbJsonEncode.Append($"\narrdim{varCntTotal}.Add({varName}.GetLength({i}));");
-                        //}
+                        var listType1 = typeof(List<>).MakeGenericType(typeof(int));
+                       
+                        varCntTotal++;
+                        int pv = varCntTotal;
+                        StringBuilder msb = new StringBuilder();
+                        var listType = typeof(List<>).MakeGenericType(iType.GetElementType());
+                        sbJsonEncode.Append($"\n{StandardTypes.GetFriendlyName(listType)} r{pv}= new {StandardTypes.GetFriendlyName(listType)}();");
+                        sbJsonEncode.Append($"\nforeach(var el in {varName})");
+                        sbJsonEncode.Append($"\nr{pv}.Add(el);");
 
-                        //var listType1 = typeof(List<>).MakeGenericType(typeof(int));
-                        //EncodeSingle(listType1, sbJsonEncode, $"arrdim{varCntTotal}", true);
-
-                        //varCntTotal++;
-                        //int pv = varCntTotal;
-                        //StringBuilder msb = new StringBuilder();
-                        //var listType = typeof(List<>).MakeGenericType(iType.GetElementType());
-                        //sbJsonEncode.Append($"\n{StandardTypes.GetFriendlyName(listType)} r{pv}= new {StandardTypes.GetFriendlyName(listType)}();");
-                        //sbJsonEncode.Append($"\nforeach(var el in {varName})");
-                        //sbJsonEncode.Append($"\nr{pv}.Add(el);");
-
-                        //EncodeSingle(listType, msb, $"r{pv}", root);
-                        //msb.Replace($"\"r{pv}\"", $"\"{varName}\"");
-                        //sbJsonEncode.Append(msb.ToString());
+                        varCntTotal++;
+                        int pvtpl = varCntTotal;
+                        var listType2 = typeof(Tuple<,>).MakeGenericType(typeof(List<int>), listType);
+                        sbJsonEncode.Append($"\nvar r{pvtpl} = new Tuple<System.Collections.Generic.List<int>, {StandardTypes.GetFriendlyName(listType)}>(arrdim{pvard}, r{pv});");
+                        EncodeSingle(listType2, msb, $"r{pvtpl}", root);
+                        msb.Replace($"\"r{pvtpl}\"", $"\"{varName}\"");
+                        sbJsonEncode.Append(msb.ToString());
                     }
                     else
                     {//one dimensional or jagged array                     
@@ -184,6 +181,7 @@ namespace BiserObjectify
                         msb.Replace($"\"r{pv}\"", $"\"{varName}\"");
                         sbJsonEncode.Append(msb.ToString());
                     }
+                    sbJsonEncode.Append($"}}");
 
                 }
 
@@ -287,91 +285,170 @@ namespace BiserObjectify
                 StringBuilder msb2 = new StringBuilder();
                 StringBuilder msb3 = new StringBuilder();
 
-                if(iType.GetArrayRank()>1)
+                var listType = typeof(List<>).MakeGenericType(iType.GetElementType());
+               
+
+                if (iType.GetArrayRank()>1)
                 {
-                    //Console.WriteLine("BiserObjectify: multi-dimensional arrays are supported in Binary serializer only!");
-                    //Debug.WriteLine("BiserObjectify: multi-dimensional arrays are supported in Binary serializer only!");
-                    return;
-                }
+                    var listType2 = typeof(Tuple<,>).MakeGenericType(typeof(List<int>), listType);
+                    varCntTotal++;
+                    int pv = varCntTotal;
+                    DecodeSingle(listType2, sbJsonDecode, $"pv{pv}");
 
-                //Reading List to prepare transformation
-                Dictionary<int, string> varmap = new Dictionary<int, string>();
-                for (int i = 0; i < iType.GetArrayRank(); i++)
-                {
-                    var listType = typeof(List<>).MakeGenericType(iType.GetElementType());
-
-                    varCntTotal++;                  
-                    varmap.Add(i, $"intlst{varCntTotal}");
-                    DecodeSingle(listType, sbJsonDecode, $"intlst{varCntTotal}");
-                }
-
-                //sbJsonDecode.Append("\n//------------------");
-
-                if (!UsedVars.Contains(varName))
-                {
-                    UsedVars.Add(varName);
-                    sbJsonDecode.Append("\nvar ");
-                }
-                else
-                    sbJsonDecode.Append("\n");
-
-                for (int i = 0; i < iType.GetArrayRank(); i++)
-                {
-                    if (i > 0)
+                    //at this momemnt we can have Tuple
+                    //var pv1 = new Tuple<System.Collections.Generic.List<System.Int32>, System.Collections.Generic.List<System.Int32>>(pvar2, pvar5);
+                    for (int i = 0; i < iType.GetArrayRank(); i++)
                     {
-                        msb1.Append(", ");
-                        msb3.Append(", ");
+                        if (i > 0)
+                        {
+                            msb1.Append(", ");                           
+                        }
+                        msb1.Append($"pv{pv}.Item1[{i}]");
                     }
+
+                    if (!UsedVars.Contains(varName))
+                    {
+                        UsedVars.Add(varName);
+                        sbJsonDecode.Append("\nvar ");
+                    }
+                    else
+                        sbJsonDecode.Append("\n");
+
+
+                    int iof = 0;
+                    string strf = StandardTypes.GetFriendlyName(iType);
+                    for (int j = strf.Length - 1; j >= 0; j--)
+                    {
+                        var l = strf[j];
+                        if (l == '[' || l == ']' || l == ',')
+                        {
+                            iof++;
+                            if (l == '[')
+                                break;
+                        }
+                        else
+                            break;
+                    }
+                    
+                    sbJsonDecode.Append($"{varName} = new {strf.Substring(0, strf.Length - iof)}[{msb1.ToString()}];");
+
+                    varCntTotal++;
+                    int arenm = varCntTotal;
+
+                    sbJsonDecode.Append($"\nvar arenm{arenm} = pv{pv}.Item2.GetEnumerator();");
+                    sbJsonDecode.Append($"\narenm{arenm}.MoveNext();");
 
                     varCntTotal++;
                     int ardpv = varCntTotal;
-                                        
-                    msb1.Append($"{varmap[i]}.Count");
-                    msb3.Append($"ard{ardpv}_{i}");
-                    //---
-                    if (i == iType.GetArrayRank() - 1)
-                    {//last element
-                        msb2.Append($"\nfor(int ard{ardpv}_{i} = 0; ard{ardpv}_{i} < {varName}.GetLength({i}); ard{ardpv}_{i}++) {{");
 
-                        //msb2.Append($"\n{varName}[ard{ardpv}_{i}] = {varmap[i]}[ard{ardpv}_{i}];");
-                        msb2.Append($"\n{varName}[{msb3.ToString()}] = {varmap[i]}[ard{ardpv}_{i}];");
-                        msb2.Append($"\n}}");
+                    for (int i = 0; i < iType.GetArrayRank(); i++)
+                    {                        
+                        if (i > 0)
+                        {                            
+                            msb3.Append(", ");
+                        }
+                        msb3.Append($"ard{ardpv}_{i}");
+
+                        if (i == iType.GetArrayRank() - 1)
+                        {//last element
+                            msb2.Append($"\nfor(int ard{ardpv}_{i} = 0; ard{ardpv}_{i} < {varName}.GetLength({i}); ard{ardpv}_{i}++) {{");
+                                                        
+                            msb2.Append($"\n{varName}[{msb3.ToString()}] = arenm{arenm}.Current;");
+                            msb2.Append($"\narenm{arenm}.MoveNext();");
+                            msb2.Append($"\n}}");
+                        }
+                        else
+                            msb2.Append($"\nfor(int ard{ardpv}_{i} = 0; ard{ardpv}_{i} < {varName}.GetLength({i}); ard{ardpv}_{i}++)");
                     }
-                    else
-                        msb2.Append($"\nfor(int ard{ardpv}_{i} = 0; ard{ardpv}_{i} < {varName}.GetLength({i}); ard{ardpv}_{i}++)");
+
+                    sbJsonDecode.Append(msb2.ToString());
                 }
-
-                int iof = 0;
-                string strf = StandardTypes.GetFriendlyName(iType);
-                StringBuilder revArr = new StringBuilder();
-                for (int j = strf.Length - 1; j >= 0; j--)
-                {
-                    var l = strf[j];
-                    if (l == '[' || l == ']' || l == ',')
-                    {
-                        iof++;
-                        if (l == '[')
-                            l = ']';
-                        else if (l == ']')
-                            l = '[';
-                        revArr.Append(l);
-                    }
-                    else
-                        break;
-                }
-
-                var revArrStr = revArr.ToString();
-                revArrStr = revArrStr.Substring(revArrStr.IndexOf("]") + 1);
-
-                if (iof > 0)
-                    strf = $"{strf.Substring(0, strf.Length - iof)}[{msb1.ToString()}]{revArrStr.ToString()}";
                 else
-                    strf = $"{strf}[{msb1.ToString()}]";
+                {
 
-                sbJsonDecode.Append($"{varName} = decoder.CheckNull() ? null : new {strf};");
-                sbJsonDecode.Append($"\nif({varName} != null){{");
-                sbJsonDecode.Append($"{msb2.ToString()}");
-                sbJsonDecode.Append($"\n}}");
+                    //Reading List to prepare transformation
+                    Dictionary<int, string> varmap = new Dictionary<int, string>();
+                    for (int i = 0; i < iType.GetArrayRank(); i++)
+                    {
+                        //  var listType = typeof(List<>).MakeGenericType(iType.GetElementType());
+
+                        varCntTotal++;
+                        varmap.Add(i, $"intlst{varCntTotal}");
+                        DecodeSingle(listType, sbJsonDecode, $"intlst{varCntTotal}");
+                    }
+
+                    //sbJsonDecode.Append("\n//------------------");
+
+                    if (!UsedVars.Contains(varName))
+                    {
+                        UsedVars.Add(varName);
+                        sbJsonDecode.Append("\nvar ");
+                    }
+                    else
+                        sbJsonDecode.Append("\n");
+
+                    for (int i = 0; i < iType.GetArrayRank(); i++)
+                    {
+                        if (i > 0)
+                        {
+                            msb1.Append(", ");
+                            msb3.Append(", ");
+                        }
+
+                        varCntTotal++;
+                        int ardpv = varCntTotal;
+
+                        msb1.Append($"{varmap[i]}.Count");
+                        msb3.Append($"ard{ardpv}_{i}");
+                        //---
+                        if (i == iType.GetArrayRank() - 1)
+                        {//last element
+                            msb2.Append($"\nfor(int ard{ardpv}_{i} = 0; ard{ardpv}_{i} < {varName}.GetLength({i}); ard{ardpv}_{i}++) {{");
+
+                            //msb2.Append($"\n{varName}[ard{ardpv}_{i}] = {varmap[i]}[ard{ardpv}_{i}];");
+                            msb2.Append($"\n{varName}[{msb3.ToString()}] = {varmap[i]}[ard{ardpv}_{i}];");
+                            msb2.Append($"\n}}");
+                        }
+                        else
+                            msb2.Append($"\nfor(int ard{ardpv}_{i} = 0; ard{ardpv}_{i} < {varName}.GetLength({i}); ard{ardpv}_{i}++)");
+                    }
+
+                    int iof = 0;
+                    string strf = StandardTypes.GetFriendlyName(iType);
+                    StringBuilder revArr = new StringBuilder();
+                    for (int j = strf.Length - 1; j >= 0; j--)
+                    {
+                        var l = strf[j];
+                        if (l == '[' || l == ']' || l == ',')
+                        {
+                            iof++;
+                            if (l == '[')
+                                l = ']';
+                            else if (l == ']')
+                                l = '[';
+                            revArr.Append(l);
+                        }
+                        else
+                            break;
+                    }
+
+                    var revArrStr = revArr.ToString();
+                    revArrStr = revArrStr.Substring(revArrStr.IndexOf("]") + 1);
+
+                    if (iof > 0)
+                        strf = $"{strf.Substring(0, strf.Length - iof)}[{msb1.ToString()}]{revArrStr.ToString()}";
+                    else
+                        strf = $"{strf}[{msb1.ToString()}]";
+
+                    sbJsonDecode.Append($"{varName} = decoder.CheckNull() ? null : new {strf};");
+                    sbJsonDecode.Append($"\nif({varName} != null){{");
+                    sbJsonDecode.Append($"{msb2.ToString()}");
+                    sbJsonDecode.Append($"\n}}");
+
+                }
+
+
+
             }
             else if (iType.GetInterface("ICollection`1") != null)
             {
