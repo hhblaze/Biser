@@ -313,24 +313,7 @@ namespace BiserObjectify
                     }
                     else
                         sbJsonDecode.Append("\n");
-
-
-                    //int iof = 0;
-                    //string strf = StandardTypes.GetFriendlyName(iType);
-                    //for (int j = strf.Length - 1; j >= 0; j--)
-                    //{
-                    //    var l = strf[j];
-                    //    if (l == '[' || l == ']' || l == ',')
-                    //    {
-                    //        iof++;
-                    //        if (l == '[')
-                    //            break;
-                    //    }
-                    //    else
-                    //        break;
-                    //}
-                    //sbJsonDecode.Append($"{varName} = new {strf.Substring(0, strf.Length - iof)}[{msb1.ToString()}];");
-
+                    
                     int iof = 0;
                     string strf = StandardTypes.GetFriendlyName(iType);
                     StringBuilder revArr = new StringBuilder();

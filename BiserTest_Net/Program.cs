@@ -23,7 +23,7 @@ namespace BiserTest_Net
             var resbof = BiserObjectify.Generator.Run(typeof(TS6),
                 true,
                 @"D:\Temp\1\",
-                forBiserBinary: false,
+                forBiserBinary: true,
                 forBiserJson: true);
 
             return;
