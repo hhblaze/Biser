@@ -4,13 +4,15 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>BiserObjectify</RootNamespace>
     <AssemblyName>BiserObjectify</AssemblyName>
+    <SignAssembly>false</SignAssembly>
+    <AssemblyOriginatorKeyFile>signKey.snk</AssemblyOriginatorKeyFile>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Include="..\BiserObjectify\BinaryGenerator.cs" Link="BinaryGenerator.cs" />
     <Compile Include="..\BiserObjectify\Generator.cs" Link="Generator.cs" />
     <Compile Include="..\BiserObjectify\JsonGenerator.cs" Link="JsonGenerator.cs" />
-    <Compile Include="..\BiserObjectify\Properties\Resource1.Designer.cs" Link="Resource1.Designer.cs" />
     <Compile Include="..\BiserObjectify\StandardTypes.cs" Link="StandardTypes.cs" />
     <Compile Include="..\BiserObjectify\Utils.cs" Link="Utils.cs" />
   </ItemGroup>
@@ -22,7 +24,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="..\BiserObjectify\Properties\Resource1.resx" Link="Resource1.resx" />
+    <Compile Update="Properties\Resource1.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resource1.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resource1.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource1.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>
