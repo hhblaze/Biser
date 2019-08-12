@@ -20,13 +20,51 @@ namespace BiserTest_Net
     {
         static void Main(string[] args)
         {
-            var resbof = BiserObjectify.Generator.Run(typeof(TS6),
-                true,
-                @"D:\Temp\1\",
-                forBiserBinary: true,
-                forBiserJson: true);
+            //var resbof = BiserObjectify.Generator.Run(typeof(TS6),
+            //    true,
+            //    @"D:\Temp\1\",
+            //    forBiserBinary: true,
+            //    forBiserJson: true);
 
-            return;
+
+            //var resbof = BiserObjectify.Generator.Run(typeof(BiserTest_Net.StateLogEntry),
+            //   true,
+            //   @"D:\Temp\1\",
+            //   forBiserBinary: false,
+            //   forBiserJson: true);
+
+            //return;
+
+            //////BiserTest_Net.StateLogEntry sle = new BiserTest_Net.StateLogEntry
+            //////{
+            //////    Term =16,
+            //////     Data = new byte[] { 23 },
+            //////      Index = 12,
+            //////       IsCommitted = true
+            //////};
+
+            //////byte[] sleBt = null;
+            //////string prettifiedJsonString = "";
+
+            //////var jsonSettings = new Biser.JsonSettings { DateFormat = Biser.JsonSettings.DateTimeStyle.ISO };
+
+            ////////string prettifiedJsonString = new Biser.JsonEncoder(sle, jsonSettings)
+            ////////           .GetJSON(Biser.JsonSettings.JsonStringStyle.Prettify);
+            ////////File.WriteAllText(@"D:\Temp\1\sleBtStr", prettifiedJsonString);
+
+            //////prettifiedJsonString = File.ReadAllText(@"D:\Temp\1\sleBtStr");
+            //////var restoredJsonObject = StateLogEntry.BiserJsonDecode(prettifiedJsonString, settings: jsonSettings);
+
+
+
+            ////////sleBt = sle.BiserEncoder().Encode();
+            ////////File.WriteAllBytes(@"D:\Temp\1\sleBt", sleBt);
+
+            //////// sleBt = File.ReadAllBytes(@"D:\Temp\1\sleBt");
+
+            ////////  var sleR = StateLogEntry.BiserDecode(sleBt);
+
+            //////return;
 
             TS6 t6 = new TS6()
             {

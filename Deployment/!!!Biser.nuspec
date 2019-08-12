@@ -2,21 +2,22 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>Biser</id>
-        <version>1.8.0</version>
+        <version>1.9.0</version>
         <title>Biser.NET dotnet binary and JSON serializer</title>
         <authors>Alex Solovyov</authors>
-        <owners>tiesky.com / Alex Solovyov</owners>
-        <licenseUrl>https://github.com/hhblaze/Biser/blob/master/LICENSE</licenseUrl>
+        <owners>tiesky.com / Alex Solovyov</owners>        
+		<license type="file">LICENSE.txt</license>
         <projectUrl>https://github.com/hhblaze/Biser</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>Biser.NET dotnet binary javascript and JSON serializer</description>
         <summary>Biser.NET dotnet binary javascript and JSON serializer</summary>
-        <releaseNotes>JSON encoder fixing and opts</releaseNotes>
+        <releaseNotes>Biser decoder fix after adding new properties into old class</releaseNotes>
         <copyright>Copyright © 2018 tiesky.com / Alex Solovyov</copyright>
         <language>es-US</language>
         <tags>Biser protobuf JSON alternative dbreeze serializer binary serialization netcore netstandard net javascript framework</tags>
     </metadata>
     <files>
+	    <file src="Biser\LICENSE.txt" target="LICENSE.txt" />
         <file src="Biser\bin\Release\Biser.dll" target="lib\net45\Biser.dll" />
         <file src="Biser\bin\Release\Biser.xml" target="lib\net45\Biser.xml" />   
 		<file src="Biser\bin\Release-NET47\Biser.dll" target="lib\net47\Biser.dll" />

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -14,7 +14,8 @@
     <PackageLicenseUrl>https://github.com/hhblaze/Biser/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/hhblaze/Biser</PackageProjectUrl>
     <PackageReleaseNotes />
-    <Product>Biser.NET dotnet binary serializer, JSON serializer</Product>    
+    <Product>Biser.NET dotnet binary serializer, JSON serializer</Product>
+    <LangVersion>default</LangVersion>    
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

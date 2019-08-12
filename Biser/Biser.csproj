@@ -24,6 +24,7 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>
     </DocumentationFile>
+    <LangVersion>default</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
@@ -35,6 +36,7 @@
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <DocumentationFile>bin\Release\Biser.xml</DocumentationFile>
+    <LangVersion>default</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release-NET47|AnyCPU'">
     <OutputPath>bin\Release-NET47\</OutputPath>

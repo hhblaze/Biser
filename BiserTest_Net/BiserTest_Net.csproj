@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StateLogEntry.cs" />
     <Compile Include="TS1.cs" />
     <Compile Include="TS1_Biser.cs" />
     <Compile Include="TS2.cs" />
