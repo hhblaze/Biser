@@ -158,6 +158,13 @@ namespace BiserObjectify
                     tn++;
                 }
             }
+            else if (iType.IsEnum)
+            {
+                //var nullableEnum = Nullable.GetUnderlyingType(iType);
+                Type underlyingType = Enum.GetUnderlyingType(iType);
+
+                sbEncode.Append($"\nencoder.Add(({underlyingType.ToString()}){varName});");
+            }
             else
             {
                 sbEncode.Append($"\nencoder.Add({varName});");                
@@ -402,6 +409,30 @@ namespace BiserObjectify
                 msb.Append(");");
 
                 sbDecode.Append(msb.ToString());
+            }
+            else if (iType.IsEnum)
+            {
+                //var nullableEnum = Nullable.GetUnderlyingType(iType);
+                Type underlyingType = Enum.GetUnderlyingType(iType);
+
+                if (!UsedVars.Contains(varName))
+                {
+                    UsedVars.Add(varName);
+                    sbDecode.Append("\nvar ");
+                }
+                else
+                    sbDecode.Append("\n");
+
+                sbDecode.Append($"{varName} = ({iType.Name})");
+
+                if (StandardTypes.STypes.TryGetValue(underlyingType, out var tf))
+                {
+                    sbDecode.Append(tf.FGet);
+                }
+                else
+                    throw new Exception("Enum.GetUnderlyingType generation has failed");
+
+                sbDecode.Append(";");
             }
             else
             {

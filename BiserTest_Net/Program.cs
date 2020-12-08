@@ -20,6 +20,28 @@ namespace BiserTest_Net
     {
         static void Main(string[] args)
         {
+            TS7 ts7 = new TS7()
+            {
+                VoteType = TS7.eVoteType.VoteReject
+            };
+
+            var btTs7 = ts7.BiserEncoder().Encode();
+            var ts7d = TS7.BiserDecode(btTs7);
+
+            var jsonSettings = new Biser.JsonSettings { DateFormat = Biser.JsonSettings.DateTimeStyle.ISO };
+            string prettifiedJsonString = new Biser.JsonEncoder(ts7, jsonSettings)
+                       .GetJSON(Biser.JsonSettings.JsonStringStyle.Prettify);
+            var restoredJsonObject = TS7.BiserJsonDecode(prettifiedJsonString, settings: jsonSettings);
+
+
+
+            var resbof = BiserObjectify.Generator.Run(typeof(TS7),
+                true,
+                @"C:\Users\Secure\Documents\VSProjects\tests\1\",
+                forBiserBinary: true,
+                forBiserJson: true);
+
+            return;
             //var resbof = BiserObjectify.Generator.Run(typeof(TS6),
             //    true,
             //    @"D:\Temp\1\",
