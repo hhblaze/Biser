@@ -89,6 +89,7 @@ namespace BiserObjectify.Properties {
         ///   Looks up a localized string similar to using System;
         ///using System.Collections.Generic;
         ///using System.Linq;
+        ///{@BiserForDBreeze}
         ///
         ///namespace {@NamespaceName}
         ///{
@@ -105,6 +106,19 @@ namespace BiserObjectify.Properties {
         internal static string tmplBiserContainer {
             get {
                 return ResourceManager.GetString("tmplBiserContainer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to #if BiserForDBreeze
+        ///using DBreeze.Utils;
+        ///#else
+        ///#endif
+        ///.
+        /// </summary>
+        internal static string tmplBiserForDBreeze {
+            get {
+                return ResourceManager.GetString("tmplBiserForDBreeze", resourceCulture);
             }
         }
         

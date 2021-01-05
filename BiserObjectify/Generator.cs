@@ -11,7 +11,7 @@ namespace BiserObjectify
     {
 
         /// <summary>
-        /// 
+        /// When generated calsses must be used under DBreeze, set parameter generateForDBreeze to true or use project "Conditional Compilational Symbol" equal to "BiserForDBreeze"
         /// </summary>
         /// <param name="incomingType"></param>
         /// <param name="generateIncludedTypes"></param>
@@ -19,8 +19,9 @@ namespace BiserObjectify
         /// <param name="forBiserBinary"></param>
         /// <param name="forBiserJson"></param>
         /// <param name="exclusions">excluded properties Names</param>
+        /// <param name="generateForDBreeze">Default is false. Adds some extra namespaces if classes must be used by Biser integrated into DBreeze</param>
         /// <returns></returns>
-        public static Dictionary<string, string> Run(Type incomingType, bool generateIncludedTypes, string destinationFolder, bool forBiserBinary=true, bool forBiserJson = true, HashSet<string> exclusions = null)
+        public static Dictionary<string, string> Run(Type incomingType, bool generateIncludedTypes, string destinationFolder, bool forBiserBinary=true, bool forBiserJson = true, HashSet<string> exclusions = null, bool generateForDBreeze=false)
         {
             Dictionary<string, string> retT = new Dictionary<string, string>();
             StandardTypes.InitDict();
@@ -74,16 +75,27 @@ namespace BiserObjectify
 
                 var nsLen = toProcess.FullName.Length - toProcess.Name.Length - 1;
 
-                var ret = Resource1.tmplBiserContainer.ReplaceMultiple(
-                    new Dictionary<string, string> {
+
+                var replaceDictionary = new Dictionary<string, string> {
                     { "{@NamespaceName}", toProcess.FullName.Substring(0, nsLen) },
-                    { "{@ObjName}", toProcess.Name},
+                    { "{@ObjName}", toProcess.Name},                   
                     { "{@IfcJson}", tmplIfcJson},
                     { "{@IfcBinary}", tmplIfcBinary},
                     { "{@IfcComma1}", tmplIfcComma1 },
                     { "{@ContentJson}", contentJson },
                     { "{@ContentBinary}", contentBinary}
-                    });
+                    };
+
+
+                if (generateForDBreeze)
+                {
+                    replaceDictionary["{@BiserForDBreeze}"] = "using DBreeze.Utils;";
+                }
+                else
+                    replaceDictionary["{@BiserForDBreeze}"] = Resource1.tmplBiserForDBreeze;
+
+              
+                var ret = Resource1.tmplBiserContainer.ReplaceMultiple(replaceDictionary);
 
                 if (!String.IsNullOrEmpty(destinationFolder))
                 {

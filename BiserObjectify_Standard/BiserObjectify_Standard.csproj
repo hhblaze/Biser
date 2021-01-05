@@ -20,6 +20,7 @@
   <ItemGroup>
     <Content Include="..\BiserObjectify\tmplBinary.txt" Link="tmplBinary.txt" />
     <Content Include="..\BiserObjectify\tmplBiserContainer.txt" Link="tmplBiserContainer.txt" />
+    <Content Include="..\BiserObjectify\tmplBiserForDBreeze.txt" Link="tmplBiserForDBreeze.txt" />
     <Content Include="..\BiserObjectify\tmplJson.txt" Link="tmplJson.txt" />
   </ItemGroup>
 

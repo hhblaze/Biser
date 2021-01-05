@@ -60,6 +60,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="tmplBiserForDBreeze.txt" />
     <Content Include="tmplJson.txt" />
     <Content Include="tmplBinary.txt" />
     <Content Include="tmplBiserContainer.txt" />

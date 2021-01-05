@@ -19,7 +19,7 @@ namespace BiserObjectify.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resource1 {
@@ -61,27 +61,23 @@ namespace BiserObjectify.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to public void BiserJsonEncode(Biser.JsonEncoder encoder)
-        ///	{
-        ///{@ContentJsonEncode}
-        ///	}
+        ///   Looks up a localized string similar to public Biser.Encoder BiserEncoder(Biser.Encoder existingEncoder = null)
+        ///        {
+        ///            Biser.Encoder encoder = new Biser.Encoder(existingEncoder);
         ///
-        ///	public static {@ObjName} BiserJsonDecode(string enc = null, Biser.JsonDecoder extDecoder = null, Biser.JsonSettings settings = null)
-        ///	{
-        ///		Biser.JsonDecoder decoder = null;
+        ///{@ContentEncode}
         ///
-        ///		if (extDecoder == null)
-        ///		{
-        ///			if (enc == null || String.IsNullOrEmpty(enc))
-        ///				return null;
-        ///			decoder = new Biser.JsonDecoder(enc, settings);
-        ///			if (decoder.CheckNull())
-        ///				return null;
-        ///		}
-        ///		else
-        ///			decoder = extDecoder;
+        ///            return encoder;
+        ///        }
         ///
-        ///		{@Ob [rest of string was truncated]&quot;;.
+        ///
+        ///        public static {@ObjName} BiserDecode(byte[] enc = null, Biser.Decoder extDecoder = null)
+        ///        {
+        ///            Biser.Decoder decoder = null;
+        ///            if (extDecoder == null)
+        ///            {
+        ///                if (enc == null || enc.Length == 0)
+        ///                    return null; [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string tmplBinary {
             get {
@@ -92,6 +88,7 @@ namespace BiserObjectify.Properties {
         /// <summary>
         ///   Looks up a localized string similar to using System;
         ///using System.Collections.Generic;
+        ///using System.Linq;
         ///
         ///namespace {@NamespaceName}
         ///{
@@ -108,6 +105,19 @@ namespace BiserObjectify.Properties {
         internal static string tmplBiserContainer {
             get {
                 return ResourceManager.GetString("tmplBiserContainer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to #if BiserForDBreeze
+        ///using DBreeze.Utils;
+        ///#else
+        ///#endif
+        ///.
+        /// </summary>
+        internal static string tmplBiserForDBreeze {
+            get {
+                return ResourceManager.GetString("tmplBiserForDBreeze", resourceCulture);
             }
         }
         

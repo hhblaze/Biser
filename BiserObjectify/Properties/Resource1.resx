@@ -124,6 +124,9 @@
   <data name="tmplBiserContainer" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\tmplbisercontainer.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="tmplBiserForDBreeze" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\tmplbiserfordbreeze.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
   <data name="tmplJson" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\tmpljson.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
