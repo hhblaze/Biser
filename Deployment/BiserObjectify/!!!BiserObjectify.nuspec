@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>BiserObjectify</id>
-        <version>1.6.0</version>
+        <version>1.7.0</version>
         <title>BiserObjectify is an object generator for Biser.NET</title>
         <authors>Alex Solovyov</authors>
         <owners>tiesky.com / Alex Solovyov</owners>       
@@ -11,7 +11,7 @@
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>BiserObjectify is an object generator for Biser.NET</description>
         <summary>BiserObjectify is an object generator for Biser.NET</summary>
-        <releaseNotes>fixed adding extra namespace when generating for DBreeze</releaseNotes>
+        <releaseNotes>fixed line endings in generated files</releaseNotes>
         <copyright>Copyright © 2019 tiesky.com / Alex Solovyov</copyright>
         <language>es-US</language>
         <tags>Biser protobuf JSON alternative dbreeze serializer binary serialization netcore netstandard net javascript framework</tags>
